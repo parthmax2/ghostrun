@@ -7,6 +7,12 @@ All notable changes to ghostrun are documented here. The format is based on
 ## [Unreleased]
 
 ### Added
+- **Terminal mascot** — a small ASCII ghost printed once at the end of a test
+  session, reacting to what the interceptor actually did: calm when every
+  call replayed from cache, alert (yellow) when the network was actually
+  touched, and a distinct miss face (red) when `--ghostrun-replay` hit an
+  uncached request. Color and emoji only render on a real UTF-8-capable TTY;
+  silent on CI/piped output, and always silenceable via `GHOSTRUN_NO_MASCOT=1`.
 - **`ghostrun init`** — scaffolds a working first test in one command. Detects
   whether `openai` or `anthropic` is importable in the project and generates
   a matching starter test (or a generic httpx-based one if neither is found),
