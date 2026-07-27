@@ -85,7 +85,7 @@ Legend: ✅ confirmed via docs/README · ⚠️ marketed but not confirmed in do
   with G-Eval-style metrics is materially the same pitch, more mature, with
   50+ pre-built metrics vs. ghostrun's five.
 
-## What's still a genuinely open question (see [prd.md](prd.md) and the literature review in this conversation)
+## What's still a genuinely open question (see the [judge-voting benchmark](judge-voting-benchmark.md))
 
 Whether **caching a single judge verdict** (ghostrun's and DeepEval's shared
 default) is a safe engineering tradeoff given the now-published judge flip-rate
