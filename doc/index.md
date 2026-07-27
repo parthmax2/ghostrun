@@ -38,8 +38,6 @@ pytest test_ghostrun_example.py
 
 - [Judge-voting benchmark](judge-voting-benchmark.md)
 - [Comparison with other tools](comparison.md)
-- [Product spec](prd.md)
-- [Task tracker](task.md)
 
 Source, issues, and the changelog live on
 [GitHub](https://github.com/parthmax2/ghostrun).

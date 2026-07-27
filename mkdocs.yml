@@ -13,14 +13,22 @@ site_dir: site
 
 theme:
   name: material
+  logo: assets/ghost-icon.svg
+  favicon: assets/ghost-icon.svg
+  icon:
+    repo: fontawesome/brands/github
   palette:
     - media: "(prefers-color-scheme: light)"
       scheme: default
+      primary: deep purple
+      accent: deep purple
       toggle:
         icon: material/brightness-7
         name: Switch to dark mode
     - media: "(prefers-color-scheme: dark)"
       scheme: slate
+      primary: black
+      accent: deep purple
       toggle:
         icon: material/brightness-4
         name: Switch to light mode
@@ -28,17 +36,33 @@ theme:
     - navigation.instant
     - navigation.tracking
     - navigation.top
+    - navigation.tabs
+    - navigation.sections
+    - navigation.footer
     - search.suggest
+    - search.highlight
+    - search.share
     - content.code.copy
+    - content.code.annotate
+    - content.tabs.link
     - content.action.edit
+    - toc.follow
 
 markdown_extensions:
   - meta
   - toc:
       permalink: true
   - admonition
-  - pymdownx.highlight
+  - footnotes
+  - pymdownx.details
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
   - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
 
 nav:
   - Home: index.md
@@ -52,6 +76,3 @@ nav:
   - Research:
       - Judge-voting benchmark: judge-voting-benchmark.md
       - Comparison with other tools: comparison.md
-      - Product spec: prd.md
-  - Project:
-      - Task tracker: task.md
