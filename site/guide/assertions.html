@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Semantic assertions — ghostrun</title>
+<meta name="description" content="contains_intent, tone_is, matches, and deterministic assertions. Judge reliability, majority-vote verdicts, tool-call checks.">
+<link rel="icon" href="../assets/ghost-icon.svg">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="18" height="18"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>
+  </button>
+  <a class="brand" href="../index.html"><img src="../assets/ghost-icon.svg" alt="">GhostRun</a>
+  <div class="header-spacer"></div>
+  <div class="search-wrap">
+    <span class="search-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
+    <input class="search-input" id="search-input" type="text" placeholder="Search docs..." autocomplete="off">
+    <div class="search-results" id="search-results"></div>
+  </div>
+  <div class="header-actions">
+    <button class="icon-btn" id="theme-toggle" aria-label="Toggle theme">
+      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="4"/><line x1="12" y1="20" x2="12" y2="22"/><line x1="4.9" y1="4.9" x2="6.3" y2="6.3"/><line x1="17.7" y1="17.7" x2="19.1" y2="19.1"/><line x1="2" y1="12" x2="4" y2="12"/><line x1="20" y1="12" x2="22" y2="12"/><line x1="4.9" y1="19.1" x2="6.3" y2="17.7"/><line x1="17.7" y1="6.3" x2="19.1" y2="4.9"/></svg>
+      <svg class="icon-moon" viewBox="0 0 24 24" fill="currentColor"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    </button>
+    <a class="icon-btn" href="https://github.com/parthmax2/ghostrun" target="_blank" rel="noopener" aria-label="GitHub repository">
+      <svg viewBox="0 0 16 16" width="18" height="18" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+    </a>
+  </div>
+</header>
+
+<div class="scrim" id="scrim"></div>
+
+<div class="shell">
+  <nav class="sidebar" aria-label="Sidebar">
+    <div class="side-group">
+      <div class="side-group-title">Guide</div>
+      <a class="side-link" href="getting-started.html">Getting started</a>
+      <a class="side-link" href="recording.html">Recording and replay</a>
+      <a class="side-link active" href="assertions.html">Semantic assertions</a>
+      <a class="side-link" href="regression-tracking.html">Prompt regression tracking</a>
+      <a class="side-link" href="configuration.html">Configuration</a>
+      <a class="side-link" href="api-reference.html">API reference</a>
+      <a class="side-link" href="why-not-diy.html">Why not just ask an LLM?</a>
+    </div>
+    <div class="side-group">
+      <div class="side-group-title">Research</div>
+      <a class="side-link" href="../research/comparison.html">Comparison with other tools</a>
+      <a class="side-link" href="../research/judge-voting-benchmark.html">Judge-voting benchmark</a>
+    </div>
+  </nav>
+
+  <main class="main">
+    <article class="article">
+      <div class="breadcrumb"><a href="../index.html">Home</a> / Guide</div>
+      <h1>Semantic assertions</h1>
+      <p class="lede">Assert on meaning, not exact text — graded by a judge, cached like everything else.</p>
+
+      <p>Judge-backed (uses the configured LLM judge):</p>
+      <ul>
+        <li><code>contains_intent(intent)</code></li>
+        <li><code>does_not_contain_intent(intent)</code></li>
+        <li><code>tone_is(tone)</code></li>
+        <li><code>matches(free_form_criterion)</code></li>
+      </ul>
+
+      <p>Deterministic (no model, instant):</p>
+      <ul>
+        <li><code>contains(substring)</code> / <code>does_not_contain(substring)</code></li>
+        <li><code>is_valid_json()</code></li>
+      </ul>
+
+      <p>All methods chain and raise <code>AssertionError</code> on failure, so they render as normal pytest failures.</p>
+
+      <h2>How reliable is the judge?</h2>
+      <p>Semantic grading is only as good as the model doing it. Benchmarked on a set of hand-labeled cases, the default <code>llama3.2:3b</code> judge agreed with ground truth about <strong>~90%</strong> of the time — strong on clear-cut and negation cases, weaker on subtle tone and sarcasm. Practical implications:</p>
+      <ul>
+        <li><strong>Use judge-backed assertions to catch gross regressions</strong> ("the bot stopped apologizing"), not as a precise quality gate. Expect roughly 1 in 10 semantic verdicts to be arguable on a small model.</li>
+        <li><strong>For deterministic properties, prefer the deterministic assertions above</strong> (<code>contains</code>, <code>is_valid_json</code>, tool-call checks) — they're exact and instant.</li>
+        <li><strong>Need higher fidelity?</strong> Point <code>judge_model</code> at a larger local model or a cloud model in <code>.ghostrun.yaml</code>. Accuracy scales with the judge you choose.</li>
+      </ul>
+      <p>Verdicts are cached (see <a href="recording.html">Recording and replay</a>), so a suite is deterministic run-to-run even though the underlying model is stochastic.</p>
+
+      <h2>Majority-vote verdicts (judge.votes)</h2>
+      <p>Caching a single verdict freezes whatever the judge said on <em>that one draw</em> — including if it was wrong. Published LLM-as-judge reliability studies report mean flip rates around 13–14% on repeated grading of identical input, even at temperature 0. <code>judge.votes</code> grades N times on a cache miss and caches the <strong>majority</strong> verdict plus the observed disagreement rate:</p>
+
+      <pre><code>judge:
+  votes: 5   &#35; odd numbers avoid ties; default is 1 (single draw, prior behavior)</code></pre>
+
+      <pre><code>ghostrun.expect(reply).tone_is("empathetic")
+&#35; on failure: "[4/5 agreed] the text does not convey warmth"</code></pre>
+
+      <p>This costs N× the judge inference on a cache miss (replay is always free regardless of <code>votes</code>).</p>
+
+      <p><strong>What voting actually buys you — measured, not assumed.</strong> Benchmarked against the real <code>llama3.2:3b</code> judge (90 live grades, easy/borderline/sarcasm cases, at temperature 0 and 0.7 — full methodology and numbers in the <a href="../research/judge-voting-benchmark.html">judge-voting benchmark</a>):</p>
+      <ul>
+        <li><strong>5 of 6 test conditions were perfectly reproducible</strong> (0% flip rate) — for well-posed criteria at temperature 0 (the shipped default), a single local judge draw was already stable across 15 repeats. Voting adds cost with no measurable benefit here.</li>
+        <li><strong>The one genuinely ambiguous case</strong> (grading sarcasm at temperature 0.7) flipped <strong>46.7%</strong> of the time — a real coin flip. Voting helped only marginally and non-monotonically (k=1: 49.6% → k=3: 55.8% → k=5: 51.8% reliability against the modal verdict) — <strong>majority voting does not reliably rescue a criterion the judge has no real opinion on.</strong></li>
+      </ul>
+
+      <div class="callout">
+        <span class="callout-label">Practical takeaway</span>
+        <p><code>judge.votes</code> is most useful as a <em>detector</em>, not a <em>fix</em>. A high <code>disagreement_rate</code> on a cached verdict tells you the criterion itself is ambiguous or the judge is guessing — a signal to rewrite the assertion or use a bigger judge, not something more votes will paper over. Keep <code>temperature=0</code> (already the default) for maximum stability; this benchmark is also why <code>OllamaJudge</code> doesn't expose a temperature knob.</p>
+      </div>
+
+      <h2>Tool / function calls</h2>
+      <p>Most agent bugs are wrong-tool or wrong-argument bugs, not bad prose. These are deterministic — no judge, no model:</p>
+      <pre><code>ghostrun.expect_tool_calls(response.choices[0].message.tool_calls) \
+    .called_once("search_orders") \
+    .called_with("search_orders", order_id="A123") \
+    .did_not_call("issue_refund")</code></pre>
+      <p>OpenAI (<code>function.arguments</code> as a JSON string), Anthropic (<code>input</code>), and plain <code>{"name", "arguments"}</code> shapes are all normalized automatically.</p>
+
+      <div class="page-nav">
+        <a href="recording.html"><span class="dir">Previous</span>Recording and replay</a>
+        <a class="next" href="regression-tracking.html"><span class="dir">Next</span>Prompt regression tracking</a>
+      </div>
+    </article>
+  </main>
+
+  <aside class="toc">
+    <div class="toc-title">On this page</div>
+    <ul id="toc-list"></ul>
+  </aside>
+</div>
+
+<footer class="site-footer">
+  <a href="https://github.com/parthmax2/ghostrun" target="_blank" rel="noopener">parthmax2/ghostrun</a> · MIT License
+</footer>
+
+<script src="../assets/search-index.js"></script>
+<script src="../assets/app.js"></script>
+</body>
+</html>

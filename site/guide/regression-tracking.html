@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Prompt regression tracking — ghostrun</title>
+<meta name="description" content="Snapshot runs and diff them: ghostrun diff, output drift, PR-comment and JUnit CI formats.">
+<link rel="icon" href="../assets/ghost-icon.svg">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="18" height="18"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>
+  </button>
+  <a class="brand" href="../index.html"><img src="../assets/ghost-icon.svg" alt="">GhostRun</a>
+  <div class="header-spacer"></div>
+  <div class="search-wrap">
+    <span class="search-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
+    <input class="search-input" id="search-input" type="text" placeholder="Search docs..." autocomplete="off">
+    <div class="search-results" id="search-results"></div>
+  </div>
+  <div class="header-actions">
+    <button class="icon-btn" id="theme-toggle" aria-label="Toggle theme">
+      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="4"/><line x1="12" y1="20" x2="12" y2="22"/><line x1="4.9" y1="4.9" x2="6.3" y2="6.3"/><line x1="17.7" y1="17.7" x2="19.1" y2="19.1"/><line x1="2" y1="12" x2="4" y2="12"/><line x1="20" y1="12" x2="22" y2="12"/><line x1="4.9" y1="19.1" x2="6.3" y2="17.7"/><line x1="17.7" y1="6.3" x2="19.1" y2="4.9"/></svg>
+      <svg class="icon-moon" viewBox="0 0 24 24" fill="currentColor"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    </button>
+    <a class="icon-btn" href="https://github.com/parthmax2/ghostrun" target="_blank" rel="noopener" aria-label="GitHub repository">
+      <svg viewBox="0 0 16 16" width="18" height="18" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+    </a>
+  </div>
+</header>
+
+<div class="scrim" id="scrim"></div>
+
+<div class="shell">
+  <nav class="sidebar" aria-label="Sidebar">
+    <div class="side-group">
+      <div class="side-group-title">Guide</div>
+      <a class="side-link" href="getting-started.html">Getting started</a>
+      <a class="side-link" href="recording.html">Recording and replay</a>
+      <a class="side-link" href="assertions.html">Semantic assertions</a>
+      <a class="side-link active" href="regression-tracking.html">Prompt regression tracking</a>
+      <a class="side-link" href="configuration.html">Configuration</a>
+      <a class="side-link" href="api-reference.html">API reference</a>
+      <a class="side-link" href="why-not-diy.html">Why not just ask an LLM?</a>
+    </div>
+    <div class="side-group">
+      <div class="side-group-title">Research</div>
+      <a class="side-link" href="../research/comparison.html">Comparison with other tools</a>
+      <a class="side-link" href="../research/judge-voting-benchmark.html">Judge-voting benchmark</a>
+    </div>
+  </nav>
+
+  <main class="main">
+    <article class="article">
+      <div class="breadcrumb"><a href="../index.html">Home</a> / Guide</div>
+      <h1>Prompt regression tracking</h1>
+      <p class="lede">Did that prompt tweak break anything? Snapshot a run, change the prompt, snapshot again, and diff.</p>
+
+      <pre><code>pytest --ghostrun-snapshot v1 --ghostrun-label "original prompt"
+&#35; ... edit your prompt ...
+pytest --ghostrun-snapshot v2 --ghostrun-label "added few-shot examples"
+
+ghostrun diff v1 v2</code></pre>
+
+      <pre><code>Comparing v1 -&gt; v2
+========================================================================
+1 regression(s), 0 fix(es), 1 stable, 1 output(s) changed
+
+REGRESSION (1)
+  test_support.py::test_reply
+    contains_intent('sorry')
+    judge: the text does not apologize
+
+OUTPUT DRIFT (1)
+  test_support.py::test_reply [output 0] (45% similar)
+    --- before
+    +++ after
+    @@ -1 +1 @@
+    -I'm so sorry about the delay with your refund...
+    +Your refund request is in the queue...
+
+FAILED: 1 regression(s) detected.</code></pre>
+
+      <p>Every run also writes a <code>_last</code> snapshot, so <code>ghostrun diff v1</code> (candidate defaults to <code>_last</code>) works without planning ahead.</p>
+
+      <p><strong>Output drift</strong> is reported separately from regressions: a response can change substantially while still passing every assertion, which is worth seeing before it becomes a regression later.</p>
+
+      <p>Assertions that never executed because a test aborted at an earlier failure are reported as <strong>NOT EVALUATED</strong>, not "removed" — so a single failure doesn't masquerade as a pile of deleted checks.</p>
+
+      <h2>CLI</h2>
+      <pre><code>ghostrun list                              &#35; saved snapshots
+ghostrun show v1                           &#35; outputs + verdicts for one run
+ghostrun diff v1 v2                        &#35; compare
+ghostrun diff v1 v2 --format json          &#35; machine-readable
+ghostrun diff v1 v2 --fail-on-regression   &#35; exit 1 on any PASS -&gt; FAIL (CI gate)
+ghostrun diff v1 v2 --format github-comment -o comment.md   &#35; markdown for a PR bot
+ghostrun diff v1 v2 --format junit -o ghostrun.xml            &#35; for CI test-result dashboards</code></pre>
+
+      <h2>Posting a regression diff as a PR comment</h2>
+      <p>A regression a developer has to remember to check for locally gets missed. One that shows up inline in the PR doesn't. In a GitHub Actions workflow:</p>
+
+      <pre><code>- name: Record this PR's outputs
+  run: pytest --ghostrun-snapshot pr-${{ github.event.pull_request.number }}
+
+- name: Diff against main's baseline
+  run: |
+    ghostrun diff main-baseline pr-${{ github.event.pull_request.number }} \
+      --format github-comment -o comment.md
+    echo "exit_code=$?" &gt;&gt; "$GITHUB_OUTPUT"
+  id: diff
+  continue-on-error: true
+
+- name: Post as a PR comment
+  run: gh pr comment ${{ github.event.pull_request.number }} --body-file comment.md
+  env:
+    GH_TOKEN: ${{ github.token }}
+
+- name: Fail the job if a regression was found
+  if: steps.diff.outputs.exit_code == '1'
+  run: exit 1</code></pre>
+
+      <p><code>--format junit</code> instead produces standard JUnit XML, so a prompt regression shows up in whatever test-results view your CI already renders (GitHub Actions annotations, GitLab, Jenkins) without that system needing to know anything about ghostrun.</p>
+
+      <div class="page-nav">
+        <a href="assertions.html"><span class="dir">Previous</span>Semantic assertions</a>
+        <a class="next" href="configuration.html"><span class="dir">Next</span>Configuration</a>
+      </div>
+    </article>
+  </main>
+
+  <aside class="toc">
+    <div class="toc-title">On this page</div>
+    <ul id="toc-list"></ul>
+  </aside>
+</div>
+
+<footer class="site-footer">
+  <a href="https://github.com/parthmax2/ghostrun" target="_blank" rel="noopener">parthmax2/ghostrun</a> · MIT License
+</footer>
+
+<script src="../assets/search-index.js"></script>
+<script src="../assets/app.js"></script>
+</body>
+</html>

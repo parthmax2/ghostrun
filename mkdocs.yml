@@ -9,7 +9,7 @@ repo_name: parthmax2/ghostrun
 edit_uri: edit/main/doc/
 
 docs_dir: doc
-site_dir: site
+site_dir: _mkdocs_build
 
 theme:
   name: material
