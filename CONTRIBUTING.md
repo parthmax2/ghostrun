@@ -29,8 +29,6 @@ real Ollama judge when available and skips gracefully otherwise.
   [doc/guide/why-not-diy.md](doc/guide/why-not-diy.md) for examples) —
   "I tested it manually" is not sufficient for anything touching concurrency,
   caching, or redaction.
-- Update `doc/task.md` if you change project status or add/complete a
-  roadmap item — it's a living document, not written after the fact.
 - Update `CHANGELOG.md` under `[Unreleased]`.
 
 ## Where things live
