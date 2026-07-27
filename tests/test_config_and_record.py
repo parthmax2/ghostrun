@@ -7,8 +7,8 @@ from ghostrun import config as gt_config
 
 
 def test_env_overrides(monkeypatch):
-    monkeypatch.setenv("ghostrun_MODE", "replay")
-    monkeypatch.setenv("ghostrun_JUDGE", "echo")
+    monkeypatch.setenv("GHOSTRUN_MODE", "replay")
+    monkeypatch.setenv("GHOSTRUN_JUDGE", "echo")
     gt_config.reset_config()
     cfg = gt_config.load_config()
     assert cfg.mode == "replay"
@@ -33,8 +33,8 @@ def test_configure_overrides():
 
 
 def test_record_decorator_roundtrip(monkeypatch, tmp_path):
-    monkeypatch.setenv("ghostrun_CACHE_DIR", str(tmp_path / "c"))
-    monkeypatch.setenv("ghostrun_MODE", "auto")
+    monkeypatch.setenv("GHOSTRUN_CACHE_DIR", str(tmp_path / "c"))
+    monkeypatch.setenv("GHOSTRUN_MODE", "auto")
     gt_config.reset_config()
 
     counter = {"n": 0}

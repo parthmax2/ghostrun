@@ -73,7 +73,7 @@ All notable changes to ghostrun are documented here. The format is based on
   freezes whatever the judge said on one draw, including if it was wrong —
   published LLM-as-judge studies report ~13–14% flip rates on repeated grading
   of identical input, even at temperature 0. Setting `judge.votes` (or
-  `ghostrun_JUDGE_VOTES`) to an odd N > 1 grades N times on a cache miss and
+  `GHOSTRUN_JUDGE_VOTES`) to an odd N > 1 grades N times on a cache miss and
   caches the majority verdict plus the observed disagreement rate
   (`Grade.votes`, `Grade.disagreement_rate`). Even vote counts tie-break
   conservatively to FAIL. Cache keys now include the vote count, so changing
@@ -104,7 +104,7 @@ All notable changes to ghostrun are documented here. The format is based on
   judge could flip a passing test with no code change. Verdicts are now recorded
   to `.ghostrun_cache/judge/` under the same `auto`/`record`/`replay` semantics as
   HTTP calls, keyed on judge backend + model + text + criterion. Configurable via
-  `judge.cache` or `ghostrun_JUDGE_CACHE`. Cuts the bundled example from 23.3s to
+  `judge.cache` or `GHOSTRUN_JUDGE_CACHE`. Cuts the bundled example from 23.3s to
   2.7s and makes semantic assertions deterministic.
 - Committed tests for async clients and streaming (SSE) record/replay, including
   async streaming — previously working but uncovered.
@@ -161,7 +161,7 @@ Initial Phase 1 MVP.
   stub for CI.
 - **Pytest plugin** (auto-registered): `--ghostrun-record`, `--ghostrun-replay`,
   `--ghostrun-judge` flags and a `ghostrun_record` fixture.
-- **Configuration** via `.ghostrun.yaml`, `ghostrun_*` environment variables, or
+- **Configuration** via `.ghostrun.yaml`, `GHOSTRUN_*` environment variables, or
   `ghostrun.configure(...)`, resolved defaults → file → env.
 - Documentation (`README.md`, `doc/prd.md`), a runnable `examples/` app with a
   pre-recorded cache, and an offline test suite.

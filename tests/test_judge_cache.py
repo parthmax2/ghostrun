@@ -89,7 +89,7 @@ def test_echo_judge_is_not_wrapped(monkeypatch):
     from ghostrun.judge import get_judge
     from ghostrun.judge.echo import EchoJudge
 
-    monkeypatch.setenv("ghostrun_JUDGE", "echo")
+    monkeypatch.setenv("GHOSTRUN_JUDGE", "echo")
     gt_config.reset_config()
     assert isinstance(get_judge(), EchoJudge)
 
@@ -99,7 +99,7 @@ def test_caching_can_be_disabled(monkeypatch):
     from ghostrun.judge import get_judge
     from ghostrun.judge.ollama import OllamaJudge
 
-    monkeypatch.setenv("ghostrun_JUDGE", "ollama")
-    monkeypatch.setenv("ghostrun_JUDGE_CACHE", "false")
+    monkeypatch.setenv("GHOSTRUN_JUDGE", "ollama")
+    monkeypatch.setenv("GHOSTRUN_JUDGE_CACHE", "false")
     gt_config.reset_config()
     assert isinstance(get_judge(), OllamaJudge)

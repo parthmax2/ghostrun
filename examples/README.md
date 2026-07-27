@@ -37,7 +37,7 @@ When no real judge is available (echo, or Ollama down / model not pulled), the
 example **skips** rather than fails:
 
 ```bash
-ghostrun_JUDGE=echo pytest examples/test_support_reply.py   # -> skipped
+GHOSTRUN_JUDGE=echo pytest examples/test_support_reply.py   # -> skipped
 ```
 
 For real semantic grading, use Ollama (above) or point the judge at a cloud
@@ -47,10 +47,10 @@ model in `.ghostrun.yaml`.
 
 [`test_live_smoke.py`](test_live_smoke.py) is the one check the mock-based suite
 can't cover: recording from the **real** OpenAI API and replaying it offline.
-It's opt-in — skipped unless you provide a key and set `ghostrun_LIVE=1`:
+It's opt-in — skipped unless you provide a key and set `GHOSTRUN_LIVE=1`:
 
 ```bash
-OPENAI_API_KEY=sk-... ghostrun_LIVE=1 pytest examples/test_live_smoke.py -v
+OPENAI_API_KEY=sk-... GHOSTRUN_LIVE=1 pytest examples/test_live_smoke.py -v
 ```
 
 It costs one cheap `gpt-4o-mini` call the first time, writes the response to

@@ -6,7 +6,7 @@ response, so this test needs no API key and no network:
     pytest examples/test_support_reply.py
 
 The semantic assertions are graded by a local Ollama model (default). If a real
-judge isn't available (no Ollama, or ghostrun_JUDGE=echo), the test skips rather
+judge isn't available (no Ollama, or GHOSTRUN_JUDGE=echo), the test skips rather
 than fails — see examples/conftest.py.
 
 To re-record against the real OpenAI API instead:

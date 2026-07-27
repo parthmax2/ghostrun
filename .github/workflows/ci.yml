@@ -41,19 +41,19 @@ jobs:
       # The core suite is hermetic: no network, no Ollama, no API keys.
       - name: Test (offline)
         env:
-          ghostrun_JUDGE: echo
+          GHOSTRUN_JUDGE: echo
         run: pytest tests -q
 
       # The example must skip cleanly rather than fail when no judge exists.
       - name: Example degrades gracefully without a judge
         env:
-          ghostrun_JUDGE: echo
+          GHOSTRUN_JUDGE: echo
         run: pytest examples -q
 
       # Replay must work with no network and no judge backend reachable.
       - name: Strict replay (no network, judge unreachable)
         env:
-          ghostrun_JUDGE_BASE_URL: http://localhost:59999
+          GHOSTRUN_JUDGE_BASE_URL: http://localhost:59999
         run: pytest examples -q --ghostrun-replay
 
   parallel:
@@ -72,7 +72,7 @@ jobs:
       # The interceptor patches global httpx state; this guards against races.
       - name: Test under parallel workers
         env:
-          ghostrun_JUDGE: echo
+          GHOSTRUN_JUDGE: echo
         run: pytest tests -q -n 4
 
   build:
@@ -118,6 +118,6 @@ jobs:
       - name: Record from the real API, then replay offline
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          ghostrun_LIVE: "1"
-          ghostrun_JUDGE: echo   # don't require Ollama in CI
+          GHOSTRUN_LIVE: "1"
+          GHOSTRUN_JUDGE: echo   # don't require Ollama in CI
         run: pytest examples/test_live_smoke.py -v
