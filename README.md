@@ -1,9 +1,11 @@
 <p align="center">
-  <img src="assets/ghostrun-hero.gif" alt="ghostrun: a ghost travels to the LLM API once, then instantly reappears with the result on every run after" width="640">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="assets/wordmark-dark.svg">
+    <img alt="ghostrun" src="assets/wordmark-light.svg" width="480">
+  </picture>
 </p>
 
-<h1 align="center">ghostrun</h1>
-<p align="center"><b>pytest for LLMs.</b></p>
+<h3 align="center">pytest for LLMs</h3>
 <p align="center">Deterministic record/replay and semantic assertions for GenAI apps — local-first, privacy-first, zero SaaS lock-in.</p>
 
 <p align="center">
@@ -21,6 +23,10 @@
   <a href="#documentation">Documentation</a> ·
   <a href="#roadmap">Roadmap</a>
 </h4>
+
+<p align="center">
+  <img src="assets/ghostrun-hero.gif" alt="ghostrun: a ghost travels to the LLM API once, then instantly reappears with the result on every run after" width="640">
+</p>
 
 ---
 
