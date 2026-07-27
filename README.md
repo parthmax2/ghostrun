@@ -1,13 +1,31 @@
-# ghostrun
+<p align="center">
+  <img src="assets/ghostrun-hero.gif" alt="ghostrun: a ghost travels to the LLM API once, then instantly reappears with the result on every run after" width="640">
+</p>
 
-[![PyPI](https://img.shields.io/pypi/v/ghostrun.svg)](https://pypi.org/project/ghostrun/)
-[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-[![Python 3.9+](https://img.shields.io/badge/python-3.9%2B-blue.svg)](pyproject.toml)
-[![RELEASE](https://github.com/parthmax2/ghostrun/actions/workflows/release.yml/badge.svg)](https://github.com/parthmax2/ghostrun/actions/workflows/ci.yml)
+<h1 align="center">ghostrun</h1>
+<p align="center"><b>pytest for LLMs.</b></p>
+<p align="center">Deterministic record/replay and semantic assertions for GenAI apps — local-first, privacy-first, zero SaaS lock-in.</p>
 
-**pytest for LLMs.** Deterministic record/replay and semantic assertions for GenAI apps — **local-first, privacy-first, zero SaaS lock-in.**
+<p align="center">
+  <a href="https://pypi.org/project/ghostrun/"><img alt="PyPI" src="https://img.shields.io/pypi/v/ghostrun.svg"></a>
+  <a href="LICENSE"><img alt="License: MIT" src="https://img.shields.io/badge/license-MIT-blue.svg"></a>
+  <a href="pyproject.toml"><img alt="Python 3.9+" src="https://img.shields.io/badge/python-3.9%2B-blue.svg"></a>
+  <a href="https://github.com/parthmax2/ghostrun/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/parthmax2/ghostrun/actions/workflows/ci.yml/badge.svg"></a>
+  <a href="https://github.com/parthmax2/ghostrun/actions/workflows/release.yml"><img alt="Release" src="https://github.com/parthmax2/ghostrun/actions/workflows/release.yml/badge.svg"></a>
+</p>
 
-![ghostrun: a ghost travels to the LLM API once, then instantly reappears with the result on every run after](assets/ghostrun-hero.gif)
+<h4 align="center">
+  <a href="#is-this-for-you">Is this for you?</a> ·
+  <a href="#install">Install</a> ·
+  <a href="#quickstart">Quickstart</a> ·
+  <a href="#documentation">Documentation</a> ·
+  <a href="#roadmap">Roadmap</a>
+</h4>
+
+---
+
+> [!TIP]
+> Every real test run of an LLM feature means a live API call — slow, costs money, and flaky, since the model never says the same thing twice. ghostrun records the call once, replays it instantly forever after, and grades the *meaning* of the output instead of matching exact text.
 
 ### The problem
 
@@ -15,8 +33,6 @@
 reply = generate_reply("Where is my refund?")
 assert reply == "I'm sorry for the delay..."   # fails tomorrow: LLM never says the same thing twice
 ```
-
-Every real test run also means a live API call — slow, costs money, and now your CI needs a secret API key just to run the test suite.
 
 ### What ghostrun does about it
 
@@ -117,7 +133,10 @@ Start here, in order:
 | [doc/guide/assertions.md](doc/guide/assertions.md) | Semantic assertions, judge reliability (benchmarked, not asserted), majority-vote verdicts, tool/function-call assertions |
 | [doc/guide/configuration.md](doc/guide/configuration.md) | `.ghostrun.yaml`, environment variables, pytest flags, `ghostrun doctor`, `ghostrun init` |
 
-Deeper reference, once you're past the basics:
+<details>
+<summary><b>Deeper reference</b>, once you're past the basics</summary>
+
+<br>
 
 | Guide | What's in it |
 | :--- | :--- |
@@ -128,9 +147,25 @@ Deeper reference, once you're past the basics:
 | [doc/comparison.md](doc/comparison.md) | Researched comparison against DeepEval, Promptfoo, Ragas, vcr-langchain, and 9 other tools |
 | [CHANGELOG.md](CHANGELOG.md) | Release notes |
 
+</details>
+
 A hosted, searchable version of this documentation is planned at
 [parthmax2.github.io/ghostrun](https://parthmax2.github.io/ghostrun/) (config
 in `mkdocs.yml`, builds via `.github/workflows/docs.yml`).
+
+## Roadmap
+
+- [x] Deterministic HTTP record/replay (`@ghostrun.record`, `.ghostrun_cache/`)
+- [x] Semantic assertions (`contains_intent`, `tone_is`, `matches`) via local Ollama or an offline `echo` stub
+- [x] Judge-verdict caching, including majority-vote grading (`judge.votes`) with a benchmarked reliability tradeoff
+- [x] Tool/function-call assertions (`expect_tool_calls`)
+- [x] Prompt regression tracking — `ghostrun diff`, PR-comment and JUnit CI output
+- [x] `ghostrun init` / `ghostrun doctor` — scaffolding and setup diagnostics in one command
+- [x] Secret redaction so the cache is safe to commit
+- [x] 16-provider HTTP coverage (OpenAI, Anthropic, Gemini, Bedrock, and more)
+- [x] Published to PyPI with trusted-publishing (OIDC) releases
+- [ ] Hosted, searchable documentation site (`mkdocs.yml` ready; not yet deployed)
+- [ ] Broader provider/framework integration guides
 
 ## Contributing
 
