@@ -1,0 +1,64 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "gentest"
+version = "0.1.0"
+description = "pytest for LLMs: deterministic HTTP record/replay, local LLM-as-judge semantic assertions, and prompt regression diffing for testing GenAI applications."
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+authors = [{ name = "parthmax2" }]
+keywords = [
+    "llm", "llm-testing", "llm-eval", "llm-evaluation", "llm-as-judge",
+    "pytest", "pytest-plugin", "testing", "unit-testing",
+    "genai", "generative-ai", "ai-testing", "agent-testing",
+    "openai", "anthropic", "ollama",
+    "record-replay", "vcr", "http-mocking", "http-cache",
+    "prompt-testing", "prompt-regression", "regression-testing",
+    "semantic-assertions", "deterministic-testing", "ci-cd",
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Framework :: Pytest",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Software Development :: Testing",
+    "Topic :: Software Development :: Testing :: Unit",
+    "Topic :: Software Development :: Quality Assurance",
+    "Typing :: Typed",
+]
+dependencies = [
+    "httpx>=0.24",
+    "pyyaml>=6.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=7.0"]
+
+[project.scripts]
+gentest = "gentest.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/parthmax2/gentest"
+Issues = "https://github.com/parthmax2/gentest/issues"
+Documentation = "https://github.com/parthmax2/gentest#documentation"
+Changelog = "https://github.com/parthmax2/gentest/blob/main/CHANGELOG.md"
+
+# Register the pytest plugin so `import gentest` isn't required to activate it.
+[project.entry-points.pytest11]
+gentest = "gentest.plugin"
+
+[tool.hatch.build.targets.wheel]
+packages = ["gentest"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

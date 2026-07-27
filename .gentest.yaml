@@ -1,0 +1,31 @@
+# GenTest configuration. All keys are optional; these are the defaults.
+# Every value can also be set via environment variable (GENTEST_MODE, etc.)
+# or at runtime with gentest.configure(...).
+
+# Record/replay behavior:
+#   auto   - replay from cache if present, otherwise record (default)
+#   record - always hit the network and overwrite the cache
+#   replay - never hit the network; a cache miss is an error (use in CI)
+mode: auto
+
+# Where cached LLM responses live, relative to the project root.
+cache_dir: .gentest_cache
+
+# The LLM-as-a-judge backend for semantic assertions.
+judge:
+  # "ollama" runs a local model (private, free). "echo" is an offline
+  # heuristic stub for CI runs that shouldn't depend on a model.
+  type: ollama
+  model: llama3.2:3b
+  base_url: http://localhost:11434
+  timeout: 60
+  # Record/replay judge verdicts too, so semantic assertions are deterministic
+  # and don't re-invoke the model on every run. Verdicts are keyed on judge
+  # model + text + criterion, so changing any of them forces a re-grade.
+  cache: true
+  # Grade this many times on a cache miss and cache the majority verdict
+  # (odd numbers avoid ties). 1 (default) matches a single graded draw, which
+  # published studies show can disagree with itself ~13-14% of the time on
+  # repeated grading. votes: 3 or 5 trades judge cost for a more reliable,
+  # disagreement-rate-annotated cached verdict.
+  votes: 1
