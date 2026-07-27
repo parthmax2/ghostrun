@@ -1,10 +1,10 @@
-"""Semantic assertions: ``gentest.expect(text).contains_intent(...)`` etc.
+"""Semantic assertions: ``ghostrun.expect(text).contains_intent(...)`` etc.
 
 ``expect`` returns a fluent object whose methods raise ``AssertionError`` on
 failure — so they integrate with pytest exactly like ``assert`` does, producing
 red F's with a readable message. Each method returns ``self`` for chaining.
 
-Note: the PRD sketched ``gentest.assert(...)``, but ``assert`` is a reserved
+Note: the PRD sketched ``ghostrun.assert(...)``, but ``assert`` is a reserved
 Python keyword and cannot be an attribute name. ``expect`` is the valid form.
 """
 
@@ -214,7 +214,7 @@ def _normalize_tool_call(call) -> dict:
 def expect_tool_calls(calls) -> ToolCallExpectation:
     """Assert over tool/function calls, e.g.
 
-        gentest.expect_tool_calls(resp.choices[0].message.tool_calls) \\
+        ghostrun.expect_tool_calls(resp.choices[0].message.tool_calls) \\
             .called_once("search_orders") \\
             .called_with("search_orders", order_id="A123") \\
             .did_not_call("issue_refund")

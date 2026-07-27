@@ -4,8 +4,8 @@ import json
 
 import pytest
 
-from gentest.cache import Cache, CachedResponse, request_key
-from gentest.redact import MASK, redact_headers, redact_value
+from ghostrun.cache import Cache, CachedResponse, request_key
+from ghostrun.redact import MASK, redact_headers, redact_value
 
 
 def test_sensitive_headers_masked():

@@ -1,22 +1,22 @@
 # Changelog
 
-All notable changes to GenTest are documented here. The format is based on
+All notable changes to ghostrun are documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/), and this project adheres to
 [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
 ### Added
-- **`gentest init`** — scaffolds a working first test in one command. Detects
+- **`ghostrun init`** — scaffolds a working first test in one command. Detects
   whether `openai` or `anthropic` is importable in the project and generates
   a matching starter test (or a generic httpx-based one if neither is found),
-  plus a `.gentest.yaml`. Refuses to overwrite existing files without
+  plus a `.ghostrun.yaml`. Refuses to overwrite existing files without
   `--force`. Verified end-to-end from an actual built wheel in a clean venv,
   including the no-SDK fallback path.
 - **Real git history.** Initialized the repository (`git init` + first commit)
   — previously all work in this project existed only as an uncommitted
   working directory.
-- **PEP 561 typing marker** (`gentest/py.typed`) — the `Typing :: Typed`
+- **PEP 561 typing marker** (`ghostrun/py.typed`) — the `Typing :: Typed`
   classifier was added to `pyproject.toml` without this; a classifier
   asserting something the package doesn't actually declare would have been a
   false claim, caught before publishing rather than after.
@@ -25,18 +25,18 @@ All notable changes to GenTest are documented here. The format is based on
 - **Hosted documentation site** (`mkdocs.yml` + `.github/workflows/docs.yml`,
   mkdocs-material, deploys to GitHub Pages on push to `main`). Verified with a
   real `mkdocs build --strict` locally, which caught a broken link
-  (`configuration.md` pointed at `.gentest.yaml` via a relative path outside
+  (`configuration.md` pointed at `.ghostrun.yaml` via a relative path outside
   the site's `docs_dir`) before it could ship.
 - **`CONTRIBUTING.md`** — setup, test requirements (including the parallel-run
   requirement that has caught two real concurrency bugs in this project),
   and where things live in the codebase.
 - **API reference** (`doc/guide/api-reference.md`) — every function, class,
-  exception, and config field in `gentest.__all__`.
+  exception, and config field in `ghostrun.__all__`.
 - **PyPI/SEO metadata**: expanded `keywords` and `classifiers` in
   `pyproject.toml` for search discoverability, real project URLs (previously
-  a placeholder `github.com/gentest/gentest`), and PyPI/license/Python-version/
+  a placeholder `github.com/ghostrun/ghostrun`), and PyPI/license/Python-version/
   CI badges in the README.
-- **`gentest doctor`** — diagnoses a broken setup in one command: resolved
+- **`ghostrun doctor`** — diagnoses a broken setup in one command: resolved
   configuration, httpx interceptor-hook compatibility, cache-directory
   writability, and (for the Ollama judge) whether the daemon is reachable and
   the configured model is actually pulled. Each failing check prints the exact
@@ -53,17 +53,17 @@ All notable changes to GenTest are documented here. The format is based on
   why-not-diy}.md`. Also fixed a stale cross-reference: the majority-vote
   section linked to `doc/prd.md` for benchmark methodology when the dedicated
   write-up is `doc/judge-voting-benchmark.md`.
-- **CI-friendly diff output.** `gentest diff --format github-comment` renders
+- **CI-friendly diff output.** `ghostrun diff --format github-comment` renders
   markdown suitable for posting as a pull-request comment (collapsible
   sections, a table of regressions, output-drift diffs); `--format junit`
   renders standard JUnit XML so a prompt regression shows up in whatever
-  CI test-results view you already use, with no GenTest-specific tooling on
+  CI test-results view you already use, with no ghostrun-specific tooling on
   that end. `-o/--output FILE` writes either to a file instead of stdout. The
   existing `--json` flag keeps working as a shorthand for `--format json`.
   README documents a full GitHub Actions pattern for posting the comment via
   `gh pr comment`.
 - **"Why not just ask an LLM to write this?"** README section — the concrete
-  bugs found and fixed in GenTest's own development (thread-safety races,
+  bugs found and fixed in ghostrun's own development (thread-safety races,
   torn cache writes, a secret-redaction false positive on `max_tokens`, the
   majority-vote tie-breaking edge case) as the actual case for a maintained
   package over a one-off generated script.
@@ -73,7 +73,7 @@ All notable changes to GenTest are documented here. The format is based on
   freezes whatever the judge said on one draw, including if it was wrong —
   published LLM-as-judge studies report ~13–14% flip rates on repeated grading
   of identical input, even at temperature 0. Setting `judge.votes` (or
-  `GENTEST_JUDGE_VOTES`) to an odd N > 1 grades N times on a cache miss and
+  `ghostrun_JUDGE_VOTES`) to an odd N > 1 grades N times on a cache miss and
   caches the majority verdict plus the observed disagreement rate
   (`Grade.votes`, `Grade.disagreement_rate`). Even vote counts tie-break
   conservatively to FAIL. Cache keys now include the vote count, so changing
@@ -89,9 +89,9 @@ All notable changes to GenTest are documented here. The format is based on
 - **Prompt regression tracking (PRD Phase 2, Feature 4).** Runs now snapshot the
   text every assertion saw plus each verdict, so two prompt versions can be
   compared:
-  - `pytest --gentest-snapshot NAME [--gentest-label TEXT]` saves a snapshot;
+  - `pytest --ghostrun-snapshot NAME [--ghostrun-label TEXT]` saves a snapshot;
     every run also refreshes `_last`.
-  - New `gentest` CLI: `list`, `show`, `diff`, with `--json` and
+  - New `ghostrun` CLI: `list`, `show`, `diff`, with `--json` and
     `--fail-on-regression` (exit 1) for CI gating.
   - Classifies each assertion as regression / fix / stable / added / removed,
     and reports **output drift** separately — responses that changed while still
@@ -102,9 +102,9 @@ All notable changes to GenTest are documented here. The format is based on
 - **Judge verdict caching.** Semantic assertions previously re-invoked the judge
   model on every run, leaving suites slow and non-deterministic — a stochastic
   judge could flip a passing test with no code change. Verdicts are now recorded
-  to `.gentest_cache/judge/` under the same `auto`/`record`/`replay` semantics as
+  to `.ghostrun_cache/judge/` under the same `auto`/`record`/`replay` semantics as
   HTTP calls, keyed on judge backend + model + text + criterion. Configurable via
-  `judge.cache` or `GENTEST_JUDGE_CACHE`. Cuts the bundled example from 23.3s to
+  `judge.cache` or `ghostrun_JUDGE_CACHE`. Cuts the bundled example from 23.3s to
   2.7s and makes semantic assertions deterministic.
 - Committed tests for async clients and streaming (SSE) record/replay, including
   async streaming — previously working but uncovered.
@@ -114,7 +114,7 @@ All notable changes to GenTest are documented here. The format is based on
   secret-looking body keys plus `sk-…`/`ghp_…`/`AKIA…` patterns in free text.
   Benign lookalikes (`max_tokens`, `total_tokens`) are explicitly preserved.
   Response bodies stay verbatim by design — they're what gets replayed.
-- **Tool/function-call assertions** via `gentest.expect_tool_calls(...)`:
+- **Tool/function-call assertions** via `ghostrun.expect_tool_calls(...)`:
   `called`, `did_not_call`, `called_once`, `call_count`, `called_with` (subset
   match). Normalizes OpenAI, Anthropic, and plain tool-call shapes.
 - **Provider coverage** extended from 3 to 16 hosts (Gemini, Vertex, Bedrock,
@@ -139,8 +139,8 @@ All notable changes to GenTest are documented here. The format is based on
   removes its own stack frame.
 
 ### Changed
-- `CacheMiss` now lives in `gentest.cache` and covers both HTTP and judge-verdict
-  misses. Still importable from `gentest` and `gentest.interceptor`.
+- `CacheMiss` now lives in `ghostrun.cache` and covers both HTTP and judge-verdict
+  misses. Still importable from `ghostrun` and `ghostrun.interceptor`.
 - The example's judge-availability guard no longer probes Ollama in `replay`
   mode, where no model is invoked.
 
@@ -149,23 +149,23 @@ All notable changes to GenTest are documented here. The format is based on
 Initial Phase 1 MVP.
 
 ### Added
-- **Deterministic record/replay** via `@gentest.record` and the
-  `gentest.recording()` context manager. Intercepts LLM HTTP traffic at the
+- **Deterministic record/replay** via `@ghostrun.record` and the
+  `ghostrun.recording()` context manager. Intercepts LLM HTTP traffic at the
   httpx transport layer (covers the OpenAI and Anthropic SDKs) and caches
-  responses to `.gentest_cache/`. Modes: `auto`, `record`, `replay`.
-- **Semantic assertions** via `gentest.expect(text)`:
+  responses to `.ghostrun_cache/`. Modes: `auto`, `record`, `replay`.
+- **Semantic assertions** via `ghostrun.expect(text)`:
   `contains_intent`, `does_not_contain_intent`, `tone_is`, `matches`, plus
   deterministic `contains`, `does_not_contain`, `is_valid_json`. All chainable.
 - **LLM-as-a-judge backends**: local `ollama` (default, private) with actionable
   errors when the daemon or model is missing, and an offline `echo` heuristic
   stub for CI.
-- **Pytest plugin** (auto-registered): `--gentest-record`, `--gentest-replay`,
-  `--gentest-judge` flags and a `gentest_record` fixture.
-- **Configuration** via `.gentest.yaml`, `GENTEST_*` environment variables, or
-  `gentest.configure(...)`, resolved defaults → file → env.
+- **Pytest plugin** (auto-registered): `--ghostrun-record`, `--ghostrun-replay`,
+  `--ghostrun-judge` flags and a `ghostrun_record` fixture.
+- **Configuration** via `.ghostrun.yaml`, `ghostrun_*` environment variables, or
+  `ghostrun.configure(...)`, resolved defaults → file → env.
 - Documentation (`README.md`, `doc/prd.md`), a runnable `examples/` app with a
   pre-recorded cache, and an offline test suite.
 
 ### Notes
-- The assertion entry point is `gentest.expect(...)`, not `gentest.assert(...)`
+- The assertion entry point is `ghostrun.expect(...)`, not `ghostrun.assert(...)`
   — `assert` is a reserved Python keyword and cannot be a function name.

@@ -1,15 +1,15 @@
-# GenTest vs. the field — comparison research
+# ghostrun vs. the field — comparison research
 
 **Last updated:** 2026-07-24
 **Method:** live web research (see Sources at the end of each section). This is
-not a marketing comparison — it's written to find out honestly where GenTest
+not a marketing comparison — it's written to find out honestly where ghostrun
 is ahead, where it's behind, and where it's simply duplicating existing work.
 
 ---
 
 ## TL;DR
 
-GenTest's individual pieces all have prior art, some of it more mature and
+ghostrun's individual pieces all have prior art, some of it more mature and
 better-funded. Its actual differentiation is a **specific combination** nobody
 else ships as one package:
 
@@ -30,7 +30,7 @@ see below.
 
 | Tool | Category | License / OSS | Ecosystem | Record/replay of the **app's own** LLM calls | Judge-verdict caching | Structured regression diff (regression/fix/added/removed) | Native to pytest | Maturity |
 |---|---|---|---|---|---|---|---|---|
-| **GenTest** | Testing framework | MIT, OSS | Python | ✅ transport-level, any SDK, zero code change | ✅ + not-run/removed distinction | ✅ `gentest diff` with output-drift similarity | ✅ native plugin | New (this project) |
+| **ghostrun** | Testing framework | MIT, OSS | Python | ✅ transport-level, any SDK, zero code change | ✅ + not-run/removed distinction | ✅ `ghostrun diff` with output-drift similarity | ✅ native plugin | New (this project) |
 | **DeepEval** | Testing framework | OSS (Confident AI has a paid cloud tier) | Python | ❌ not documented — you already have the output; it caches the *grading*, not the app's provider call | ✅ `-c` flag caches metric results per identical test case | ❌ not documented | ✅ `assert_test()`, `deepeval test run` | Mature, active, described as "the closest thing to pytest for LLMs" |
 | **Promptfoo** | Prompt/model comparison + red-teaming | OSS, 23k+ ⭐ | Node.js/CLI, YAML config | ❌ caches its *own* evaluation-matrix results for cost, not a generic transport-level replay of arbitrary app code | Partial — caches eval results, not framed as "judge verdict" specifically | ⚠️ marketed as having "regression tracking" but docs describe pass/fail re-evaluation, not a structured diff report | ❌ separate CLI, not a pytest plugin | Mature, very active, 10M+-user production pedigree claimed |
 | **Ragas** | RAG evaluation metrics | OSS | Python | ❌ | ❌ | ❌ | Integrable, not native | Mature; narrow scope (RAG metrics only) |
@@ -49,45 +49,45 @@ Legend: ✅ confirmed via docs/README · ⚠️ marketed but not confirmed in do
 
 ---
 
-## Where GenTest is genuinely ahead
+## Where ghostrun is genuinely ahead
 
 - **Zero-code-change replay of the actual application under test.** DeepEval,
   Promptfoo, Ragas, and the observability platforms all assume you bring the
   *output* to them (a test case, a dataset row, a logged trace). None of them
   intercept your app's own live HTTP calls to OpenAI/Anthropic/etc.
-  transparently. GenTest's httpx-transport interception means you wrap
-  existing code with `@gentest.record` and it works, regardless of which SDK
+  transparently. ghostrun's httpx-transport interception means you wrap
+  existing code with `@ghostrun.record` and it works, regardless of which SDK
   or provider you used to write it — no adapter, no config file.
 - **LangChain-agnostic.** vcr-langchain and langchain-replay — the two tools
-  closest to GenTest's replay mechanism — are explicitly coupled to LangChain
-  and admit incomplete coverage. GenTest works at the HTTP layer underneath
+  closest to ghostrun's replay mechanism — are explicitly coupled to LangChain
+  and admit incomplete coverage. ghostrun works at the HTTP layer underneath
   any SDK.
 - **Structured regression diffing with a `not-evaluated` state.** Nothing
   found distinguishes "this assertion was deleted" from "this assertion never
   ran because the test aborted earlier" — a real reporting bug I found and
-  fixed in GenTest's own implementation (see CHANGELOG). This is a small but
+  fixed in ghostrun's own implementation (see CHANGELOG). This is a small but
   real quality difference.
 - **All of this lives inside pytest**, not a separate CLI/YAML/dataset
   workflow — closer to the everyday habits of a Python developer than
   Promptfoo's Node/YAML model.
 
-## Where GenTest is duplicating prior art (be honest about this in any paper or pitch)
+## Where ghostrun is duplicating prior art (be honest about this in any paper or pitch)
 
 - **"Cache judge verdicts."** DeepEval already ships this (`-c` flag, disk-backed,
-  keyed on identical test cases). GenTest's version adds a `(backend, model,
+  keyed on identical test cases). ghostrun's version adds a `(backend, model,
   text, criterion)` key and a `replay`/`record`/`auto` mode distinction, which
   is more precise, but the *concept* is not new.
 - **"Record/replay LLM HTTP calls."** vcr-langchain, langchain-replay, and
-  pytest-recording/VCR.py (generic) all predate this. GenTest's contribution
+  pytest-recording/VCR.py (generic) all predate this. ghostrun's contribution
   here is breadth (provider-agnostic, not LangChain-locked) and integration
   quality, not the underlying idea.
 - **"LLM-as-judge semantic assertions in pytest."** DeepEval's `assert_test()`
   with G-Eval-style metrics is materially the same pitch, more mature, with
-  50+ pre-built metrics vs. GenTest's five.
+  50+ pre-built metrics vs. ghostrun's five.
 
 ## What's still a genuinely open question (see [prd.md](prd.md) and the literature review in this conversation)
 
-Whether **caching a single judge verdict** (GenTest's and DeepEval's shared
+Whether **caching a single judge verdict** (ghostrun's and DeepEval's shared
 default) is a safe engineering tradeoff given the now-published judge flip-rate
 literature (~13.6% mean flip rate per "The Coin Flip Judge?", 2606.13685) is
 *not* answered by either tool's documentation, or by the flip-rate papers

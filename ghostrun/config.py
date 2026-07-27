@@ -1,9 +1,9 @@
-"""Configuration loading for GenTest.
+"""Configuration loading for ghostrun.
 
 Resolution order (lowest to highest precedence):
   1. Built-in defaults
-  2. ``.gentest.yaml`` found by walking up from the current working directory
-  3. Environment variables (``GENTEST_*``)
+  2. ``.ghostrun.yaml`` found by walking up from the current working directory
+  3. Environment variables (``ghostrun_*``)
 
 Nothing here talks to the network; a missing config file is fine.
 """
@@ -17,8 +17,8 @@ from typing import Optional
 
 import yaml
 
-CONFIG_FILENAME = ".gentest.yaml"
-CACHE_DIRNAME = ".gentest_cache"
+CONFIG_FILENAME = ".ghostrun.yaml"
+CACHE_DIRNAME = ".ghostrun_cache"
 
 # Recording modes for the interceptor.
 #   "auto"   -> replay from cache if present, otherwise record (default)
@@ -52,7 +52,7 @@ class Config:
 
 
 def find_config_file(start: Optional[Path] = None) -> Optional[Path]:
-    """Walk up from ``start`` (cwd by default) looking for ``.gentest.yaml``."""
+    """Walk up from ``start`` (cwd by default) looking for ``.ghostrun.yaml``."""
     here = (start or Path.cwd()).resolve()
     for directory in (here, *here.parents):
         candidate = directory / CONFIG_FILENAME
@@ -93,22 +93,22 @@ def _from_file(path: Path) -> dict:
 def _from_env() -> dict:
     env = os.environ
     out: dict = {}
-    if "GENTEST_MODE" in env:
-        out["mode"] = env["GENTEST_MODE"]
-    if "GENTEST_CACHE_DIR" in env:
-        out["cache_dir"] = env["GENTEST_CACHE_DIR"]
-    if "GENTEST_JUDGE" in env:
-        out["judge"] = env["GENTEST_JUDGE"]
-    if "GENTEST_JUDGE_MODEL" in env:
-        out["judge_model"] = env["GENTEST_JUDGE_MODEL"]
-    if "GENTEST_JUDGE_BASE_URL" in env:
-        out["judge_base_url"] = env["GENTEST_JUDGE_BASE_URL"]
-    if "GENTEST_JUDGE_TIMEOUT" in env:
-        out["judge_timeout"] = float(env["GENTEST_JUDGE_TIMEOUT"])
-    if "GENTEST_JUDGE_CACHE" in env:
-        out["judge_cache"] = env["GENTEST_JUDGE_CACHE"].strip().lower() not in ("0", "false", "no")
-    if "GENTEST_JUDGE_VOTES" in env:
-        out["judge_votes"] = int(env["GENTEST_JUDGE_VOTES"])
+    if "ghostrun_MODE" in env:
+        out["mode"] = env["ghostrun_MODE"]
+    if "ghostrun_CACHE_DIR" in env:
+        out["cache_dir"] = env["ghostrun_CACHE_DIR"]
+    if "ghostrun_JUDGE" in env:
+        out["judge"] = env["ghostrun_JUDGE"]
+    if "ghostrun_JUDGE_MODEL" in env:
+        out["judge_model"] = env["ghostrun_JUDGE_MODEL"]
+    if "ghostrun_JUDGE_BASE_URL" in env:
+        out["judge_base_url"] = env["ghostrun_JUDGE_BASE_URL"]
+    if "ghostrun_JUDGE_TIMEOUT" in env:
+        out["judge_timeout"] = float(env["ghostrun_JUDGE_TIMEOUT"])
+    if "ghostrun_JUDGE_CACHE" in env:
+        out["judge_cache"] = env["ghostrun_JUDGE_CACHE"].strip().lower() not in ("0", "false", "no")
+    if "ghostrun_JUDGE_VOTES" in env:
+        out["judge_votes"] = int(env["ghostrun_JUDGE_VOTES"])
     return out
 
 

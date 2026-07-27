@@ -1,13 +1,13 @@
-"""`gentest doctor` and `OllamaJudge.is_available()` -- offline, no real
+"""`ghostrun doctor` and `OllamaJudge.is_available()` -- offline, no real
 Ollama or network required. All Ollama-backend checks use httpx.MockTransport
 so this suite stays hermetic."""
 
 import httpx
 import pytest
 
-from gentest import config as gt_config
-from gentest.cli import main
-from gentest.judge.ollama import OllamaJudge
+from ghostrun import config as gt_config
+from ghostrun.cli import main
+from ghostrun.judge.ollama import OllamaJudge
 
 
 def _client(handler):
@@ -54,18 +54,18 @@ def test_is_available_false_on_bad_status(monkeypatch):
     assert "500" in reason
 
 
-# --- gentest doctor CLI ------------------------------------------------------
+# --- ghostrun doctor CLI ------------------------------------------------------
 
 @pytest.fixture(autouse=True)
 def _reset(monkeypatch, tmp_path):
-    monkeypatch.setenv("GENTEST_CACHE_DIR", str(tmp_path / "cache"))
+    monkeypatch.setenv("ghostrun_CACHE_DIR", str(tmp_path / "cache"))
     gt_config.reset_config()
     yield
     gt_config.reset_config()
 
 
 def test_doctor_echo_judge_passes_without_network(monkeypatch, capsys):
-    monkeypatch.setenv("GENTEST_JUDGE", "echo")
+    monkeypatch.setenv("ghostrun_JUDGE", "echo")
     gt_config.reset_config()
     rc = main(["doctor"])
     out = capsys.readouterr().out
@@ -75,7 +75,7 @@ def test_doctor_echo_judge_passes_without_network(monkeypatch, capsys):
 
 
 def test_doctor_reports_cache_dir_and_httpx_ok(monkeypatch, capsys):
-    monkeypatch.setenv("GENTEST_JUDGE", "echo")
+    monkeypatch.setenv("ghostrun_JUDGE", "echo")
     gt_config.reset_config()
     main(["doctor"])
     out = capsys.readouterr().out
@@ -84,8 +84,8 @@ def test_doctor_reports_cache_dir_and_httpx_ok(monkeypatch, capsys):
 
 
 def test_doctor_fails_when_ollama_unreachable(monkeypatch, capsys):
-    monkeypatch.setenv("GENTEST_JUDGE", "ollama")
-    monkeypatch.setenv("GENTEST_JUDGE_BASE_URL", "http://localhost:1")
+    monkeypatch.setenv("ghostrun_JUDGE", "ollama")
+    monkeypatch.setenv("ghostrun_JUDGE_BASE_URL", "http://localhost:1")
     gt_config.reset_config()
 
     def raise_connect_error(url, timeout):
@@ -100,8 +100,8 @@ def test_doctor_fails_when_ollama_unreachable(monkeypatch, capsys):
 
 
 def test_doctor_prints_resolved_config(monkeypatch, capsys):
-    monkeypatch.setenv("GENTEST_JUDGE", "echo")
-    monkeypatch.setenv("GENTEST_JUDGE_VOTES", "3")
+    monkeypatch.setenv("ghostrun_JUDGE", "echo")
+    monkeypatch.setenv("ghostrun_JUDGE_VOTES", "3")
     gt_config.reset_config()
     main(["doctor"])
     out = capsys.readouterr().out
@@ -109,13 +109,13 @@ def test_doctor_prints_resolved_config(monkeypatch, capsys):
 
 
 def test_doctor_unwritable_cache_dir_fails(monkeypatch, capsys):
-    monkeypatch.setenv("GENTEST_JUDGE", "echo")
+    monkeypatch.setenv("ghostrun_JUDGE", "echo")
     # Point cache_dir at a path that cannot be created (a file, not a dir, as
     # an existing path component -- mkdir must fail with a real OSError).
     import tempfile
     with tempfile.NamedTemporaryFile(delete=False) as f:
         blocked_file = f.name
-    monkeypatch.setenv("GENTEST_CACHE_DIR", blocked_file + "/subdir")
+    monkeypatch.setenv("ghostrun_CACHE_DIR", blocked_file + "/subdir")
     gt_config.reset_config()
 
     rc = main(["doctor"])

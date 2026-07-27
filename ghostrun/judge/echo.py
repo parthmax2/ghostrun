@@ -1,7 +1,7 @@
-"""Offline stub judge for CI and GenTest's own test suite.
+"""Offline stub judge for CI and ghostrun's own test suite.
 
 Uses cheap deterministic heuristics instead of a model, so tests never depend on
-Ollama being installed. Selected via ``judge: echo`` / ``GENTEST_JUDGE=echo``.
+Ollama being installed. Selected via ``judge: echo`` / ``ghostrun_JUDGE=echo``.
 The heuristic: PASS when every whitespace-delimited word of the criterion (minus
 a small stoplist) appears as a substring of the text, case-insensitively.
 """

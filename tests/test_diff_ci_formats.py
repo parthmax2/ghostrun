@@ -1,7 +1,7 @@
 """CI-friendly diff output: GitHub PR comment markdown and JUnit XML.
 
 These are what let a prompt regression show up inline in a pull request or a
-CI dashboard, instead of requiring someone to remember to run `gentest diff`
+CI dashboard, instead of requiring someone to remember to run `ghostrun diff`
 locally.
 """
 
@@ -9,10 +9,10 @@ import xml.etree.ElementTree as ET
 
 import pytest
 
-from gentest import runlog
-from gentest.cli import main
-from gentest.regression import compare, render_github_comment, render_junit
-from gentest.runlog import AssertionRecord, RunLog
+from ghostrun import runlog
+from ghostrun.cli import main
+from ghostrun.regression import compare, render_github_comment, render_junit
+from ghostrun.runlog import AssertionRecord, RunLog
 
 
 def make_run(name, tests):

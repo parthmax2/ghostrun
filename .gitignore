@@ -1,8 +1,8 @@
-# GenTest cache (recorded LLM responses live here; usually committed intentionally
-# per-project, e.g. examples/.gentest_cache/). The root-level one is where ad-hoc
-# local runs of the test suite / gentest doctor happen to write -- not intentional
+# ghostrun cache (recorded LLM responses live here; usually committed intentionally
+# per-project, e.g. examples/.ghostrun_cache/). The root-level one is where ad-hoc
+# local runs of the test suite / ghostrun doctor happen to write -- not intentional
 # content, so it's ignored specifically at the root rather than everywhere.
-/.gentest_cache/
+/.ghostrun_cache/
 
 __pycache__/
 *.py[cod]
@@ -12,3 +12,6 @@ dist/
 .pytest_cache/
 .venv/
 site/
+
+doc/prd.md
+doc/task.md

@@ -4,10 +4,10 @@ import json
 
 import pytest
 
-from gentest import runlog
-from gentest.cli import main
-from gentest.regression import compare, render_text
-from gentest.runlog import AssertionRecord, RunLog
+from ghostrun import runlog
+from ghostrun.cli import main
+from ghostrun.regression import compare, render_text
+from ghostrun.runlog import AssertionRecord, RunLog
 
 
 def make_run(name, tests):

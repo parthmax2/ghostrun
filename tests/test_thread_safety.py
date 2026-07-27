@@ -6,8 +6,8 @@ import threading
 import httpx
 import pytest
 
-from gentest.cache import Cache
-from gentest.interceptor import Interceptor, UnsupportedHttpx, _check_httpx_supported
+from ghostrun.cache import Cache
+from ghostrun.interceptor import Interceptor, UnsupportedHttpx, _check_httpx_supported
 
 URL = "https://api.openai.com/v1/chat/completions"
 

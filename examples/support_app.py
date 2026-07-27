@@ -2,11 +2,11 @@
 
 This stands in for real user code. It uses httpx to POST to the OpenAI
 chat-completions endpoint exactly like the official SDK does under the hood, so
-GenTest's transport-layer interceptor records and replays it transparently.
+ghostrun's transport-layer interceptor records and replays it transparently.
 
 In a real project you'd call `openai.OpenAI().chat.completions.create(...)`; the
 raw httpx call here keeps the example dependency-free while exercising the same
-code path GenTest hooks.
+code path ghostrun hooks.
 """
 
 from __future__ import annotations

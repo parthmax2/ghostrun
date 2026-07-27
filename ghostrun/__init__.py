@@ -1,14 +1,14 @@
-"""GenTest: pytest for LLMs — deterministic record/replay and semantic assertions.
+"""ghostrun: pytest for LLMs — deterministic record/replay and semantic assertions.
 
 Local-first, privacy-first. No SaaS, no data leaves your machine by default.
 
-    import gentest
+    import ghostrun
 
-    @gentest.record(model="gpt-4o-mini")
+    @ghostrun.record(model="gpt-4o-mini")
     def test_reply():
         reply = generate_reply("Where is my refund?")
-        gentest.expect(reply).contains_intent("apology")
-        gentest.expect(reply).tone_is("empathetic")
+        ghostrun.expect(reply).contains_intent("apology")
+        ghostrun.expect(reply).tone_is("empathetic")
 """
 
 from __future__ import annotations
@@ -30,7 +30,7 @@ __version__ = "0.1.0"
 def configure(**kwargs) -> Config:
     """Override configuration for the current process. Returns the new config.
 
-    Example: ``gentest.configure(judge="echo")``.
+    Example: ``ghostrun.configure(judge="echo")``.
     """
     cfg = get_config().with_overrides(**kwargs)
     set_config(cfg)

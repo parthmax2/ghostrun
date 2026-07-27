@@ -1,4 +1,4 @@
-# Contributing to GenTest
+# Contributing to ghostrun
 
 Thanks for considering it. This project is young and the codebase is small
 enough to read in an afternoon — that's intentional; see
@@ -7,8 +7,8 @@ enough to read in an afternoon — that's intentional; see
 ## Setup
 
 ```bash
-git clone https://github.com/parthmax2/gentest.git
-cd gentest
+git clone https://github.com/parthmax2/ghostrun.git
+cd ghostrun
 pip install -e ".[dev]"
 pytest            # 138 tests, runs fully offline in a couple of seconds
 ```
@@ -21,7 +21,7 @@ real Ollama judge when available and skips gracefully otherwise.
 
 - `pytest tests -q` must pass.
 - If you touch the interceptor, cache, or judge-caching logic, also run under
-  parallel workers: `GENTEST_JUDGE=echo pytest tests -q -n 4` — several real
+  parallel workers: `ghostrun_JUDGE=echo pytest tests -q -n 4` — several real
   bugs in this project (cross-thread cache contamination, torn writes) were
   only found this way, not by the sequential suite.
 - New behavior needs a test that fails without the fix. This project has
@@ -37,14 +37,14 @@ real Ollama judge when available and skips gracefully otherwise.
 
 | Area | File |
 | :--- | :--- |
-| HTTP record/replay | `gentest/interceptor.py`, `gentest/cache.py` |
-| Semantic assertions | `gentest/assertions.py` |
-| Judge backends | `gentest/judge/` |
-| Secret redaction | `gentest/redact.py` |
-| Prompt regression diffing | `gentest/regression.py`, `gentest/runlog.py` |
-| CLI (`gentest list/show/diff/doctor/init`) | `gentest/cli.py`, `gentest/scaffold.py` |
-| Pytest plugin/flags | `gentest/plugin.py` |
-| Configuration | `gentest/config.py` |
+| HTTP record/replay | `ghostrun/interceptor.py`, `ghostrun/cache.py` |
+| Semantic assertions | `ghostrun/assertions.py` |
+| Judge backends | `ghostrun/judge/` |
+| Secret redaction | `ghostrun/redact.py` |
+| Prompt regression diffing | `ghostrun/regression.py`, `ghostrun/runlog.py` |
+| CLI (`ghostrun list/show/diff/doctor/init`) | `ghostrun/cli.py`, `ghostrun/scaffold.py` |
+| Pytest plugin/flags | `ghostrun/plugin.py` |
+| Configuration | `ghostrun/config.py` |
 
 ## Reporting a bug
 
@@ -55,7 +55,7 @@ concurrency bug found in this project so far.
 
 ## Project philosophy (so PRs align with it)
 
-- **Minimal, not comprehensive.** GenTest deliberately ships ~5 semantic
+- **Minimal, not comprehensive.** ghostrun deliberately ships ~5 semantic
   assertion types where DeepEval ships 50+ — see
   [doc/comparison.md](doc/comparison.md) for why breadth isn't the goal here.
 - **Measure, don't assert.** Claims about judge accuracy or caching behavior

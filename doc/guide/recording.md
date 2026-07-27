@@ -1,11 +1,11 @@
 # Recording and replay
 
-GenTest intercepts at the **HTTP transport layer** (httpx), which both the OpenAI
+ghostrun intercepts at the **HTTP transport layer** (httpx), which both the OpenAI
 and Anthropic SDKs sit on top of. It does *not* monkey-patch the SDKs, so it
 survives SDK upgrades. Only requests to known provider hosts are cached; all
 other traffic passes through untouched.
 
-Modes (via `GENTEST_MODE` or `.gentest.yaml`):
+Modes (via `ghostrun_MODE` or `.ghostrun.yaml`):
 
 | Mode | Behavior |
 | :--- | :--- |
@@ -20,8 +20,8 @@ prompt change produces a reviewable diff.
 
 Caching the LLM response but re-grading it on every run would leave your suite
 slow *and* non-deterministic — a stochastic judge can flip a green test to red
-with no code change. So GenTest records judge verdicts under
-`.gentest_cache/judge/` with the same `auto` / `record` / `replay` semantics.
+with no code change. So ghostrun records judge verdicts under
+`.ghostrun_cache/judge/` with the same `auto` / `record` / `replay` semantics.
 
 Verdicts are keyed on **judge backend + model + text + criterion**, so changing
 the judge model or editing an assertion correctly forces a re-grade. Each stored
@@ -38,8 +38,8 @@ test passes:
 ```
 
 In the bundled example this takes a run from **23.3s to 2.7s**, and in
-`--gentest-replay` no model is invoked at all. Disable with `judge.cache: false`
-or `GENTEST_JUDGE_CACHE=false` if you want a live grade every run.
+`--ghostrun-replay` no model is invoked at all. Disable with `judge.cache: false`
+or `ghostrun_JUDGE_CACHE=false` if you want a live grade every run.
 
 ## Providers
 
@@ -50,7 +50,7 @@ Cohere, OpenRouter, Groq, Together, Fireworks, DeepSeek, xAI, Perplexity.
 Self-hosted gateway or something not listed?
 
 ```python
-import gentest.interceptor as gi
+import ghostrun.interceptor as gi
 gi.PROVIDER_HOSTS += ("llm.internal.corp",)
 ```
 

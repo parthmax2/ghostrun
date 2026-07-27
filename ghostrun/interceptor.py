@@ -6,7 +6,7 @@ than monkey-patching the SDKs (brittle across releases), we swap httpx's
 
 We patch ``httpx.Client._transport_for_url`` and the async equivalent so that any
 client created by any SDK (or by user code) transparently routes through our
-wrapping transport while GenTest is active. The wrapper only intercepts hosts we
+wrapping transport while ghostrun is active. The wrapper only intercepts hosts we
 recognize as LLM providers; everything else passes straight through untouched.
 """
 
@@ -23,7 +23,7 @@ from .cache import Cache, CachedResponse, CacheMiss, request_key
 # request host keeps this resilient to regional subdomains.
 #
 # Extend at runtime for self-hosted gateways or providers not listed here:
-#     gentest.interceptor.PROVIDER_HOSTS += ("llm.internal.corp",)
+#     ghostrun.interceptor.PROVIDER_HOSTS += ("llm.internal.corp",)
 PROVIDER_HOSTS = (
     "api.openai.com",
     "api.anthropic.com",
@@ -72,7 +72,7 @@ class _RecordingTransport(httpx.BaseTransport):
         if self._mode == "replay":
             raise CacheMiss(
                 f"No cached response for {request.method} {request.url} "
-                f"(key {key}). Re-run with GENTEST_MODE=record to capture it."
+                f"(key {key}). Re-run with ghostrun_MODE=record to capture it."
             )
 
         response = self._inner.handle_request(request)
@@ -102,7 +102,7 @@ class _AsyncRecordingTransport(httpx.AsyncBaseTransport):
         if self._mode == "replay":
             raise CacheMiss(
                 f"No cached response for {request.method} {request.url} "
-                f"(key {key}). Re-run with GENTEST_MODE=record to capture it."
+                f"(key {key}). Re-run with ghostrun_MODE=record to capture it."
             )
 
         response = await self._inner.handle_async_request(request)
@@ -132,7 +132,7 @@ def _to_response(cached: CachedResponse) -> httpx.Response:
 
 
 class UnsupportedHttpx(RuntimeError):
-    """httpx no longer exposes the hook GenTest patches."""
+    """httpx no longer exposes the hook ghostrun patches."""
 
 
 def _check_httpx_supported() -> None:
@@ -146,7 +146,7 @@ def _check_httpx_supported() -> None:
         if not hasattr(cls, "_transport_for_url"):
             raise UnsupportedHttpx(
                 f"This httpx version ({httpx.__version__}) does not expose "
-                f"{cls.__name__}._transport_for_url, which GenTest uses to "
+                f"{cls.__name__}._transport_for_url, which ghostrun uses to "
                 f"intercept LLM calls. Pin httpx<0.29 or file an issue."
             )
 

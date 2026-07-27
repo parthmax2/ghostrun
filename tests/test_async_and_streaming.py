@@ -7,8 +7,8 @@ import json
 
 import httpx
 
-from gentest.cache import Cache
-from gentest.interceptor import Interceptor
+from ghostrun.cache import Cache
+from ghostrun.interceptor import Interceptor
 
 URL = "https://api.openai.com/v1/chat/completions"
 

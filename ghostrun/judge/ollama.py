@@ -29,7 +29,7 @@ class OllamaJudge:
     def is_available(self, probe_timeout: float = 2.0) -> Tuple[bool, str]:
         """Cheap readiness check: is the daemon up and the model pulled?
 
-        Used by ``gentest doctor`` and by anything (like the bundled example's
+        Used by ``ghostrun doctor`` and by anything (like the bundled example's
         conftest) that wants to skip gracefully instead of raising. Uses a
         short timeout by default since this is meant to fail fast, not wait
         for the grading timeout.

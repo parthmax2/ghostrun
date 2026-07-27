@@ -28,7 +28,7 @@ subtle tone and sarcasm. Practical implications:
 - **For deterministic properties, prefer the deterministic assertions above**
   (`contains`, `is_valid_json`, tool-call checks) — they're exact and instant.
 - **Need higher fidelity?** Point `judge_model` at a larger local model or a
-  cloud model in `.gentest.yaml`. Accuracy scales with the judge you choose.
+  cloud model in `.ghostrun.yaml`. Accuracy scales with the judge you choose.
 
 Verdicts are cached (see [recording.md](recording.md)), so a suite is
 deterministic run-to-run even though the underlying model is stochastic.
@@ -47,7 +47,7 @@ judge:
 ```
 
 ```
-gentest.expect(reply).tone_is("empathetic")
+ghostrun.expect(reply).tone_is("empathetic")
 # on failure: "[4/5 agreed] the text does not convey warmth"
 ```
 
@@ -82,7 +82,7 @@ Most agent bugs are wrong-tool or wrong-argument bugs, not bad prose. These are
 deterministic — no judge, no model:
 
 ```python
-gentest.expect_tool_calls(response.choices[0].message.tool_calls) \
+ghostrun.expect_tool_calls(response.choices[0].message.tool_calls) \
     .called_once("search_orders") \
     .called_with("search_orders", order_id="A123") \
     .did_not_call("issue_refund")

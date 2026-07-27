@@ -1,6 +1,6 @@
 """Redaction of secrets before anything is written to the cache.
 
-The README encourages committing `.gentest_cache/` so prompt changes show up as
+The README encourages committing `.ghostrun_cache/` so prompt changes show up as
 reviewable diffs — which makes it a genuine leak risk if raw payloads land on
 disk. This module scrubs credentials on the way in.
 
