@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 180" width="640" height="180">
+  <defs>
+    <filter id="glow-dark" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="6" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+  </defs>
+  <text
+    x="320" y="120"
+    text-anchor="middle"
+    font-family="Georgia, 'Iowan Old Style', 'Palatino Linotype', 'Times New Roman', serif"
+    font-style="italic"
+    font-weight="700"
+    font-size="92"
+    fill="#eef0ff"
+    filter="url(#glow-dark)"
+  >ghostrun</text>
+</svg>
