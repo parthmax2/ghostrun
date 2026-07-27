@@ -7,6 +7,7 @@
     gentest diff v1 v2 --format github-comment -o comment.md   # for a PR bot
     gentest diff v1 v2 --format junit -o gentest.xml            # for CI dashboards
     gentest doctor                   # diagnose config/cache/httpx/judge setup
+    gentest init                     # scaffold a working first test in one command
 
 Test execution itself stays in pytest — this CLI only inspects what a run
 recorded.
@@ -15,12 +16,13 @@ recorded.
 from __future__ import annotations
 
 import argparse
+import importlib.util
 import json
 import sys
 from pathlib import Path
 from typing import List, Optional
 
-from . import runlog
+from . import runlog, scaffold
 from .config import get_config
 from .regression import compare, render_github_comment, render_junit, render_text
 
@@ -171,6 +173,40 @@ def cmd_doctor(args) -> int:
     return 0 if ok_all else 1
 
 
+def cmd_init(args) -> int:
+    target_dir = Path(args.dir or ".").resolve()
+    target_dir.mkdir(parents=True, exist_ok=True)
+
+    config_path = target_dir / ".gentest.yaml"
+    test_path = target_dir / args.filename
+
+    existing = [p for p in (config_path, test_path) if p.exists()]
+    if existing and not args.force:
+        names = ", ".join(p.name for p in existing)
+        print(f"error: {names} already exist(s) in {target_dir}. "
+              f"Re-run with --force to overwrite.", file=sys.stderr)
+        return 1
+
+    sdk = scaffold.detect_sdk()
+    config_path.write_text(scaffold.render_config(judge_type=args.judge), encoding="utf-8")
+    test_path.write_text(scaffold.render_test_file(sdk, args.filename), encoding="utf-8")
+
+    print(f"Created {config_path.relative_to(target_dir) if target_dir != Path('.').resolve() else config_path.name}")
+    print(f"Created {test_path.name}  (detected SDK: {sdk})")
+    print()
+    print("Next steps:")
+    if args.judge == "ollama":
+        print("  1. ollama pull llama3.2:3b")
+    step = 2 if args.judge == "ollama" else 1
+    env_var = "OPENAI_API_KEY" if sdk != "anthropic" else "ANTHROPIC_API_KEY"
+    print(f"  {step}. export {env_var}=...  (for the first, recording run)")
+    print(f"  {step + 1}. pytest {args.filename}          # records + grades for real")
+    print(f"  {step + 2}. pytest {args.filename}          # instant, from cache")
+    print()
+    print("Run `gentest doctor` any time to check your setup.")
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="gentest",
@@ -213,6 +249,18 @@ def build_parser() -> argparse.ArgumentParser:
     p_doctor = sub.add_parser(
         "doctor", help="Diagnose a broken setup: config, cache dir, httpx, judge backend.")
     p_doctor.set_defaults(func=cmd_doctor)
+
+    p_init = sub.add_parser(
+        "init", help="Scaffold a working first test and .gentest.yaml in one command.")
+    p_init.add_argument("--dir", default=None,
+                        help="Directory to scaffold into (default: current directory).")
+    p_init.add_argument("--filename", default="test_gentest_example.py",
+                        help="Name of the generated test file.")
+    p_init.add_argument("--judge", choices=["ollama", "echo"], default="ollama",
+                        help="Judge backend to configure (default: ollama).")
+    p_init.add_argument("--force", action="store_true",
+                        help="Overwrite existing .gentest.yaml / test file.")
+    p_init.set_defaults(func=cmd_init)
 
     return parser
 

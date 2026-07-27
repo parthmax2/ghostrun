@@ -7,6 +7,35 @@ All notable changes to GenTest are documented here. The format is based on
 ## [Unreleased]
 
 ### Added
+- **`gentest init`** — scaffolds a working first test in one command. Detects
+  whether `openai` or `anthropic` is importable in the project and generates
+  a matching starter test (or a generic httpx-based one if neither is found),
+  plus a `.gentest.yaml`. Refuses to overwrite existing files without
+  `--force`. Verified end-to-end from an actual built wheel in a clean venv,
+  including the no-SDK fallback path.
+- **Real git history.** Initialized the repository (`git init` + first commit)
+  — previously all work in this project existed only as an uncommitted
+  working directory.
+- **PEP 561 typing marker** (`gentest/py.typed`) — the `Typing :: Typed`
+  classifier was added to `pyproject.toml` without this; a classifier
+  asserting something the package doesn't actually declare would have been a
+  false claim, caught before publishing rather than after.
+- **`llms.txt`** at the repo root, following the emerging llms.txt convention
+  for LLM-crawler-readable project summaries, linking to every doc page.
+- **Hosted documentation site** (`mkdocs.yml` + `.github/workflows/docs.yml`,
+  mkdocs-material, deploys to GitHub Pages on push to `main`). Verified with a
+  real `mkdocs build --strict` locally, which caught a broken link
+  (`configuration.md` pointed at `.gentest.yaml` via a relative path outside
+  the site's `docs_dir`) before it could ship.
+- **`CONTRIBUTING.md`** — setup, test requirements (including the parallel-run
+  requirement that has caught two real concurrency bugs in this project),
+  and where things live in the codebase.
+- **API reference** (`doc/guide/api-reference.md`) — every function, class,
+  exception, and config field in `gentest.__all__`.
+- **PyPI/SEO metadata**: expanded `keywords` and `classifiers` in
+  `pyproject.toml` for search discoverability, real project URLs (previously
+  a placeholder `github.com/gentest/gentest`), and PyPI/license/Python-version/
+  CI badges in the README.
 - **`gentest doctor`** — diagnoses a broken setup in one command: resolved
   configuration, httpx interceptor-hook compatibility, cache-directory
   writability, and (for the Ollama judge) whether the daemon is reachable and

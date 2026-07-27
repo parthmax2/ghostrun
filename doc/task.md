@@ -5,15 +5,21 @@ commit as the work itself, not afterwards.
 
 **Last updated:** 2026-07-24
 **Current version:** 0.1.0 (unreleased)
-**Test status:** 126 core tests passing, green under `pytest -n 4` (127 incl. examples) · [see verification](#verification-matrix)
-**Docs status:** restructured — README is now a landing page; deep-dives live
-in `doc/guide/` ([recording](guide/recording.md), [assertions](guide/assertions.md),
-[regression-tracking](guide/regression-tracking.md), [configuration](guide/configuration.md),
-[why-not-diy](guide/why-not-diy.md)). No hosted docs site yet — see Tier 1 below.
-**Package status:** builds clean, `twine check` PASSED, verified working install
-(import + `gentest` console script + pytest plugin auto-registration) in a
-fresh venv from the built wheel — **publish-ready, blocked only on your PyPI
-account/token**
+**Test status:** 138 core tests passing, green under `pytest -n 4` (139 incl. examples) · [see verification](#verification-matrix)
+**Repo status:** git initialized, first commit made. Remote is **not yet
+pushed** — `git init` and a local commit only; add a remote and `git push`
+yourself when ready.
+**Docs status:** README is a landing page; deep-dives live in `doc/guide/`
+(recording, assertions, regression-tracking, configuration, api-reference,
+why-not-diy). Hosted docs site is configured (`mkdocs.yml` +
+`.github/workflows/docs.yml`, builds clean under `mkdocs build --strict`) but
+**not yet live** — GitHub Pages needs the repo pushed and its Pages source set
+to "GitHub Actions" in repo settings (one-time, manual, needs repo admin
+access this session doesn't have). `llms.txt` added at the repo root.
+**Package status:** builds clean, `twine check` PASSED, verified working
+install (import + `gentest` console script + pytest plugin auto-registration,
+including `gentest init`'s no-SDK fallback) in a fresh venv from the built
+wheel — **publish-ready, blocked only on your PyPI account/token**
 **See also:** [`comparison.md`](comparison.md) — live competitive research vs. DeepEval, Promptfoo, Ragas, vcr-langchain, and others
 
 ---
@@ -175,14 +181,17 @@ Last full run — all green:
 
 | Scenario | Result |
 | :--- | :--- |
-| Core suite, isolated | 91 passed · 0.82s |
-| Core suite under `pytest -n 4` (xdist) | 91 passed |
+| Core suite, isolated | 138 passed · ~2.3s |
+| Core suite under `pytest -n 4` (xdist) | 138 passed |
 | Prompt regression tracking, end-to-end | regression + drift correctly detected, exit 1 |
-| Full repo (live Ollama judge) | 33 passed · 2.94s |
+| Full repo incl. examples (live Ollama judge) | 139 passed, 2 skipped (live smoke, no API key) |
 | Strict replay, judge endpoint **unreachable** | 1 passed · 0.45s |
-| `GENTEST_JUDGE=echo` | 32 passed, 1 skipped |
+| `GENTEST_JUDGE=echo` | passes, 1 skipped |
 | Ollama down, auto mode | 1 skipped (not failed) · 4.41s |
 | Python 3.9 syntax compatibility (AST) | clean |
+| `gentest init` from an actual built wheel, clean venv | works, incl. no-SDK fallback path |
+| `mkdocs build --strict` | clean (after fixing one broken relative link) |
+| `python -m build` + `twine check` | PASSED, `py.typed` and `scaffold.py` confirmed in wheel |
 
 ---
 
@@ -222,12 +231,27 @@ LangSmith, OpenAI Evals, Inspect AI, CacheSaver, pytest-recording/VCR.py).
       the adoption pitch a real number instead of a README claim
 - [x] **`gentest doctor`** — diagnoses config/httpx/cache-dir/judge reachability
       in one command with actionable fixes, not stack traces. Done this session.
+- [x] **`gentest init`** — scaffolds a working first test + `.gentest.yaml`,
+      detecting the installed LLM SDK (openai/anthropic/generic fallback).
+      Verified end-to-end from an actual built wheel in a clean venv, including
+      the fallback path. Done this session.
 - [x] **Documentation restructure** — README split into a landing page +
-      `doc/guide/` deep-dives; fixed a stale cross-link (majority-vote section
-      pointed at the wrong file for benchmark methodology). Still missing: a
-      real hosted docs site (GitHub Pages/mkdocs or ReadTheDocs) — right now
-      docs are invisible to search until someone's already on the repo. Needs
-      the repo to be public first (chicken-and-egg with the PyPI blocker).
+      `doc/guide/` deep-dives (incl. a new API reference); fixed a stale
+      cross-link (majority-vote section pointed at the wrong file for
+      benchmark methodology).
+- [x] **Hosted docs site configured** — `mkdocs.yml` + mkdocs-material +
+      `.github/workflows/docs.yml` deploying to GitHub Pages on push to
+      `main`. Verified with a real `mkdocs build --strict` (caught and fixed a
+      broken relative link before it could ship). **Not live yet** — needs the
+      repo pushed and Pages source set to "GitHub Actions" in repo settings,
+      a one-time manual step outside this session's access.
+- [x] **`llms.txt`** at the repo root (emerging LLM-crawler convention) and
+      expanded PyPI `keywords`/`classifiers`, real project URLs (was a
+      placeholder `github.com/gentest/gentest`), README badges, PEP 561
+      `py.typed` marker, and `CONTRIBUTING.md` — all for discoverability by
+      search engines, LLM crawlers, and human contributors respectively.
+- [x] **Git repository initialized** — first commit made locally. Not pushed
+      to a remote yet.
 
 **Tier 2 — metric breadth (DeepEval ships 50+, GenTest ships ~5):**
 - [ ] RAG faithfulness assertion (most-requested RAG metric)
@@ -255,6 +279,15 @@ LangSmith, OpenAI Evals, Inspect AI, CacheSaver, pytest-recording/VCR.py).
 
 ## Changelog for this document
 
+- **2026-07-24 (4)** — Git repository initialized (first local commit,
+  no remote pushed yet). Added `gentest init`, `gentest doctor`,
+  API reference, `llms.txt`, hosted-docs-site config (mkdocs-material +
+  GitHub Pages workflow, verified with a real strict build), `CONTRIBUTING.md`,
+  and SEO-relevant PyPI metadata (keywords, classifiers, real URLs, badges,
+  `py.typed`). Restructured README into a landing page. Core tests 117 → 138.
+  Two real bugs caught by actually running things rather than trusting the
+  code: a Windows-console Unicode crash in the PR-comment renderer, and a
+  broken relative link in the mkdocs build that only strict-mode caught.
 - **2026-07-24 (3)** — Phase 2 Feature 4 (prompt regression tracking) complete:
   run snapshots, comparison engine, `gentest` CLI. Core tests 67 → 91. Two
   reporting bugs found and fixed by end-to-end use (tests recording nothing were
