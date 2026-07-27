@@ -1,21 +1,12 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 180" width="640" height="180">
-  <defs>
-    <filter id="glow-light" x="-50%" y="-50%" width="200%" height="200%">
-      <feGaussianBlur stdDeviation="4" result="blur" />
-      <feMerge>
-        <feMergeNode in="blur" />
-        <feMergeNode in="SourceGraphic" />
-      </feMerge>
-    </filter>
-  </defs>
   <text
-    x="320" y="120"
+    x="320" y="115"
     text-anchor="middle"
-    font-family="Georgia, 'Iowan Old Style', 'Palatino Linotype', 'Times New Roman', serif"
-    font-style="italic"
-    font-weight="700"
-    font-size="92"
-    fill="#1c2340"
-    filter="url(#glow-light)"
-  >ghostrun</text>
+    font-family="-apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif"
+    font-style="normal"
+    font-weight="800"
+    font-size="84"
+    letter-spacing="-1"
+    fill="#2a2f55"
+  >GhostRun</text>
 </svg>
