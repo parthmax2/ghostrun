@@ -3,7 +3,7 @@
 Resolution order (lowest to highest precedence):
   1. Built-in defaults
   2. ``.ghostrun.yaml`` found by walking up from the current working directory
-  3. Environment variables (``ghostrun_*``)
+  3. Environment variables (``GHOSTRUN_*``)
 
 Nothing here talks to the network; a missing config file is fine.
 """
@@ -93,22 +93,22 @@ def _from_file(path: Path) -> dict:
 def _from_env() -> dict:
     env = os.environ
     out: dict = {}
-    if "ghostrun_MODE" in env:
-        out["mode"] = env["ghostrun_MODE"]
-    if "ghostrun_CACHE_DIR" in env:
-        out["cache_dir"] = env["ghostrun_CACHE_DIR"]
-    if "ghostrun_JUDGE" in env:
-        out["judge"] = env["ghostrun_JUDGE"]
-    if "ghostrun_JUDGE_MODEL" in env:
-        out["judge_model"] = env["ghostrun_JUDGE_MODEL"]
-    if "ghostrun_JUDGE_BASE_URL" in env:
-        out["judge_base_url"] = env["ghostrun_JUDGE_BASE_URL"]
-    if "ghostrun_JUDGE_TIMEOUT" in env:
-        out["judge_timeout"] = float(env["ghostrun_JUDGE_TIMEOUT"])
-    if "ghostrun_JUDGE_CACHE" in env:
-        out["judge_cache"] = env["ghostrun_JUDGE_CACHE"].strip().lower() not in ("0", "false", "no")
-    if "ghostrun_JUDGE_VOTES" in env:
-        out["judge_votes"] = int(env["ghostrun_JUDGE_VOTES"])
+    if "GHOSTRUN_MODE" in env:
+        out["mode"] = env["GHOSTRUN_MODE"]
+    if "GHOSTRUN_CACHE_DIR" in env:
+        out["cache_dir"] = env["GHOSTRUN_CACHE_DIR"]
+    if "GHOSTRUN_JUDGE" in env:
+        out["judge"] = env["GHOSTRUN_JUDGE"]
+    if "GHOSTRUN_JUDGE_MODEL" in env:
+        out["judge_model"] = env["GHOSTRUN_JUDGE_MODEL"]
+    if "GHOSTRUN_JUDGE_BASE_URL" in env:
+        out["judge_base_url"] = env["GHOSTRUN_JUDGE_BASE_URL"]
+    if "GHOSTRUN_JUDGE_TIMEOUT" in env:
+        out["judge_timeout"] = float(env["GHOSTRUN_JUDGE_TIMEOUT"])
+    if "GHOSTRUN_JUDGE_CACHE" in env:
+        out["judge_cache"] = env["GHOSTRUN_JUDGE_CACHE"].strip().lower() not in ("0", "false", "no")
+    if "GHOSTRUN_JUDGE_VOTES" in env:
+        out["judge_votes"] = int(env["GHOSTRUN_JUDGE_VOTES"])
     return out
 
 

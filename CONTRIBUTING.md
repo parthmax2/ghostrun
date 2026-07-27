@@ -21,7 +21,7 @@ real Ollama judge when available and skips gracefully otherwise.
 
 - `pytest tests -q` must pass.
 - If you touch the interceptor, cache, or judge-caching logic, also run under
-  parallel workers: `ghostrun_JUDGE=echo pytest tests -q -n 4` — several real
+  parallel workers: `GHOSTRUN_JUDGE=echo pytest tests -q -n 4` — several real
   bugs in this project (cross-thread cache contamination, torn writes) were
   only found this way, not by the sequential suite.
 - New behavior needs a test that fails without the fix. This project has

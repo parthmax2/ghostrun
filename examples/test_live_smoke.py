@@ -3,9 +3,9 @@ that ghostrun records correctly from a *real* provider response, then replays it
 
 This is opt-in. It is skipped unless BOTH are true:
   * OPENAI_API_KEY is set
-  * ghostrun_LIVE=1
+  * GHOSTRUN_LIVE=1
 
-    OPENAI_API_KEY=sk-... ghostrun_LIVE=1 pytest examples/test_live_smoke.py -v
+    OPENAI_API_KEY=sk-... GHOSTRUN_LIVE=1 pytest examples/test_live_smoke.py -v
 
 What it proves, end to end:
   1. record  -> one real call to api.openai.com is captured to the cache
@@ -29,8 +29,8 @@ from ghostrun.cache import Cache
 from ghostrun.interceptor import CacheMiss, Interceptor
 
 pytestmark = pytest.mark.skipif(
-    not (os.environ.get("OPENAI_API_KEY") and os.environ.get("ghostrun_LIVE") == "1"),
-    reason="live test: set OPENAI_API_KEY and ghostrun_LIVE=1 to run",
+    not (os.environ.get("OPENAI_API_KEY") and os.environ.get("GHOSTRUN_LIVE") == "1"),
+    reason="live test: set OPENAI_API_KEY and GHOSTRUN_LIVE=1 to run",
 )
 
 CACHE_DIR = str(Path(__file__).with_name(".ghostrun_live_cache"))

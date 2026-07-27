@@ -72,7 +72,7 @@ class _RecordingTransport(httpx.BaseTransport):
         if self._mode == "replay":
             raise CacheMiss(
                 f"No cached response for {request.method} {request.url} "
-                f"(key {key}). Re-run with ghostrun_MODE=record to capture it."
+                f"(key {key}). Re-run with GHOSTRUN_MODE=record to capture it."
             )
 
         response = self._inner.handle_request(request)
@@ -102,7 +102,7 @@ class _AsyncRecordingTransport(httpx.AsyncBaseTransport):
         if self._mode == "replay":
             raise CacheMiss(
                 f"No cached response for {request.method} {request.url} "
-                f"(key {key}). Re-run with ghostrun_MODE=record to capture it."
+                f"(key {key}). Re-run with GHOSTRUN_MODE=record to capture it."
             )
 
         response = await self._inner.handle_async_request(request)

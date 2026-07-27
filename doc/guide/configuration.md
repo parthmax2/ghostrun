@@ -16,8 +16,8 @@ judge:
   cache: true
 ```
 
-Everything is overridable by environment variable (`ghostrun_MODE`,
-`ghostrun_JUDGE`, `ghostrun_JUDGE_MODEL`, `ghostrun_CACHE_DIR`, `ghostrun_JUDGE_VOTES`,
+Everything is overridable by environment variable (`GHOSTRUN_MODE`,
+`GHOSTRUN_JUDGE`, `GHOSTRUN_JUDGE_MODEL`, `GHOSTRUN_CACHE_DIR`, `GHOSTRUN_JUDGE_VOTES`,
 …) or at runtime via `ghostrun.configure(judge="echo")`. Resolution order:
 defaults → `.ghostrun.yaml` → environment variables → `ghostrun.configure(...)`.
 

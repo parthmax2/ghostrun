@@ -5,7 +5,7 @@ and Anthropic SDKs sit on top of. It does *not* monkey-patch the SDKs, so it
 survives SDK upgrades. Only requests to known provider hosts are cached; all
 other traffic passes through untouched.
 
-Modes (via `ghostrun_MODE` or `.ghostrun.yaml`):
+Modes (via `GHOSTRUN_MODE` or `.ghostrun.yaml`):
 
 | Mode | Behavior |
 | :--- | :--- |
@@ -39,7 +39,7 @@ test passes:
 
 In the bundled example this takes a run from **23.3s to 2.7s**, and in
 `--ghostrun-replay` no model is invoked at all. Disable with `judge.cache: false`
-or `ghostrun_JUDGE_CACHE=false` if you want a live grade every run.
+or `GHOSTRUN_JUDGE_CACHE=false` if you want a live grade every run.
 
 ## Providers
 
