@@ -3,9 +3,11 @@
 [![PyPI](https://img.shields.io/pypi/v/ghostrun.svg)](https://pypi.org/project/ghostrun/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Python 3.9+](https://img.shields.io/badge/python-3.9%2B-blue.svg)](pyproject.toml)
-[![CI](https://github.com/parthmax2/ghostrun/actions/workflows/ci.yml/badge.svg)](https://github.com/parthmax2/ghostrun/actions/workflows/ci.yml)
+[![RELEASE](https://github.com/parthmax2/ghostrun/actions/workflows/release.yml/badge.svg)](https://github.com/parthmax2/ghostrun/actions/workflows/ci.yml)
 
 **pytest for LLMs.** Deterministic record/replay and semantic assertions for GenAI apps — **local-first, privacy-first, zero SaaS lock-in.**
+
+![ghostrun: a ghost travels to the LLM API once, then instantly reappears with the result on every run after](assets/ghostrun-hero.gif)
 
 ### The problem
 
