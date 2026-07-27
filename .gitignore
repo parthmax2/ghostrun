@@ -10,8 +10,18 @@ __pycache__/
 build/
 dist/
 .pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
 .venv/
 site/
+
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
 
 doc/prd.md
 doc/task.md
