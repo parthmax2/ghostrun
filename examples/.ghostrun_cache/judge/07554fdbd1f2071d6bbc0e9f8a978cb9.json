@@ -1,0 +1,13 @@
+{
+  "judge": {
+    "backend": "ollama",
+    "model": "llama3.2:3b"
+  },
+  "criterion": "The text expresses the intent or content: refund",
+  "text": "I'm truly sorry for the long wait on your refund — three weeks is far longer than it should take, and I completely understand your frustration. Our policy is to process approved refunds back to the original payment method within 5–10 business days. I've flagged your order for priority review and you'll receive a confirmation email as soon as it's issued. Thank you for your patience, and again, I'm sorry for the inconvenience.",
+  "votes_requested": 1,
+  "passed": true,
+  "reason": "The text explicitly mentions \"refund\" in its content.",
+  "votes": null,
+  "disagreement_rate": 0.0
+}

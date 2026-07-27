@@ -8,7 +8,7 @@ from pathlib import Path
 from typing import Callable, Optional
 
 from .cache import Cache
-from .config import get_config
+from .config import get_config, set_config
 from .interceptor import Interceptor
 
 
@@ -25,19 +25,34 @@ class recording:
     ``with ghostrun.recording(): ...`` is equivalent to wrapping the block in the
     ``@record`` decorator. The optional ``model`` argument is accepted for
     symmetry/documentation but does not change interception behavior.
+
+    An explicit ``mode``/``cache_dir`` also applies to judge verdict caching for
+    the duration of the block, not just the HTTP interceptor -- otherwise a
+    per-test ``cache_dir`` (e.g. to keep an example's cache next to the test
+    file) would silently leave verdicts in the global cache dir instead.
     """
 
     def __init__(self, *, model: Optional[str] = None, mode: Optional[str] = None,
                  cache_dir: Optional[str] = None):
         self.model = model
         self._interceptor = _make_interceptor(mode, cache_dir)
+        self._override = mode is not None or cache_dir is not None
+        self._prev_config = None
+        if self._override:
+            cfg = get_config()
+            self._new_config = cfg.with_overrides(mode=mode, cache_dir=cache_dir)
 
     def __enter__(self):
+        if self._override:
+            self._prev_config = get_config()
+            set_config(self._new_config)
         self._interceptor.install()
         return self
 
     def __exit__(self, *exc):
         self._interceptor.uninstall()
+        if self._override:
+            set_config(self._prev_config)
         return False
 
 
