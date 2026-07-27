@@ -17,6 +17,8 @@ from __future__ import annotations
 import pytest
 
 from . import config as _config
+from . import interceptor as _interceptor
+from . import mascot as _mascot
 from . import runlog
 from .cache import Cache
 from .interceptor import Interceptor
@@ -55,6 +57,7 @@ def pytest_configure(config):
         # Ensure a base config exists, then layer CLI overrides on top.
         _config.set_config(_config.get_config().with_overrides(**overrides))
 
+    _interceptor.reset_stats()
     config.addinivalue_line("markers", "ghostrun: mark a test as using ghostrun record/replay.")
 
     # Always capture a run snapshot so `ghostrun diff _last <name>` works without
@@ -90,11 +93,16 @@ def pytest_sessionfinish(session, exitstatus):
     # Always refresh `_last`; also write the named snapshot when one was asked for.
     runlog.save(log, cache_dir, name=runlog.LAST_RUN_NAME)
     explicit = session.config.getoption("--ghostrun-snapshot")
+    reporter = session.config.pluginmanager.get_plugin("terminalreporter")
     if explicit:
         path = runlog.save(log, cache_dir, name=explicit)
-        reporter = session.config.pluginmanager.get_plugin("terminalreporter")
         if reporter is not None:
             reporter.write_line(f"[ghostrun] saved snapshot {explicit!r} -> {path}")
+
+    if reporter is not None:
+        block = _mascot.render(_interceptor.get_stats())
+        if block:
+            reporter.write_line(block)
 
 
 @pytest.fixture

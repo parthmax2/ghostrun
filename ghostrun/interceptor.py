@@ -51,6 +51,31 @@ def _is_provider(url: httpx.URL) -> bool:
     return any(provider in host for provider in PROVIDER_HOSTS)
 
 
+# Session-wide tallies of what actually happened at the HTTP layer, read by the
+# mascot summary at the end of a pytest run. Deliberately process-global (not
+# per-Interceptor) so a session mixing @record-decorated tests still gets one
+# combined count instead of the mascot only seeing the last test's numbers.
+_stats_lock = threading.Lock()
+_stats = {"replayed": 0, "recorded": 0, "misses": 0}
+
+
+def reset_stats() -> None:
+    with _stats_lock:
+        _stats["replayed"] = 0
+        _stats["recorded"] = 0
+        _stats["misses"] = 0
+
+
+def get_stats() -> dict:
+    with _stats_lock:
+        return dict(_stats)
+
+
+def _tally(kind: str) -> None:
+    with _stats_lock:
+        _stats[kind] += 1
+
+
 class _RecordingTransport(httpx.BaseTransport):
     """Sync transport wrapper. Delegates to the real transport on record."""
 
@@ -67,9 +92,11 @@ class _RecordingTransport(httpx.BaseTransport):
         key = request_key(request.method, str(request.url), body)
 
         if self._mode in ("auto", "replay") and self._cache.has(key):
+            _tally("replayed")
             return _to_response(self._cache.get(key))
 
         if self._mode == "replay":
+            _tally("misses")
             raise CacheMiss(
                 f"No cached response for {request.method} {request.url} "
                 f"(key {key}). Re-run with GHOSTRUN_MODE=record to capture it."
@@ -78,6 +105,7 @@ class _RecordingTransport(httpx.BaseTransport):
         response = self._inner.handle_request(request)
         stored = _from_response(response)
         self._cache.put(key, request.method, str(request.url), body, stored)
+        _tally("recorded")
         return _to_response(stored)
 
 
@@ -97,9 +125,11 @@ class _AsyncRecordingTransport(httpx.AsyncBaseTransport):
         key = request_key(request.method, str(request.url), body)
 
         if self._mode in ("auto", "replay") and self._cache.has(key):
+            _tally("replayed")
             return _to_response(self._cache.get(key))
 
         if self._mode == "replay":
+            _tally("misses")
             raise CacheMiss(
                 f"No cached response for {request.method} {request.url} "
                 f"(key {key}). Re-run with GHOSTRUN_MODE=record to capture it."
@@ -109,6 +139,7 @@ class _AsyncRecordingTransport(httpx.AsyncBaseTransport):
         await response.aread()
         stored = _from_response(response)
         self._cache.put(key, request.method, str(request.url), body, stored)
+        _tally("recorded")
         return _to_response(stored)
 
 
