@@ -9,9 +9,9 @@ plus the observed disagreement rate.
 
 import pytest
 
-from gentest.cache import CacheMiss, KVCache, verdict_key
-from gentest.judge.base import Grade
-from gentest.judge.caching import CachingJudge
+from ghostrun.cache import CacheMiss, KVCache, verdict_key
+from ghostrun.judge.base import Grade
+from ghostrun.judge.caching import CachingJudge
 
 
 class ScriptedJudge:

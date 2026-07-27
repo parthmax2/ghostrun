@@ -1,6 +1,6 @@
 """Record/replay tests driven entirely offline.
 
-We give httpx a MockTransport as the *real* underlying transport. GenTest's
+We give httpx a MockTransport as the *real* underlying transport. ghostrun's
 interceptor wraps whatever `_transport_for_url` returns, so on record it calls
 the mock (counting the call) and caches the response; on replay it serves from
 cache without touching the mock. This mirrors how a real OpenAI/Anthropic call
@@ -12,9 +12,9 @@ import json
 import httpx
 import pytest
 
-from gentest.cache import Cache
-from gentest.config import get_config
-from gentest.interceptor import CacheMiss, Interceptor
+from ghostrun.cache import Cache
+from ghostrun.config import get_config
+from ghostrun.interceptor import CacheMiss, Interceptor
 
 URL = "https://api.openai.com/v1/chat/completions"
 

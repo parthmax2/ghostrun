@@ -6,7 +6,7 @@
 
 ## The question
 
-GenTest, like several LLM-testing tools, uses an LLM to grade semantic
+ghostrun, like several LLM-testing tools, uses an LLM to grade semantic
 assertions (`expect(reply).tone_is("empathetic")`) and caches the verdict so
 tests are fast and deterministic on replay. But caching a *single* verdict
 freezes whatever the judge said on that one draw — including if it was wrong.
@@ -84,7 +84,7 @@ have diminishing and non-monotonic returns.
 resolution.** A cached verdict with a high `disagreement_rate` is a signal
 that the criterion is ambiguous or the judge is guessing on this input — a
 prompt to rewrite the assertion or use a stronger judge, not a number that
-more votes will reliably fix. GenTest surfaces this rate on every cached
+more votes will reliably fix. ghostrun surfaces this rate on every cached
 verdict for exactly this reason: **voting is a better detector of unreliable
 assertions than a corrector of them.**
 
@@ -102,7 +102,7 @@ established rather than suggestive.
 
 ## Practical guidance this produces
 
-- **Keep `judge.votes: 1` and `temperature=0`** (both are GenTest's defaults)
+- **Keep `judge.votes: 1` and `temperature=0`** (both are ghostrun's defaults)
   for most assertions — the benchmark found no case where voting was needed at
   temperature 0.
 - **Treat a nonzero `disagreement_rate` as a code smell in the assertion**,
@@ -116,7 +116,7 @@ established rather than suggestive.
 ## Reproducing this
 
 This write-up lives alongside the `judge.votes` implementation
-(`gentest/judge/caching.py`) in this repository. The majority-vote mechanism
+(`ghostrun/judge/caching.py`) in this repository. The majority-vote mechanism
 itself is unit-tested with a scripted judge (no network required) in
 `tests/test_judge_voting.py`; this document's numbers come from one live run
 against the real judge and are reported as a single run, not an average over

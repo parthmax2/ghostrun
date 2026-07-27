@@ -1,4 +1,4 @@
-"""The ``@gentest.record`` decorator and ``recording()`` context manager."""
+"""The ``@ghostrun.record`` decorator and ``recording()`` context manager."""
 
 from __future__ import annotations
 
@@ -22,7 +22,7 @@ def _make_interceptor(mode: Optional[str], cache_dir: Optional[str]) -> Intercep
 class recording:
     """Context manager that intercepts LLM HTTP traffic for record/replay.
 
-    ``with gentest.recording(): ...`` is equivalent to wrapping the block in the
+    ``with ghostrun.recording(): ...`` is equivalent to wrapping the block in the
     ``@record`` decorator. The optional ``model`` argument is accepted for
     symmetry/documentation but does not change interception behavior.
     """

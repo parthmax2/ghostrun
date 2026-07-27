@@ -5,7 +5,7 @@ anything worse than V1?" we need more than a pass/fail — we need the actual te
 each test saw and how each criterion was graded, snapshotted per run so two runs
 can be compared.
 
-Every value passed to ``gentest.expect(...)`` is recorded against the currently
+Every value passed to ``ghostrun.expect(...)`` is recorded against the currently
 running test, along with each assertion's criterion and verdict. Snapshots land
 in ``<cache_dir>/runs/`` as readable JSON.
 """

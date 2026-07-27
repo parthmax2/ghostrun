@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "gentest"
+name = "ghostrun"
 version = "0.1.0"
 description = "pytest for LLMs: deterministic HTTP record/replay, local LLM-as-judge semantic assertions, and prompt regression diffing for testing GenAI applications."
 readme = "README.md"
@@ -45,20 +45,20 @@ dependencies = [
 dev = ["pytest>=7.0"]
 
 [project.scripts]
-gentest = "gentest.cli:main"
+ghostrun = "ghostrun.cli:main"
 
 [project.urls]
-Homepage = "https://github.com/parthmax2/gentest"
-Issues = "https://github.com/parthmax2/gentest/issues"
-Documentation = "https://github.com/parthmax2/gentest#documentation"
-Changelog = "https://github.com/parthmax2/gentest/blob/main/CHANGELOG.md"
+Homepage = "https://github.com/parthmax2/ghostrun"
+Issues = "https://github.com/parthmax2/ghostrun/issues"
+Documentation = "https://github.com/parthmax2/ghostrun#documentation"
+Changelog = "https://github.com/parthmax2/ghostrun/blob/main/CHANGELOG.md"
 
-# Register the pytest plugin so `import gentest` isn't required to activate it.
+# Register the pytest plugin so `import ghostrun` isn't required to activate it.
 [project.entry-points.pytest11]
-gentest = "gentest.plugin"
+ghostrun = "ghostrun.plugin"
 
 [tool.hatch.build.targets.wheel]
-packages = ["gentest"]
+packages = ["ghostrun"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

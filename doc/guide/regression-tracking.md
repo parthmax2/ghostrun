@@ -4,11 +4,11 @@ Did that prompt tweak break anything? Snapshot a run, change the prompt, snapsho
 again, and diff:
 
 ```bash
-pytest --gentest-snapshot v1 --gentest-label "original prompt"
+pytest --ghostrun-snapshot v1 --ghostrun-label "original prompt"
 # ... edit your prompt ...
-pytest --gentest-snapshot v2 --gentest-label "added few-shot examples"
+pytest --ghostrun-snapshot v2 --ghostrun-label "added few-shot examples"
 
-gentest diff v1 v2
+ghostrun diff v1 v2
 ```
 
 ```
@@ -32,7 +32,7 @@ OUTPUT DRIFT (1)
 FAILED: 1 regression(s) detected.
 ```
 
-Every run also writes a `_last` snapshot, so `gentest diff v1` (candidate
+Every run also writes a `_last` snapshot, so `ghostrun diff v1` (candidate
 defaults to `_last`) works without planning ahead.
 
 **Output drift** is reported separately from regressions: a response can change
@@ -46,13 +46,13 @@ masquerade as a pile of deleted checks.
 ## CLI
 
 ```bash
-gentest list                              # saved snapshots
-gentest show v1                           # outputs + verdicts for one run
-gentest diff v1 v2                        # compare
-gentest diff v1 v2 --format json          # machine-readable
-gentest diff v1 v2 --fail-on-regression   # exit 1 on any PASS -> FAIL (CI gate)
-gentest diff v1 v2 --format github-comment -o comment.md   # markdown for a PR bot
-gentest diff v1 v2 --format junit -o gentest.xml            # for CI test-result dashboards
+ghostrun list                              # saved snapshots
+ghostrun show v1                           # outputs + verdicts for one run
+ghostrun diff v1 v2                        # compare
+ghostrun diff v1 v2 --format json          # machine-readable
+ghostrun diff v1 v2 --fail-on-regression   # exit 1 on any PASS -> FAIL (CI gate)
+ghostrun diff v1 v2 --format github-comment -o comment.md   # markdown for a PR bot
+ghostrun diff v1 v2 --format junit -o ghostrun.xml            # for CI test-result dashboards
 ```
 
 ## Posting a regression diff as a PR comment
@@ -62,11 +62,11 @@ that shows up inline in the PR doesn't. In a GitHub Actions workflow:
 
 ```yaml
 - name: Record this PR's outputs
-  run: pytest --gentest-snapshot pr-${{ github.event.pull_request.number }}
+  run: pytest --ghostrun-snapshot pr-${{ github.event.pull_request.number }}
 
 - name: Diff against main's baseline
   run: |
-    gentest diff main-baseline pr-${{ github.event.pull_request.number }} \
+    ghostrun diff main-baseline pr-${{ github.event.pull_request.number }} \
       --format github-comment -o comment.md
     echo "exit_code=$?" >> "$GITHUB_OUTPUT"
   id: diff
@@ -85,4 +85,4 @@ that shows up inline in the PR doesn't. In a GitHub Actions workflow:
 `--format junit` instead produces standard JUnit XML, so a prompt regression
 shows up in whatever test-results view your CI already renders (GitHub Actions
 annotations, GitLab, Jenkins) without that system needing to know anything
-about GenTest.
+about ghostrun.

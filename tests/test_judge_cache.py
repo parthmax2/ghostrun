@@ -3,9 +3,9 @@ deterministic and don't re-invoke the model on every run."""
 
 import pytest
 
-from gentest.cache import CacheMiss, KVCache, verdict_key
-from gentest.judge.base import Grade
-from gentest.judge.caching import CachingJudge
+from ghostrun.cache import CacheMiss, KVCache, verdict_key
+from ghostrun.judge.base import Grade
+from ghostrun.judge.caching import CachingJudge
 
 
 class CountingJudge:
@@ -85,21 +85,21 @@ def test_verdict_key_is_stable_and_distinct():
 
 
 def test_echo_judge_is_not_wrapped(monkeypatch):
-    from gentest import config as gt_config
-    from gentest.judge import get_judge
-    from gentest.judge.echo import EchoJudge
+    from ghostrun import config as gt_config
+    from ghostrun.judge import get_judge
+    from ghostrun.judge.echo import EchoJudge
 
-    monkeypatch.setenv("GENTEST_JUDGE", "echo")
+    monkeypatch.setenv("ghostrun_JUDGE", "echo")
     gt_config.reset_config()
     assert isinstance(get_judge(), EchoJudge)
 
 
 def test_caching_can_be_disabled(monkeypatch):
-    from gentest import config as gt_config
-    from gentest.judge import get_judge
-    from gentest.judge.ollama import OllamaJudge
+    from ghostrun import config as gt_config
+    from ghostrun.judge import get_judge
+    from ghostrun.judge.ollama import OllamaJudge
 
-    monkeypatch.setenv("GENTEST_JUDGE", "ollama")
-    monkeypatch.setenv("GENTEST_JUDGE_CACHE", "false")
+    monkeypatch.setenv("ghostrun_JUDGE", "ollama")
+    monkeypatch.setenv("ghostrun_JUDGE_CACHE", "false")
     gt_config.reset_config()
     assert isinstance(get_judge(), OllamaJudge)

@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from gentest.cache import Cache, CachedResponse, request_key
+from ghostrun.cache import Cache, CachedResponse, request_key
 
 
 def test_request_key_stable_across_key_order():

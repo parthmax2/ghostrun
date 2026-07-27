@@ -3,26 +3,26 @@ title: pytest for LLMs
 description: Deterministic HTTP record/replay, local LLM-as-judge semantic assertions, and prompt regression diffing for testing GenAI applications in Python.
 ---
 
-# GenTest
+# ghostrun
 
 **pytest for LLMs.** Deterministic record/replay and semantic assertions for
 GenAI apps — local-first, privacy-first, zero SaaS lock-in.
 
 Generative AI outputs vary, so `assert output == "expected"` doesn't work.
-GenTest gives you two things instead:
+ghostrun gives you two things instead:
 
 1. **Deterministic replay** — the first run records real LLM HTTP calls to a
-   local `.gentest_cache/`; every run after replays them instantly. Zero API
+   local `.ghostrun_cache/`; every run after replays them instantly. Zero API
    cost, zero latency, zero flakiness.
 2. **Semantic assertions** — assert on *meaning*
    (`contains_intent`, `tone_is`, …), graded by a local Ollama model by
    default. Your prompts and data never leave your machine.
 
 ```bash
-pip install gentest
+pip install ghostrun
 ollama pull llama3.2:3b   # for the default local judge
-gentest init              # scaffolds a working first test
-pytest test_gentest_example.py
+ghostrun init              # scaffolds a working first test
+pytest test_ghostrun_example.py
 ```
 
 ## Guide
@@ -42,4 +42,4 @@ pytest test_gentest_example.py
 - [Task tracker](task.md)
 
 Source, issues, and the changelog live on
-[GitHub](https://github.com/parthmax2/gentest).
+[GitHub](https://github.com/parthmax2/ghostrun).

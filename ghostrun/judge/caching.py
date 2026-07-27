@@ -61,7 +61,7 @@ class CachingJudge:
             raise CacheMiss(
                 f"No cached judge verdict for criterion {criterion!r} "
                 f"(judge={self._backend}:{self._model}, votes={self._votes}, key {key}). "
-                f"Re-run with --gentest-record to grade and store it."
+                f"Re-run with --ghostrun-record to grade and store it."
             )
 
         grade = self._vote(text, criterion)

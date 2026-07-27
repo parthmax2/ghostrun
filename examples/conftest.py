@@ -6,7 +6,7 @@ Two jobs:
 2. Skip the semantic example gracefully when a real judge isn't available —
    under the offline `echo` stub, or when Ollama is down or the model isn't
    pulled. This keeps a full-repo `pytest` run green instead of failing on
-   an environment GenTest can't control.
+   an environment ghostrun can't control.
 """
 
 from __future__ import annotations
@@ -16,8 +16,8 @@ import sys
 
 import pytest
 
-import gentest
-from gentest.judge.ollama import OllamaJudge
+import ghostrun
+from ghostrun.judge.ollama import OllamaJudge
 
 sys.path.insert(0, os.path.dirname(__file__))
 
@@ -45,7 +45,7 @@ def _skip_reason(cfg) -> str | None:
 @pytest.fixture(autouse=True)
 def _require_semantic_judge():
     """Skip (don't fail) when the example's semantic assertions can't be graded."""
-    reason = _skip_reason(gentest.get_config())
+    reason = _skip_reason(ghostrun.get_config())
     if reason:
         pytest.skip(reason)
     yield

@@ -1,6 +1,6 @@
-# GenTest configuration. All keys are optional; these are the defaults.
-# Every value can also be set via environment variable (GENTEST_MODE, etc.)
-# or at runtime with gentest.configure(...).
+# ghostrun configuration. All keys are optional; these are the defaults.
+# Every value can also be set via environment variable (ghostrun_MODE, etc.)
+# or at runtime with ghostrun.configure(...).
 
 # Record/replay behavior:
 #   auto   - replay from cache if present, otherwise record (default)
@@ -9,7 +9,7 @@
 mode: auto
 
 # Where cached LLM responses live, relative to the project root.
-cache_dir: .gentest_cache
+cache_dir: .ghostrun_cache
 
 # The LLM-as-a-judge backend for semantic assertions.
 judge:

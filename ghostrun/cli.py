@@ -1,13 +1,13 @@
-"""``gentest`` command-line interface for prompt regression tracking.
+"""``ghostrun`` command-line interface for prompt regression tracking.
 
-    gentest list                     # show saved run snapshots
-    gentest show v1                  # inspect one snapshot
-    gentest diff v1 v2               # compare two runs
-    gentest diff v1 _last --fail-on-regression   # for CI
-    gentest diff v1 v2 --format github-comment -o comment.md   # for a PR bot
-    gentest diff v1 v2 --format junit -o gentest.xml            # for CI dashboards
-    gentest doctor                   # diagnose config/cache/httpx/judge setup
-    gentest init                     # scaffold a working first test in one command
+    ghostrun list                     # show saved run snapshots
+    ghostrun show v1                  # inspect one snapshot
+    ghostrun diff v1 v2               # compare two runs
+    ghostrun diff v1 _last --fail-on-regression   # for CI
+    ghostrun diff v1 v2 --format github-comment -o comment.md   # for a PR bot
+    ghostrun diff v1 v2 --format junit -o ghostrun.xml            # for CI dashboards
+    ghostrun doctor                   # diagnose config/cache/httpx/judge setup
+    ghostrun init                     # scaffold a working first test in one command
 
 Test execution itself stays in pytest — this CLI only inspects what a run
 recorded.
@@ -36,7 +36,7 @@ def cmd_list(args) -> int:
     names = runlog.list_runs(cache_dir)
     if not names:
         print(f"No run snapshots in {runlog.runs_dir(cache_dir)}.")
-        print("Record one with: pytest --gentest-snapshot <name>")
+        print("Record one with: pytest --ghostrun-snapshot <name>")
         return 0
     print(f"Run snapshots in {runlog.runs_dir(cache_dir)}:")
     for name in names:
@@ -150,7 +150,7 @@ def cmd_doctor(args) -> int:
     cache_path = Path(cfg.cache_dir)
     try:
         cache_path.mkdir(parents=True, exist_ok=True)
-        probe = cache_path / ".gentest_doctor_probe"
+        probe = cache_path / ".ghostrun_doctor_probe"
         probe.write_text("ok", encoding="utf-8")
         probe.unlink()
         check("cache dir", True, f"{cache_path.resolve()} is writable")
@@ -177,7 +177,7 @@ def cmd_init(args) -> int:
     target_dir = Path(args.dir or ".").resolve()
     target_dir.mkdir(parents=True, exist_ok=True)
 
-    config_path = target_dir / ".gentest.yaml"
+    config_path = target_dir / ".ghostrun.yaml"
     test_path = target_dir / args.filename
 
     existing = [p for p in (config_path, test_path) if p.exists()]
@@ -203,14 +203,14 @@ def cmd_init(args) -> int:
     print(f"  {step + 1}. pytest {args.filename}          # records + grades for real")
     print(f"  {step + 2}. pytest {args.filename}          # instant, from cache")
     print()
-    print("Run `gentest doctor` any time to check your setup.")
+    print("Run `ghostrun doctor` any time to check your setup.")
     return 0
 
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        prog="gentest",
-        description="Inspect and compare GenTest run snapshots.",
+        prog="ghostrun",
+        description="Inspect and compare ghostrun run snapshots.",
     )
     parser.add_argument("--cache-dir", default=None,
                         help="Override the cache directory (default: from config).")
@@ -251,15 +251,15 @@ def build_parser() -> argparse.ArgumentParser:
     p_doctor.set_defaults(func=cmd_doctor)
 
     p_init = sub.add_parser(
-        "init", help="Scaffold a working first test and .gentest.yaml in one command.")
+        "init", help="Scaffold a working first test and .ghostrun.yaml in one command.")
     p_init.add_argument("--dir", default=None,
                         help="Directory to scaffold into (default: current directory).")
-    p_init.add_argument("--filename", default="test_gentest_example.py",
+    p_init.add_argument("--filename", default="test_ghostrun_example.py",
                         help="Name of the generated test file.")
     p_init.add_argument("--judge", choices=["ollama", "echo"], default="ollama",
                         help="Judge backend to configure (default: ollama).")
     p_init.add_argument("--force", action="store_true",
-                        help="Overwrite existing .gentest.yaml / test file.")
+                        help="Overwrite existing .ghostrun.yaml / test file.")
     p_init.set_defaults(func=cmd_init)
 
     return parser

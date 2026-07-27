@@ -255,9 +255,9 @@ def render_github_comment(cmp_result: Comparison, show_diffs: bool = True) -> st
     lines: List[str] = []
 
     if cmp_result.has_regressions:
-        lines.append(f"### :x: GenTest: {s['regressions']} regression(s) found")
+        lines.append(f"### :x: ghostrun: {s['regressions']} regression(s) found")
     else:
-        lines.append("### :white_check_mark: GenTest: no regressions")
+        lines.append("### :white_check_mark: ghostrun: no regressions")
     lines.append(
         f"Comparing `{cmp_result.baseline_name}` -> `{cmp_result.candidate_name}`  \n"
         f"{s['regressions']} regression(s), {s['fixes']} fix(es), "
@@ -291,7 +291,7 @@ def render_github_comment(cmp_result: Comparison, show_diffs: bool = True) -> st
                 lines.append(f"```diff\n{o.unified_diff()}\n```")
         lines.append("</details>")
 
-    lines.append(f"\n<sub>gentest diff {cmp_result.baseline_name} "
+    lines.append(f"\n<sub>ghostrun diff {cmp_result.baseline_name} "
                  f"{cmp_result.candidate_name}</sub>")
     return "\n".join(lines)
 
@@ -299,7 +299,7 @@ def render_github_comment(cmp_result: Comparison, show_diffs: bool = True) -> st
 def render_junit(cmp_result: Comparison) -> str:
     """JUnit XML so a regression diff plugs into any CI system's test-results
     view (GitHub Actions annotations, GitLab, Jenkins, etc.) without that
-    system needing to know anything about GenTest specifically. One <testcase>
+    system needing to know anything about ghostrun specifically. One <testcase>
     per assertion delta; a regression is a <failure>."""
     import xml.etree.ElementTree as ET
 
@@ -307,7 +307,7 @@ def render_junit(cmp_result: Comparison) -> str:
     failures = sum(1 for a in non_stable if a.status == "regression")
 
     suite = ET.Element("testsuite", {
-        "name": f"gentest-diff.{cmp_result.baseline_name}-vs-{cmp_result.candidate_name}",
+        "name": f"ghostrun-diff.{cmp_result.baseline_name}-vs-{cmp_result.candidate_name}",
         "tests": str(len(non_stable)),
         "failures": str(failures),
     })

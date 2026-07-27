@@ -1,4 +1,4 @@
-# GenTest — Task Tracker
+# ghostrun — Task Tracker
 
 Living status document. **Update this whenever a task changes state** — same
 commit as the work itself, not afterwards.
@@ -17,8 +17,8 @@ why-not-diy). Hosted docs site is configured (`mkdocs.yml` +
 to "GitHub Actions" in repo settings (one-time, manual, needs repo admin
 access this session doesn't have). `llms.txt` added at the repo root.
 **Package status:** builds clean, `twine check` PASSED, verified working
-install (import + `gentest` console script + pytest plugin auto-registration,
-including `gentest init`'s no-SDK fallback) in a fresh venv from the built
+install (import + `ghostrun` console script + pytest plugin auto-registration,
+including `ghostrun init`'s no-SDK fallback) in a fresh venv from the built
 wheel — **publish-ready, blocked only on your PyPI account/token**
 **See also:** [`comparison.md`](comparison.md) — live competitive research vs. DeepEval, Promptfoo, Ragas, vcr-langchain, and others
 
@@ -45,7 +45,7 @@ wheel — **publish-ready, blocked only on your PyPI account/token**
 
 ### Feature 1: Deterministic replay
 - [x] Intercept LLM API calls (OpenAI, Anthropic)
-- [x] Save request payload + response to `.gentest_cache/`
+- [x] Save request payload + response to `.ghostrun_cache/`
 - [x] Return cached response on subsequent runs
 - [x] HTTP-transport interception (not SDK monkey-patching)
 - [x] `auto` / `record` / `replay` modes
@@ -58,7 +58,7 @@ wheel — **publish-ready, blocked only on your PyPI account/token**
 - [x] `tone_is()` / `matches()` (free-form escape hatch)
 - [x] `is_valid_json()`, `contains()`, `does_not_contain()`
 - [x] Local Ollama judge as default (zero cost, private)
-- [x] Configurable judge via `.gentest.yaml` / env / `configure()`
+- [x] Configurable judge via `.ghostrun.yaml` / env / `configure()`
 - [x] Actionable errors when daemon down or model unpulled
 - [x] Offline `echo` stub judge for CI plumbing
 - [x] **Judge verdict caching** — *beyond original PRD; see §5*
@@ -71,12 +71,12 @@ wheel — **publish-ready, blocked only on your PyPI account/token**
 ### Feature 3: Native pytest integration
 - [x] Standard pytest output, no custom CLI
 - [x] Auto-registered plugin (`pytest11` entry point)
-- [x] `--gentest-record` / `--gentest-replay` / `--gentest-judge` flags
-- [x] `gentest_record` fixture
+- [x] `--ghostrun-record` / `--ghostrun-replay` / `--ghostrun-judge` flags
+- [x] `ghostrun_record` fixture
 
 ### Documentation & examples
 - [x] `README.md`, `doc/prd.md`, `CHANGELOG.md`
-- [x] Sample `.gentest.yaml`, `.gitignore`
+- [x] Sample `.ghostrun.yaml`, `.gitignore`
 - [x] Runnable `examples/` app with pre-recorded cache
 - [x] Graceful skip when no semantic judge available
 
@@ -127,9 +127,9 @@ wheel — **publish-ready, blocked only on your PyPI account/token**
       similarity ratio)
 - [x] Report semantic verdict deltas across runs (regression / fix / stable /
       added / removed / not-evaluated)
-- [x] CLI surface: `gentest list | show | diff`, `--json`,
+- [x] CLI surface: `ghostrun list | show | diff`, `--json`,
       `--fail-on-regression` for CI gating
-- [x] Run snapshots via `pytest --gentest-snapshot NAME --gentest-label TEXT`;
+- [x] Run snapshots via `pytest --ghostrun-snapshot NAME --ghostrun-label TEXT`;
       `_last` always written
 - [x] Verified end-to-end on a simulated prompt regression
 
@@ -163,11 +163,11 @@ comments within an hour.
 
 ## 5. Notable deviations from the PRD
 
-1. **`gentest.assert()` → `gentest.expect()`** — `assert` is a reserved Python
+1. **`ghostrun.assert()` → `ghostrun.expect()`** — `assert` is a reserved Python
    keyword; the PRD's snippet was a `SyntaxError`.
 2. **Judge verdict caching added** (not in PRD). Without it, semantic assertions
    re-invoked a stochastic model every run, reintroducing the exact
-   non-determinism GenTest exists to eliminate. Measured: example 23.3s → 2.7s,
+   non-determinism ghostrun exists to eliminate. Measured: example 23.3s → 2.7s,
    and now passes with the judge endpoint unreachable.
 3. **Interception at httpx transport layer**, satisfying the PRD's own
    "don't monkey-patch SDKs" constraint — though it does patch a *private* httpx
@@ -186,10 +186,10 @@ Last full run — all green:
 | Prompt regression tracking, end-to-end | regression + drift correctly detected, exit 1 |
 | Full repo incl. examples (live Ollama judge) | 139 passed, 2 skipped (live smoke, no API key) |
 | Strict replay, judge endpoint **unreachable** | 1 passed · 0.45s |
-| `GENTEST_JUDGE=echo` | passes, 1 skipped |
+| `ghostrun_JUDGE=echo` | passes, 1 skipped |
 | Ollama down, auto mode | 1 skipped (not failed) · 4.41s |
 | Python 3.9 syntax compatibility (AST) | clean |
-| `gentest init` from an actual built wheel, clean venv | works, incl. no-SDK fallback path |
+| `ghostrun init` from an actual built wheel, clean venv | works, incl. no-SDK fallback path |
 | `mkdocs build --strict` | clean (after fixing one broken relative link) |
 | `python -m build` + `twine check` | PASSED, `py.typed` and `scaffold.py` confirmed in wheel |
 
@@ -202,11 +202,11 @@ Ragas, vcr-langchain, langchain-replay, Giskard, Langfuse, Braintrust,
 LangSmith, OpenAI Evals, Inspect AI, CacheSaver, pytest-recording/VCR.py).
 
 **Tier 0 — blocking, needs the user:**
-- [ ] Publish to PyPI — no developer can `pip install gentest` yet; every other
+- [ ] Publish to PyPI — no developer can `pip install ghostrun` yet; every other
       item is moot until this exists. **Prep is done**: `python -m build`
       succeeds, `twine check dist/*` PASSED, and a clean venv install from the
       built wheel was verified to import correctly, register the pytest plugin
-      (`pytest11` entry point), and expose the `gentest` console script. What
+      (`pytest11` entry point), and expose the `ghostrun` console script. What
       remains is `twine upload` with your PyPI account/token — an irreversible
       public action intentionally left for you to run, not automated here.
 
@@ -217,21 +217,21 @@ LangSmith, OpenAI Evals, Inspect AI, CacheSaver, pytest-recording/VCR.py).
       the time and voting only marginally helped (non-monotonically) —
       **honest finding: voting detects unreliable criteria via
       `disagreement_rate` better than it fixes them.** See prd.md §5B.
-- [ ] Cache staleness warnings (`gentest stale --older-than`) — providers
+- [ ] Cache staleness warnings (`ghostrun stale --older-than`) — providers
       silently update models behind fixed names (documented: GPT-4 accuracy
       84%→51% between March/June 2023 with no version change); a cache entry
       has no age signal today
-- [x] CI-friendly diff output (`gentest diff --format github-comment` /
+- [x] CI-friendly diff output (`ghostrun diff --format github-comment` /
       `junit`, `-o` to write a file) — done this session, README documents the
       full GitHub Actions `gh pr comment` pattern; a real Windows-console
       Unicode crash (arrow/middle-dot/em-dash in the rendered markdown) was
       found and fixed by actually printing the output, not just asserting on it
-- [ ] Cost/savings reporting (`gentest stats`) — token usage already sits in
+- [ ] Cost/savings reporting (`ghostrun stats`) — token usage already sits in
       every cached response; surface cache-hit-rate/$-saved/time-saved to make
       the adoption pitch a real number instead of a README claim
-- [x] **`gentest doctor`** — diagnoses config/httpx/cache-dir/judge reachability
+- [x] **`ghostrun doctor`** — diagnoses config/httpx/cache-dir/judge reachability
       in one command with actionable fixes, not stack traces. Done this session.
-- [x] **`gentest init`** — scaffolds a working first test + `.gentest.yaml`,
+- [x] **`ghostrun init`** — scaffolds a working first test + `.ghostrun.yaml`,
       detecting the installed LLM SDK (openai/anthropic/generic fallback).
       Verified end-to-end from an actual built wheel in a clean venv, including
       the fallback path. Done this session.
@@ -247,13 +247,13 @@ LangSmith, OpenAI Evals, Inspect AI, CacheSaver, pytest-recording/VCR.py).
       a one-time manual step outside this session's access.
 - [x] **`llms.txt`** at the repo root (emerging LLM-crawler convention) and
       expanded PyPI `keywords`/`classifiers`, real project URLs (was a
-      placeholder `github.com/gentest/gentest`), README badges, PEP 561
+      placeholder `github.com/ghostrun/ghostrun`), README badges, PEP 561
       `py.typed` marker, and `CONTRIBUTING.md` — all for discoverability by
       search engines, LLM crawlers, and human contributors respectively.
 - [x] **Git repository initialized** — first commit made locally. Not pushed
       to a remote yet.
 
-**Tier 2 — metric breadth (DeepEval ships 50+, GenTest ships ~5):**
+**Tier 2 — metric breadth (DeepEval ships 50+, ghostrun ships ~5):**
 - [ ] RAG faithfulness assertion (most-requested RAG metric)
 - [ ] Hallucination flag assertion
 - Deliberately NOT chasing DeepEval's metric count — 2–3 purpose-built ones,
@@ -265,7 +265,7 @@ LangSmith, OpenAI Evals, Inspect AI, CacheSaver, pytest-recording/VCR.py).
 
 **Tier 4 — deliberately deferred:**
 - Static HTML diff report, `requests`-library interception, multi-provider
-  matrix testing (this is Promptfoo's identity — chasing it dilutes GenTest's),
+  matrix testing (this is Promptfoo's identity — chasing it dilutes ghostrun's),
   synthetic dataset generation
 
 ## Immediate next 3
@@ -280,7 +280,7 @@ LangSmith, OpenAI Evals, Inspect AI, CacheSaver, pytest-recording/VCR.py).
 ## Changelog for this document
 
 - **2026-07-24 (4)** — Git repository initialized (first local commit,
-  no remote pushed yet). Added `gentest init`, `gentest doctor`,
+  no remote pushed yet). Added `ghostrun init`, `ghostrun doctor`,
   API reference, `llms.txt`, hosted-docs-site config (mkdocs-material +
   GitHub Pages workflow, verified with a real strict build), `CONTRIBUTING.md`,
   and SEO-relevant PyPI metadata (keywords, classifiers, real URLs, badges,
@@ -289,7 +289,7 @@ LangSmith, OpenAI Evals, Inspect AI, CacheSaver, pytest-recording/VCR.py).
   code: a Windows-console Unicode crash in the PR-comment renderer, and a
   broken relative link in the mkdocs build that only strict-mode caught.
 - **2026-07-24 (3)** — Phase 2 Feature 4 (prompt regression tracking) complete:
-  run snapshots, comparison engine, `gentest` CLI. Core tests 67 → 91. Two
+  run snapshots, comparison engine, `ghostrun` CLI. Core tests 67 → 91. Two
   reporting bugs found and fixed by end-to-end use (tests recording nothing were
   invisible to the diff; assertions after an abort were mislabeled "removed").
   Overall 60% → 75%.

@@ -1,11 +1,11 @@
-site_name: GenTest
+site_name: ghostrun
 site_description: >-
   pytest for LLMs: deterministic HTTP record/replay, local LLM-as-judge
   semantic assertions, and prompt regression diffing for testing GenAI
   applications in Python.
-site_url: https://parthmax2.github.io/gentest/
-repo_url: https://github.com/parthmax2/gentest
-repo_name: parthmax2/gentest
+site_url: https://parthmax2.github.io/ghostrun/
+repo_url: https://github.com/parthmax2/ghostrun
+repo_name: parthmax2/ghostrun
 edit_uri: edit/main/doc/
 
 docs_dir: doc

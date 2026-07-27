@@ -1,25 +1,25 @@
-# GenTest
+# ghostrun
 
 > pytest for LLMs: deterministic HTTP record/replay, local LLM-as-judge semantic assertions, and prompt-version regression diffing for testing GenAI applications in Python.
 
-GenTest solves two problems that make LLM applications hard to test with
+ghostrun solves two problems that make LLM applications hard to test with
 ordinary `assert`: non-deterministic output (the same prompt returns different
 text every run) and cost/latency (every test run would otherwise hit a paid,
 slow API). It intercepts LLM provider HTTP calls at the transport layer
 (httpx) — not by monkey-patching the OpenAI/Anthropic SDKs — so the first test
 run records a real response and every run after replays it in milliseconds
 with no API key, no network call, and no cost. Semantic assertions
-(`gentest.expect(reply).contains_intent("apology")`) are graded by a judge —
+(`ghostrun.expect(reply).contains_intent("apology")`) are graded by a judge —
 by default a local Ollama model, so prompts and responses never leave the
 machine — and judge verdicts are themselves cached with an optional
 majority-of-k voting mode, benchmarked against a real judge rather than
-assumed to work (see the benchmark write-up below). `gentest diff` compares
+assumed to work (see the benchmark write-up below). `ghostrun diff` compares
 two recorded runs to flag which assertions regressed, which fixed, and which
 LLM outputs drifted, even when they still pass.
 
-It is a Python package (`pip install gentest`), a pytest plugin (auto-registers
+It is a Python package (`pip install ghostrun`), a pytest plugin (auto-registers
 via the `pytest11` entry point, no conftest wiring needed), and a CLI
-(`gentest list|show|diff|doctor|init`). It is not a hosted SaaS, not an
+(`ghostrun list|show|diff|doctor|init`). It is not a hosted SaaS, not an
 observability platform, and not a cross-model benchmarking tool — see the
 comparison document below for how it relates to DeepEval, Promptfoo, Ragas,
 vcr-langchain, and other tools in this space.
@@ -29,8 +29,8 @@ vcr-langchain, and other tools in this space.
 - [README](README.md): what it is, install, quickstart, documentation index
 - [Recording and replay](doc/guide/recording.md): HTTP-transport interception, judge-verdict caching, supported providers, secret redaction, parallel test runs
 - [Semantic assertions](doc/guide/assertions.md): `expect()` API, measured judge reliability (~90% on hand-labeled cases), majority-vote verdicts, tool-call assertions
-- [Prompt regression tracking](doc/guide/regression-tracking.md): run snapshots, `gentest diff`, CI/PR integration (GitHub Actions, JUnit XML)
-- [Configuration](doc/guide/configuration.md): `.gentest.yaml`, environment variables, `gentest doctor`, `gentest init`
+- [Prompt regression tracking](doc/guide/regression-tracking.md): run snapshots, `ghostrun diff`, CI/PR integration (GitHub Actions, JUnit XML)
+- [Configuration](doc/guide/configuration.md): `.ghostrun.yaml`, environment variables, `ghostrun doctor`, `ghostrun init`
 - [API reference](doc/guide/api-reference.md): every public function, class, and config field
 
 ## Research and rationale

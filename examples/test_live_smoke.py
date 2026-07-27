@@ -1,11 +1,11 @@
 """Live-API smoke test — the one link the mock-based suite can't prove:
-that GenTest records correctly from a *real* provider response, then replays it.
+that ghostrun records correctly from a *real* provider response, then replays it.
 
 This is opt-in. It is skipped unless BOTH are true:
   * OPENAI_API_KEY is set
-  * GENTEST_LIVE=1
+  * ghostrun_LIVE=1
 
-    OPENAI_API_KEY=sk-... GENTEST_LIVE=1 pytest examples/test_live_smoke.py -v
+    OPENAI_API_KEY=sk-... ghostrun_LIVE=1 pytest examples/test_live_smoke.py -v
 
 What it proves, end to end:
   1. record  -> one real call to api.openai.com is captured to the cache
@@ -24,16 +24,16 @@ from pathlib import Path
 
 import pytest
 
-import gentest
-from gentest.cache import Cache
-from gentest.interceptor import CacheMiss, Interceptor
+import ghostrun
+from ghostrun.cache import Cache
+from ghostrun.interceptor import CacheMiss, Interceptor
 
 pytestmark = pytest.mark.skipif(
-    not (os.environ.get("OPENAI_API_KEY") and os.environ.get("GENTEST_LIVE") == "1"),
-    reason="live test: set OPENAI_API_KEY and GENTEST_LIVE=1 to run",
+    not (os.environ.get("OPENAI_API_KEY") and os.environ.get("ghostrun_LIVE") == "1"),
+    reason="live test: set OPENAI_API_KEY and ghostrun_LIVE=1 to run",
 )
 
-CACHE_DIR = str(Path(__file__).with_name(".gentest_live_cache"))
+CACHE_DIR = str(Path(__file__).with_name(".ghostrun_live_cache"))
 PROMPT = "In one short sentence, apologize to a customer for a late refund."
 
 
@@ -60,8 +60,8 @@ def test_live_record_then_offline_replay():
     # A real judge grades the real response (skips if Ollama unavailable).
     from examples.conftest import _ollama_ready  # reuse the guard's probe
 
-    if _ollama_ready(gentest.get_config()):
-        gentest.expect(recorded).contains_intent("apology")
+    if _ollama_ready(ghostrun.get_config()):
+        ghostrun.expect(recorded).contains_intent("apology")
 
     # 2) REPLAY: network unreachable + no key. Must come from cache.
     with Interceptor(cache, mode="replay"):

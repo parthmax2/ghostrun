@@ -41,20 +41,20 @@ jobs:
       # The core suite is hermetic: no network, no Ollama, no API keys.
       - name: Test (offline)
         env:
-          GENTEST_JUDGE: echo
+          ghostrun_JUDGE: echo
         run: pytest tests -q
 
       # The example must skip cleanly rather than fail when no judge exists.
       - name: Example degrades gracefully without a judge
         env:
-          GENTEST_JUDGE: echo
+          ghostrun_JUDGE: echo
         run: pytest examples -q
 
       # Replay must work with no network and no judge backend reachable.
       - name: Strict replay (no network, judge unreachable)
         env:
-          GENTEST_JUDGE_BASE_URL: http://localhost:59999
-        run: pytest examples -q --gentest-replay
+          ghostrun_JUDGE_BASE_URL: http://localhost:59999
+        run: pytest examples -q --ghostrun-replay
 
   parallel:
     name: xdist parallel safety
@@ -72,7 +72,7 @@ jobs:
       # The interceptor patches global httpx state; this guards against races.
       - name: Test under parallel workers
         env:
-          GENTEST_JUDGE: echo
+          ghostrun_JUDGE: echo
         run: pytest tests -q -n 4
 
   build:
@@ -93,7 +93,7 @@ jobs:
         run: |
           python -m venv /tmp/fresh
           /tmp/fresh/bin/python -m pip install dist/*.whl
-          /tmp/fresh/bin/python -c "import gentest; print('import ok', gentest.__version__)"
+          /tmp/fresh/bin/python -c "import ghostrun; print('import ok', ghostrun.__version__)"
       - uses: actions/upload-artifact@v4
         with:
           name: dist
@@ -118,6 +118,6 @@ jobs:
       - name: Record from the real API, then replay offline
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          GENTEST_LIVE: "1"
-          GENTEST_JUDGE: echo   # don't require Ollama in CI
+          ghostrun_LIVE: "1"
+          ghostrun_JUDGE: echo   # don't require Ollama in CI
         run: pytest examples/test_live_smoke.py -v
