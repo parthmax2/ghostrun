@@ -1,0 +1,50 @@
+# GenTest
+
+> pytest for LLMs: deterministic HTTP record/replay, local LLM-as-judge semantic assertions, and prompt-version regression diffing for testing GenAI applications in Python.
+
+GenTest solves two problems that make LLM applications hard to test with
+ordinary `assert`: non-deterministic output (the same prompt returns different
+text every run) and cost/latency (every test run would otherwise hit a paid,
+slow API). It intercepts LLM provider HTTP calls at the transport layer
+(httpx) — not by monkey-patching the OpenAI/Anthropic SDKs — so the first test
+run records a real response and every run after replays it in milliseconds
+with no API key, no network call, and no cost. Semantic assertions
+(`gentest.expect(reply).contains_intent("apology")`) are graded by a judge —
+by default a local Ollama model, so prompts and responses never leave the
+machine — and judge verdicts are themselves cached with an optional
+majority-of-k voting mode, benchmarked against a real judge rather than
+assumed to work (see the benchmark write-up below). `gentest diff` compares
+two recorded runs to flag which assertions regressed, which fixed, and which
+LLM outputs drifted, even when they still pass.
+
+It is a Python package (`pip install gentest`), a pytest plugin (auto-registers
+via the `pytest11` entry point, no conftest wiring needed), and a CLI
+(`gentest list|show|diff|doctor|init`). It is not a hosted SaaS, not an
+observability platform, and not a cross-model benchmarking tool — see the
+comparison document below for how it relates to DeepEval, Promptfoo, Ragas,
+vcr-langchain, and other tools in this space.
+
+## Core documentation
+
+- [README](README.md): what it is, install, quickstart, documentation index
+- [Recording and replay](doc/guide/recording.md): HTTP-transport interception, judge-verdict caching, supported providers, secret redaction, parallel test runs
+- [Semantic assertions](doc/guide/assertions.md): `expect()` API, measured judge reliability (~90% on hand-labeled cases), majority-vote verdicts, tool-call assertions
+- [Prompt regression tracking](doc/guide/regression-tracking.md): run snapshots, `gentest diff`, CI/PR integration (GitHub Actions, JUnit XML)
+- [Configuration](doc/guide/configuration.md): `.gentest.yaml`, environment variables, `gentest doctor`, `gentest init`
+- [API reference](doc/guide/api-reference.md): every public function, class, and config field
+
+## Research and rationale
+
+- [Why not just ask an LLM to write this?](doc/guide/why-not-diy.md): concrete bugs found in this project's own development (thread-safety races, secret-redaction false positives, non-monotonic majority voting) as the case for a maintained package over a generated script
+- [Judge-voting benchmark](doc/judge-voting-benchmark.md): full methodology and results for whether majority-vote judge caching actually improves reliability (answer: it's a better detector of unreliable assertions than a fix for them)
+- [Comparison with other tools](doc/comparison.md): researched, sourced comparison against DeepEval, Promptfoo, Ragas, vcr-langchain, Langfuse, Braintrust, LangSmith, Giskard, and others
+- [Product spec](doc/prd.md): the full PRD, including deviations from the original plan and why
+
+## Project status
+
+- [Task tracker](doc/task.md): what's done, what's left, and why — updated as work happens, not retrospectively
+- [Changelog](CHANGELOG.md): release notes
+
+## Optional
+
+- [Bundled example](examples/README.md): a runnable customer-support test with a pre-recorded cache, plus a live-API smoke test

@@ -1,6 +1,8 @@
 # Configuration
 
-Drop a `.gentest.yaml` at your project root (see [`.gentest.yaml`](../../.gentest.yaml)):
+Drop a `.gentest.yaml` at your project root (see the
+[sample file](https://github.com/parthmax2/gentest/blob/main/.gentest.yaml) in
+the repo, or generate one with `gentest init`):
 
 ```yaml
 mode: auto

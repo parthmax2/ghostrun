@@ -1,0 +1,57 @@
+site_name: GenTest
+site_description: >-
+  pytest for LLMs: deterministic HTTP record/replay, local LLM-as-judge
+  semantic assertions, and prompt regression diffing for testing GenAI
+  applications in Python.
+site_url: https://parthmax2.github.io/gentest/
+repo_url: https://github.com/parthmax2/gentest
+repo_name: parthmax2/gentest
+edit_uri: edit/main/doc/
+
+docs_dir: doc
+site_dir: site
+
+theme:
+  name: material
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - navigation.top
+    - search.suggest
+    - content.code.copy
+    - content.action.edit
+
+markdown_extensions:
+  - meta
+  - toc:
+      permalink: true
+  - admonition
+  - pymdownx.highlight
+  - pymdownx.superfences
+
+nav:
+  - Home: index.md
+  - Guide:
+      - Recording and replay: guide/recording.md
+      - Semantic assertions: guide/assertions.md
+      - Prompt regression tracking: guide/regression-tracking.md
+      - Configuration: guide/configuration.md
+      - API reference: guide/api-reference.md
+      - Why not just ask an LLM?: guide/why-not-diy.md
+  - Research:
+      - Judge-voting benchmark: judge-voting-benchmark.md
+      - Comparison with other tools: comparison.md
+      - Product spec: prd.md
+  - Project:
+      - Task tracker: task.md
