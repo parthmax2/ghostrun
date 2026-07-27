@@ -38,11 +38,9 @@ vcr-langchain, and other tools in this space.
 - [Why not just ask an LLM to write this?](doc/guide/why-not-diy.md): concrete bugs found in this project's own development (thread-safety races, secret-redaction false positives, non-monotonic majority voting) as the case for a maintained package over a generated script
 - [Judge-voting benchmark](doc/judge-voting-benchmark.md): full methodology and results for whether majority-vote judge caching actually improves reliability (answer: it's a better detector of unreliable assertions than a fix for them)
 - [Comparison with other tools](doc/comparison.md): researched, sourced comparison against DeepEval, Promptfoo, Ragas, vcr-langchain, Langfuse, Braintrust, LangSmith, Giskard, and others
-- [Product spec](doc/prd.md): the full PRD, including deviations from the original plan and why
 
 ## Project status
 
-- [Task tracker](doc/task.md): what's done, what's left, and why — updated as work happens, not retrospectively
 - [Changelog](CHANGELOG.md): release notes
 
 ## Optional

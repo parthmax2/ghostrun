@@ -105,7 +105,7 @@ All notable changes to ghostrun are documented here. The format is based on
   time, and majority voting only marginally/non-monotonically improved
   reliability there (k=1: 49.6%, k=3: 55.8%, k=5: 51.8%) — voting is a better
   *detector* of unreliable criteria (via `disagreement_rate`) than a *fix* for
-  them. Full methodology and numbers in `doc/prd.md`.
+  them. Full methodology and numbers in `doc/judge-voting-benchmark.md`.
 - **Prompt regression tracking (PRD Phase 2, Feature 4).** Runs now snapshot the
   text every assertion saw plus each verdict, so two prompt versions can be
   compared:
