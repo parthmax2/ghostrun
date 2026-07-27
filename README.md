@@ -7,12 +7,26 @@
 
 **pytest for LLMs.** Deterministic record/replay and semantic assertions for GenAI apps — **local-first, privacy-first, zero SaaS lock-in.**
 
-Generative AI outputs vary, so `assert output == "expected"` doesn't work. ghostrun gives you two things instead:
+### The problem
 
-1. **Deterministic replay** — the first run records real LLM HTTP calls to a local `.ghostrun_cache/`; every run after replays them instantly. Zero API cost, zero latency, zero flakiness.
-2. **Semantic assertions** — assert on *meaning* (`contains_intent`, `tone_is`, …), graded by a **local Ollama model** by default. Your prompts and data never leave your machine.
+```python
+reply = generate_reply("Where is my refund?")
+assert reply == "I'm sorry for the delay..."   # fails tomorrow: LLM never says the same thing twice
+```
 
-No cloud dashboard. No custom CLI to learn. Just `pytest`.
+Every real test run also means a live API call — slow, costs money, and now your CI needs a secret API key just to run the test suite.
+
+### What ghostrun does about it
+
+1. **Deterministic replay** — the first run records real LLM HTTP calls to a local `.ghostrun_cache/`; every run after replays them instantly from disk. Zero API cost, zero latency, zero flakiness, no key needed in CI.
+2. **Semantic assertions** — assert on *meaning*, not exact text:
+   ```python
+   ghostrun.expect(reply).contains_intent("apology")
+   ghostrun.expect(reply).tone_is("empathetic")
+   ```
+   Graded by a **local Ollama model** by default — your prompts and data never leave your machine. That grading verdict gets cached too, so it's also free and deterministic after the first run.
+
+No cloud dashboard. No custom CLI to learn. No dataset to author by hand. Just `pytest`.
 
 ---
 
@@ -77,25 +91,44 @@ you call a judge-backed assertion (`contains_intent`, `tone_is`, `matches`).
 Deterministic assertions (`contains`, `is_valid_json`) and tool-call assertions
 never invoke it.
 
+## Is this for you?
+
+**Use ghostrun if** you're writing pytest tests around code that calls an LLM
+(directly or via the OpenAI/Anthropic SDKs) and want that suite to run offline,
+free, and deterministically after the first recording.
+
+**Skip it if** you need a hosted dashboard/observability platform for
+production traffic (see Langfuse/LangSmith/Braintrust instead), you're
+building a red-team/adversarial test suite (see Giskard), or you want 50+
+pre-built judge metrics out of the box today (see DeepEval — more mature, more
+metrics, but doesn't intercept your app's own HTTP calls the way ghostrun
+does). See [doc/comparison.md](doc/comparison.md) for the full, researched
+breakdown of where ghostrun is ahead and where it's duplicating existing work.
+
 ## Documentation
+
+Start here, in order:
 
 | Guide | What's in it |
 | :--- | :--- |
 | [doc/guide/recording.md](doc/guide/recording.md) | How record/replay works, judge-verdict caching, supported providers, secret redaction, parallel test runs |
 | [doc/guide/assertions.md](doc/guide/assertions.md) | Semantic assertions, judge reliability (benchmarked, not asserted), majority-vote verdicts, tool/function-call assertions |
-| [doc/guide/regression-tracking.md](doc/guide/regression-tracking.md) | Snapshotting runs, `ghostrun diff`, posting a regression as a PR comment, JUnit CI integration |
 | [doc/guide/configuration.md](doc/guide/configuration.md) | `.ghostrun.yaml`, environment variables, pytest flags, `ghostrun doctor`, `ghostrun init` |
+
+Deeper reference, once you're past the basics:
+
+| Guide | What's in it |
+| :--- | :--- |
+| [doc/guide/regression-tracking.md](doc/guide/regression-tracking.md) | Snapshotting runs, `ghostrun diff`, posting a regression as a PR comment, JUnit CI integration |
 | [doc/guide/api-reference.md](doc/guide/api-reference.md) | Every public function, class, exception, and config field |
 | [doc/guide/why-not-diy.md](doc/guide/why-not-diy.md) | The actual bugs found building this — the case for a maintained package over a five-minute prompt |
 | [doc/judge-voting-benchmark.md](doc/judge-voting-benchmark.md) | Full methodology and results for the majority-vote judge-caching benchmark |
 | [doc/comparison.md](doc/comparison.md) | Researched comparison against DeepEval, Promptfoo, Ragas, vcr-langchain, and 9 other tools |
-| [doc/prd.md](doc/prd.md) | Product spec |
-| [doc/task.md](doc/task.md) | Living status tracker — what's done, what's left, and why |
 | [CHANGELOG.md](CHANGELOG.md) | Release notes |
 
 A hosted, searchable version of this documentation is planned at
-[parthmax2.github.io/ghostrun](https://parthmax2.github.io/ghostrun/) once the
-repo is public (config in `mkdocs.yml`, builds via `.github/workflows/docs.yml`).
+[parthmax2.github.io/ghostrun](https://parthmax2.github.io/ghostrun/) (config
+in `mkdocs.yml`, builds via `.github/workflows/docs.yml`).
 
 ## Contributing
 
