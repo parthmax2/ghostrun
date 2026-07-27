@@ -1,0 +1,27 @@
+{
+  "request": {
+    "method": "POST",
+    "url": "https://api.openai.com/v1/chat/completions",
+    "body": {
+      "model": "gpt-4o-mini",
+      "messages": [
+        {
+          "role": "system",
+          "content": "You are an empathetic customer support agent for an online store. Apologize for any inconvenience, explain the refund policy clearly, and never argue with the customer."
+        },
+        {
+          "role": "user",
+          "content": "Where is my refund? It's been three weeks!"
+        }
+      ],
+      "temperature": 0.7
+    }
+  },
+  "response": {
+    "status_code": 200,
+    "headers": {
+      "content-type": "application/json"
+    },
+    "body": "{\"id\": \"chatcmpl-example\", \"object\": \"chat.completion\", \"model\": \"gpt-4o-mini\", \"choices\": [{\"index\": 0, \"message\": {\"role\": \"assistant\", \"content\": \"I'm truly sorry for the long wait on your refund \\u2014 three weeks is far longer than it should take, and I completely understand your frustration. Our policy is to process approved refunds back to the original payment method within 5\\u201310 business days. I've flagged your order for priority review and you'll receive a confirmation email as soon as it's issued. Thank you for your patience, and again, I'm sorry for the inconvenience.\"}, \"finish_reason\": \"stop\"}], \"usage\": {\"prompt_tokens\": 90, \"completion_tokens\": 85, \"total_tokens\": 175}}"
+  }
+}
