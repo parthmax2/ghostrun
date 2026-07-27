@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>API reference — ghostrun</title>
+<meta name="description" content="Every public function, class, exception, and config field in ghostrun.__all__.">
+<link rel="icon" href="../assets/ghost-icon.svg">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="18" height="18"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>
+  </button>
+  <a class="brand" href="../index.html"><img src="../assets/ghost-icon.svg" alt="">GhostRun</a>
+  <div class="header-spacer"></div>
+  <div class="search-wrap">
+    <span class="search-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
+    <input class="search-input" id="search-input" type="text" placeholder="Search docs..." autocomplete="off">
+    <div class="search-results" id="search-results"></div>
+  </div>
+  <div class="header-actions">
+    <button class="icon-btn" id="theme-toggle" aria-label="Toggle theme">
+      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="4"/><line x1="12" y1="20" x2="12" y2="22"/><line x1="4.9" y1="4.9" x2="6.3" y2="6.3"/><line x1="17.7" y1="17.7" x2="19.1" y2="19.1"/><line x1="2" y1="12" x2="4" y2="12"/><line x1="20" y1="12" x2="22" y2="12"/><line x1="4.9" y1="19.1" x2="6.3" y2="17.7"/><line x1="17.7" y1="6.3" x2="19.1" y2="4.9"/></svg>
+      <svg class="icon-moon" viewBox="0 0 24 24" fill="currentColor"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    </button>
+    <a class="icon-btn" href="https://github.com/parthmax2/ghostrun" target="_blank" rel="noopener" aria-label="GitHub repository">
+      <svg viewBox="0 0 16 16" width="18" height="18" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+    </a>
+  </div>
+</header>
+
+<div class="scrim" id="scrim"></div>
+
+<div class="shell">
+  <nav class="sidebar" aria-label="Sidebar">
+    <div class="side-group">
+      <div class="side-group-title">Guide</div>
+      <a class="side-link" href="getting-started.html">Getting started</a>
+      <a class="side-link" href="recording.html">Recording and replay</a>
+      <a class="side-link" href="assertions.html">Semantic assertions</a>
+      <a class="side-link" href="regression-tracking.html">Prompt regression tracking</a>
+      <a class="side-link" href="configuration.html">Configuration</a>
+      <a class="side-link active" href="api-reference.html">API reference</a>
+      <a class="side-link" href="why-not-diy.html">Why not just ask an LLM?</a>
+    </div>
+    <div class="side-group">
+      <div class="side-group-title">Research</div>
+      <a class="side-link" href="../research/comparison.html">Comparison with other tools</a>
+      <a class="side-link" href="../research/judge-voting-benchmark.html">Judge-voting benchmark</a>
+    </div>
+  </nav>
+
+  <main class="main">
+    <article class="article">
+      <div class="breadcrumb"><a href="../index.html">Home</a> / Guide</div>
+      <h1>API reference</h1>
+      <p class="lede">The complete public surface of ghostrun — everything in <code>ghostrun.__all__</code>. Anything not listed here is a private implementation detail and may change without notice.</p>
+
+      <h2>Recording</h2>
+      <h3><code>ghostrun.record(func=None, *, model=None, mode=None, cache_dir=None)</code></h3>
+      <p>Decorator. Intercepts LLM HTTP calls made inside the decorated test and records/replays them. Works on sync and async test functions.</p>
+      <pre><code>@ghostrun.record(model="gpt-4o-mini")
+def test_reply():
+    ...</code></pre>
+      <p>Usable bare (<code>@ghostrun.record</code>) or parameterized. <code>model</code> is accepted for documentation purposes and does not change interception behavior — it's not sent anywhere. <code>mode</code> and <code>cache_dir</code> override the resolved config for this test only.</p>
+
+      <h3><code>ghostrun.recording(*, model=None, mode=None, cache_dir=None)</code></h3>
+      <p>Context-manager form of <code>record</code>, for intercepting only part of a test:</p>
+      <pre><code>def test_reply():
+    with ghostrun.recording():
+        reply = generate_reply(...)
+    ghostrun.expect(reply).contains_intent("apology")</code></pre>
+
+      <h2>Assertions</h2>
+      <h3><code>ghostrun.expect(text, *, judge=None) -&gt; Expectation</code></h3>
+      <p>Entry point for semantic and deterministic assertions on a string. Raises <code>TypeError</code> if <code>text</code> isn't a <code>str</code>. Pass <code>judge=</code> to use a specific judge instance instead of the configured default (mainly useful in tests of your own code).</p>
+
+      <p><strong>Expectation methods</strong> (all chainable, all raise <code>SemanticAssertionError</code> — a subclass of <code>AssertionError</code> — on failure):</p>
+      <div class="table-scroll">
+      <table>
+        <thead><tr><th>Method</th><th>Judge-backed?</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td><code>.contains_intent(intent)</code></td><td>yes</td><td>text expresses the given intent/content</td></tr>
+          <tr><td><code>.does_not_contain_intent(intent)</code></td><td>yes</td><td>text does <em>not</em> express it</td></tr>
+          <tr><td><code>.tone_is(tone)</code></td><td>yes</td><td>overall tone matches</td></tr>
+          <tr><td><code>.matches(criterion)</code></td><td>yes</td><td>free-form judge criterion escape hatch</td></tr>
+          <tr><td><code>.contains(substring)</code></td><td>no</td><td>exact substring match</td></tr>
+          <tr><td><code>.does_not_contain(substring)</code></td><td>no</td><td>exact substring absence</td></tr>
+          <tr><td><code>.is_valid_json()</code></td><td>no</td><td><code>json.loads</code> succeeds</td></tr>
+        </tbody>
+      </table>
+      </div>
+
+      <h3><code>ghostrun.expect_tool_calls(calls) -&gt; ToolCallExpectation</code></h3>
+      <p>Entry point for tool/function-call assertions. Normalizes OpenAI (<code>function.arguments</code> as a JSON string), Anthropic (<code>input</code>), and plain <code>{"name", "arguments"}</code> shapes automatically. <code>calls</code> may be <code>None</code> or empty.</p>
+
+      <p><strong>ToolCallExpectation methods</strong> (all chainable):</p>
+      <div class="table-scroll">
+      <table>
+        <thead><tr><th>Method</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td><code>.called(name)</code></td><td>some call matches <code>name</code></td></tr>
+          <tr><td><code>.did_not_call(name)</code></td><td>no call matches <code>name</code></td></tr>
+          <tr><td><code>.called_once(name)</code></td><td>exactly one call matches <code>name</code></td></tr>
+          <tr><td><code>.call_count(n)</code></td><td>exactly <code>n</code> calls total</td></tr>
+          <tr><td><code>.called_with(name, **kwargs)</code></td><td>some call to <code>name</code> has these argument values (subset match)</td></tr>
+        </tbody>
+      </table>
+      </div>
+      <p><code>.names</code> (property) returns the list of called tool names; <code>len(expectation)</code> returns the total call count.</p>
+
+      <h2>Configuration</h2>
+      <h3><code>ghostrun.configure(**kwargs) -&gt; Config</code></h3>
+      <p>Overrides configuration for the current process. Accepts the same field names as <code>Config</code> below. Returns the resulting <code>Config</code>.</p>
+      <pre><code>ghostrun.configure(judge="echo", judge_model="qwen2.5:7b")</code></pre>
+
+      <h3><code>ghostrun.Config</code></h3>
+      <p>Frozen dataclass holding all resolved settings:</p>
+      <div class="table-scroll">
+      <table>
+        <thead><tr><th>Field</th><th>Default</th><th>Meaning</th></tr></thead>
+        <tbody>
+          <tr><td><code>mode</code></td><td><code>"auto"</code></td><td><code>auto</code> | <code>record</code> | <code>replay</code></td></tr>
+          <tr><td><code>cache_dir</code></td><td><code>.ghostrun_cache</code></td><td>Where recordings and verdicts live</td></tr>
+          <tr><td><code>judge</code></td><td><code>"ollama"</code></td><td><code>ollama</code> | <code>echo</code></td></tr>
+          <tr><td><code>judge_model</code></td><td><code>llama3.2:3b</code></td><td>Model name passed to the judge backend</td></tr>
+          <tr><td><code>judge_base_url</code></td><td><code>http://localhost:11434</code></td><td>Ollama daemon URL</td></tr>
+          <tr><td><code>judge_timeout</code></td><td><code>60.0</code></td><td>Seconds before a judge call times out</td></tr>
+          <tr><td><code>judge_cache</code></td><td><code>True</code></td><td>Cache judge verdicts (see <a href="recording.html">Recording and replay</a>)</td></tr>
+          <tr><td><code>judge_votes</code></td><td><code>1</code></td><td>Majority-vote grading count (see <a href="assertions.html">Semantic assertions</a>)</td></tr>
+        </tbody>
+      </table>
+      </div>
+
+      <h3><code>ghostrun.get_config() -&gt; Config</code></h3>
+      <p>Returns the active, resolved configuration (defaults → <code>.ghostrun.yaml</code> → environment → <code>configure()</code> overrides), computing it once per process.</p>
+
+      <h3><code>ghostrun.load_config(start=None) -&gt; Config</code></h3>
+      <p>Re-resolves configuration from scratch (defaults + file + env), ignoring any prior <code>configure()</code> call. Mainly useful in tests of your own configuration.</p>
+
+      <h3><code>ghostrun.set_config(cfg)</code> / <code>ghostrun.reset_config()</code></h3>
+      <p>Set the active config directly, or clear it so the next <code>get_config()</code> call re-resolves from defaults/file/env. Used internally by the pytest plugin's CLI-flag handling; rarely needed directly.</p>
+
+      <h2>Exceptions</h2>
+      <div class="table-scroll">
+      <table>
+        <thead><tr><th>Exception</th><th>Raised when</th></tr></thead>
+        <tbody>
+          <tr><td><code>ghostrun.SemanticAssertionError</code></td><td>Any <code>Expectation</code>/<code>ToolCallExpectation</code> assertion fails. Subclasses <code>AssertionError</code>.</td></tr>
+          <tr><td><code>ghostrun.CacheMiss</code></td><td><code>mode="replay"</code> and no cached HTTP response or judge verdict exists for the request.</td></tr>
+          <tr><td><code>ghostrun.UnsupportedHttpx</code></td><td>The installed httpx version doesn't expose the hook the interceptor needs.</td></tr>
+          <tr><td><code>ghostrun.judge.ollama.JudgeUnavailable</code></td><td>The Ollama daemon is unreachable, the model isn't pulled, or it returned an error — not exported at the top level, imported from <code>ghostrun.judge.ollama</code> if you need to catch it specifically.</td></tr>
+        </tbody>
+      </table>
+      </div>
+
+      <h2>CLI</h2>
+      <p>See <a href="regression-tracking.html">Prompt regression tracking</a> for <code>ghostrun list / show / diff</code> and <a href="configuration.html">Configuration</a> for <code>ghostrun doctor</code> and <code>ghostrun init</code>.</p>
+
+      <h2>Pytest plugin</h2>
+      <p>Auto-registered via the <code>pytest11</code> entry point — no conftest wiring needed. Flags: <code>--ghostrun-record</code>, <code>--ghostrun-replay</code>, <code>--ghostrun-judge NAME</code>, <code>--ghostrun-snapshot NAME</code>, <code>--ghostrun-label TEXT</code>. A <code>ghostrun_record</code> fixture is also available as a factory form of the decorator for tests that prefer explicit setup over <code>@ghostrun.record</code>.</p>
+
+      <div class="page-nav">
+        <a href="configuration.html"><span class="dir">Previous</span>Configuration</a>
+        <a class="next" href="why-not-diy.html"><span class="dir">Next</span>Why not just ask an LLM?</a>
+      </div>
+    </article>
+  </main>
+
+  <aside class="toc">
+    <div class="toc-title">On this page</div>
+    <ul id="toc-list"></ul>
+  </aside>
+</div>
+
+<footer class="site-footer">
+  <a href="https://github.com/parthmax2/ghostrun" target="_blank" rel="noopener">parthmax2/ghostrun</a> · MIT License
+</footer>
+
+<script src="../assets/search-index.js"></script>
+<script src="../assets/app.js"></script>
+</body>
+</html>

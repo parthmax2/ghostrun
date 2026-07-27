@@ -16,7 +16,7 @@ dist/
 .coverage.*
 htmlcov/
 .venv/
-site/
+_mkdocs_build/
 
 .vscode/
 .idea/
