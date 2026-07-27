@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "ghostrun"
-version = "0.1.0"
+version = "0.1.1"
 description = "pytest for LLMs: deterministic HTTP record/replay, local LLM-as-judge semantic assertions, and prompt regression diffing for testing GenAI applications."
 readme = "README.md"
 requires-python = ">=3.9"
