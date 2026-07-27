@@ -45,8 +45,7 @@ def test_opt_out_env_var(monkeypatch):
 def test_state_selection(stats, expected_state, monkeypatch):
     monkeypatch.delenv("GHOSTRUN_NO_MASCOT", raising=False)
     block = mascot.render(stats, stream=FakeStream(isatty=False))
-    face_line = mascot._FACES[expected_state][1]  # eyes line is state-distinctive
-    assert face_line in block
+    assert mascot._ASCII_FACE[expected_state] in block
 
 
 def test_color_and_emoji_only_on_tty_utf8(monkeypatch):
