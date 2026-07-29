@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Judge-voting benchmark — ghostrun</title>
+<meta name="description" content="Does majority-vote caching actually fix LLM-judge unreliability? A small, honest benchmark against a real judge.">
+<link rel="icon" href="../assets/ghost-icon.svg">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="18" height="18"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>
+  </button>
+  <a class="brand" href="../index.html"><img src="../assets/ghost-icon.svg" alt="">GhostRun</a>
+  <div class="header-spacer"></div>
+  <div class="search-wrap">
+    <span class="search-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
+    <input class="search-input" id="search-input" type="text" placeholder="Search docs..." autocomplete="off">
+    <div class="search-results" id="search-results"></div>
+  </div>
+  <div class="header-actions">
+    <button class="icon-btn" id="theme-toggle" aria-label="Toggle theme">
+      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="4"/><line x1="12" y1="20" x2="12" y2="22"/><line x1="4.9" y1="4.9" x2="6.3" y2="6.3"/><line x1="17.7" y1="17.7" x2="19.1" y2="19.1"/><line x1="2" y1="12" x2="4" y2="12"/><line x1="20" y1="12" x2="22" y2="12"/><line x1="4.9" y1="19.1" x2="6.3" y2="17.7"/><line x1="17.7" y1="6.3" x2="19.1" y2="4.9"/></svg>
+      <svg class="icon-moon" viewBox="0 0 24 24" fill="currentColor"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    </button>
+    <a class="icon-btn" href="https://github.com/parthmax2/ghostrun" target="_blank" rel="noopener" aria-label="GitHub repository">
+      <svg viewBox="0 0 16 16" width="18" height="18" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+    </a>
+  </div>
+</header>
+
+<div class="scrim" id="scrim"></div>
+
+<div class="shell">
+  <nav class="sidebar" aria-label="Sidebar">
+    <div class="side-group">
+      <div class="side-group-title">Guide</div>
+      <a class="side-link" href="../guide/getting-started.html">Getting started</a>
+      <a class="side-link" href="../guide/recording.html">Recording and replay</a>
+      <a class="side-link" href="../guide/assertions.html">Semantic assertions</a>
+      <a class="side-link" href="../guide/regression-tracking.html">Prompt regression tracking</a>
+      <a class="side-link" href="../guide/configuration.html">Configuration</a>
+      <a class="side-link" href="../guide/api-reference.html">API reference</a>
+      <a class="side-link" href="../guide/why-not-diy.html">Why not just ask an LLM?</a>
+    </div>
+    <div class="side-group">
+      <div class="side-group-title">Research</div>
+      <a class="side-link" href="comparison.html">Comparison with other tools</a>
+      <a class="side-link active" href="judge-voting-benchmark.html">Judge-voting benchmark</a>
+    </div>
+  </nav>
+
+  <main class="main">
+    <article class="article">
+      <div class="breadcrumb"><a href="../index.html">Home</a> / Research</div>
+      <h1>Does majority-vote caching actually fix LLM-judge unreliability?</h1>
+      <p class="lede">A small, honest benchmark — and a negative-ish result worth publishing anyway.</p>
+
+      <h2>The question</h2>
+      <p>ghostrun, like several LLM-testing tools, uses an LLM to grade semantic assertions (<code>expect(reply).tone_is("empathetic")</code>) and caches the verdict so tests are fast and deterministic on replay. But caching a <em>single</em> verdict freezes whatever the judge said on that one draw — including if it was wrong.</p>
+
+      <p>Published LLM-as-judge reliability research gives reason to worry. <a href="https://arxiv.org/html/2606.13685" target="_blank" rel="noopener">"The Coin Flip Judge? Reliability and Bias in LLM-as-a-Judge Evaluation"</a> found a mean flip rate of <strong>13.6%</strong> on repeated grading of identical input (same transcript, same rubric, same model), rising to 56% on the hardest items, and that <strong>11 repeated trials</strong> are needed for majority vote to recover a 50-trial reference verdict at 95% confidence. <a href="https://arxiv.org/html/2606.26185v1" target="_blank" rel="noopener">"Necessary but Not Sufficient"</a> found non-reproducibility persists even at temperature 0 across 690 calls, two providers, three model tiers. Both papers recommend the same fix: <strong>multi-trial aggregation and majority voting.</strong></p>
+
+      <p>So we built it — <code>judge.votes: k</code> grades k times on a cache miss and caches the majority verdict plus the observed disagreement rate — and then, instead of assuming it worked, benchmarked it against a real judge.</p>
+
+      <h2>Method</h2>
+      <p>90 live grading calls to a local <code>llama3.2:3b</code> judge (via Ollama), no synthetic data. Three cases chosen to span difficulty:</p>
+
+      <div class="table-scroll">
+      <table>
+        <thead><tr><th>Case</th><th>Criterion</th></tr></thead>
+        <tbody>
+          <tr><td><code>easy_control</code></td><td>"I'm so sorry for the delay with your refund." satisfies "contains an apology"</td></tr>
+          <tr><td><code>borderline_tone</code></td><td>"Well, I suppose your concern is somewhat valid, if you insist." satisfies "genuinely warm and empathetic"</td></tr>
+          <tr><td><code>sarcasm</code></td><td>"Wow, great job breaking it AGAIN. Impressive." satisfies "is sarcastic"</td></tr>
+        </tbody>
+      </table>
+      </div>
+
+      <p>Each case was graded <strong>15 times</strong> at temperature 0 and again at temperature 0.7 (90 calls total). The modal (most frequent) verdict across the 15 draws was treated as the judge's "true opinion" for that input. We then bootstrap-resampled 500 subsets of size k ∈ {1, 3, 5} from the real draws and measured how often the majority-of-k matched the modal verdict — i.e., how much more reliable caching k votes is than caching 1, in practice, on this judge.</p>
+
+      <h2>Results</h2>
+      <div class="table-scroll">
+      <table>
+        <thead><tr><th>Case</th><th>Temp</th><th>Flip rate</th><th>k=1</th><th>k=3</th><th>k=5</th></tr></thead>
+        <tbody>
+          <tr><td>easy_control</td><td>0.0</td><td>0.0%</td><td>100.0%</td><td>100.0%</td><td>100.0%</td></tr>
+          <tr><td>easy_control</td><td>0.7</td><td>0.0%</td><td>100.0%</td><td>100.0%</td><td>100.0%</td></tr>
+          <tr><td>borderline_tone</td><td>0.0</td><td>0.0%</td><td>100.0%</td><td>100.0%</td><td>100.0%</td></tr>
+          <tr><td>borderline_tone</td><td>0.7</td><td>0.0%</td><td>100.0%</td><td>100.0%</td><td>100.0%</td></tr>
+          <tr><td>sarcasm</td><td>0.0</td><td>0.0%</td><td>100.0%</td><td>100.0%</td><td>100.0%</td></tr>
+          <tr><td><strong>sarcasm</strong></td><td><strong>0.7</strong></td><td><strong>46.7%</strong></td><td><strong>49.6%</strong></td><td><strong>55.8%</strong></td><td><strong>51.8%</strong></td></tr>
+          <tr><td><strong>Average</strong></td><td></td><td><strong>7.8%</strong></td><td><strong>91.6%</strong></td><td><strong>92.6%</strong></td><td><strong>92.0%</strong></td></tr>
+        </tbody>
+      </table>
+      </div>
+
+      <p><strong>5 of 6 conditions were perfectly reproducible.</strong> At temperature 0 (the shipped default judge configuration), a single draw was stable across all 15 repeats — for the easy case, the borderline-tone case, <em>and</em> the sarcasm case. Voting bought nothing there because there was nothing to fix.</p>
+
+      <p><strong>The one condition with real variance is the interesting one.</strong> Sarcasm graded at temperature 0.7 flipped 46.7% of the time — close to an actual coin flip, and a clean small-scale replication of the "Coin Flip Judge" framing. Majority voting helped only marginally, and <strong>not monotonically</strong>: k=1 → 49.6%, k=3 → 55.8%, k=5 → <strong>51.8%</strong> (worse than k=3). Going from 3 votes to 5 made the cached verdict <em>less</em> likely to match the judge's own modal opinion, not more.</p>
+
+      <h2>What this means</h2>
+      <p><strong>Majority-vote caching does not reliably rescue a criterion the judge has no stable opinion on.</strong> When the underlying grading decision is genuinely close to 50/50, averaging more noisy draws converges toward a slightly-less-noisy coin flip — not toward a correct answer, because there isn't a well-defined correct answer to converge to. This is consistent with, and gives a small-scale mechanistic account for, why the published literature needs 11+ trials and still reports residual noise: near a decision boundary, more votes have diminishing and non-monotonic returns.</p>
+
+      <p><strong>The practically useful result is the disagreement rate itself, not the vote resolution.</strong> A cached verdict with a high <code>disagreement_rate</code> is a signal that the criterion is ambiguous or the judge is guessing on this input — a prompt to rewrite the assertion or use a stronger judge, not a number that more votes will reliably fix. ghostrun surfaces this rate on every cached verdict for exactly this reason: <strong>voting is a better detector of unreliable assertions than a corrector of them.</strong></p>
+
+      <div class="callout">
+        <span class="callout-label">A secondary, more speculative observation</span>
+        <p>Average flip rate here (7.8%) was roughly half the ~13.6% the published literature reports for cloud-served judges. Published root causes for judge non-determinism — batch-size-dependent floating-point reduction, MoE routing variance, load-balancing across non-identical replicas — are specific to multi-tenant, batched, cloud-served inference. A local, single-tenant Ollama instance processing one request at a time structurally can't exhibit those particular effects. That's a plausible explanation, not a proven one: this is six data points on one 3B model, and a larger replication across more cases, models, and providers would be needed before treating "local judges are more reproducible than cloud judges" as established rather than suggestive.</p>
+      </div>
+
+      <h2>Practical guidance this produces</h2>
+      <ul>
+        <li><strong>Keep <code>judge.votes: 1</code> and <code>temperature=0</code></strong> (both are ghostrun's defaults) for most assertions — the benchmark found no case where voting was needed at temperature 0.</li>
+        <li><strong>Treat a nonzero <code>disagreement_rate</code> as a code smell in the assertion</strong>, not a problem more votes will solve. Rewrite the criterion to be less ambiguous, or route it to a stronger judge.</li>
+        <li><strong>Don't expect majority voting to buy monotonic improvement.</strong> k=5 was measurably worse than k=3 in the one case where it mattered here; treat any single vote count as a hyperparameter with its own noise, not a dial that only helps as you turn it up.</li>
+      </ul>
+
+      <h2>Reproducing this</h2>
+      <p>This write-up lives alongside the <code>judge.votes</code> implementation (<code>ghostrun/judge/caching.py</code>) in this repository. The majority-vote mechanism itself is unit-tested with a scripted judge (no network required) in <code>tests/test_judge_voting.py</code>; this document's numbers come from one live run against the real judge and are reported as a single run, not an average over repeated benchmark executions — a caveat worth stating plainly, since the phenomenon under study is itself run-to-run variance.</p>
+
+      <div class="page-nav">
+        <a href="../guide/why-not-diy.html"><span class="dir">Previous</span>Why not just ask an LLM?</a>
+        <a class="next" href="comparison.html"><span class="dir">Next</span>Comparison with other tools</a>
+      </div>
+    </article>
+  </main>
+
+  <aside class="toc">
+    <div class="toc-title">On this page</div>
+    <ul id="toc-list"></ul>
+  </aside>
+</div>
+
+<footer class="site-footer">
+  <a href="https://github.com/parthmax2/ghostrun" target="_blank" rel="noopener">parthmax2/ghostrun</a> · MIT License
+</footer>
+
+<script src="../assets/search-index.js"></script>
+<script src="../assets/app.js"></script>
+</body>
+</html>
