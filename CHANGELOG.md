@@ -4,6 +4,12 @@ All notable changes to ghostrun are documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/), and this project adheres to
 [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Added
+- `is_grounded_in(context)` for RAG groundedness evaluation, letting tests check
+  whether an LLM answer is supported by retrieved context.
+
 ## [0.1.5] - 2026-07-29
 
 ### Added

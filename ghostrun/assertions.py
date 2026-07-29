@@ -84,6 +84,24 @@ class Expectation:
             )
         return self
 
+    def is_grounded_in(self, context: str) -> "Expectation":
+        """Assert that an answer is supported by retrieved RAG context."""
+        if not isinstance(context, str):
+            raise TypeError(f"is_grounded_in() requires a string, got {type(context).__name__}")
+        criterion = (
+            "The text is fully supported by the provided context and does not "
+            "introduce claims, facts, numbers, entities, or recommendations that "
+            "are absent from the context.\n\n"
+            f"Context:\n{context}"
+        )
+        grade = self.judge.grade(self.text, criterion)
+        self._record("is_grounded_in", "provided context", grade.passed, grade.reason)
+        if not grade.passed:
+            raise SemanticAssertionError(
+                _msg("expected text to be grounded in the provided context", self.text, grade.reason)
+            )
+        return self
+
     # --- deterministic (no judge) ------------------------------------------
 
     def contains(self, substring: str) -> "Expectation":
