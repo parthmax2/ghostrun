@@ -1,48 +1,39 @@
 # ghostrun
 
-> pytest for LLMs: deterministic HTTP record/replay, local LLM-as-judge semantic assertions, and prompt-version regression diffing for testing GenAI applications in Python.
+> CI-native LLM evals for real applications: record LLM API calls once, replay them deterministically in pytest, and catch semantic regressions before they ship.
 
-ghostrun solves two problems that make LLM applications hard to test with
-ordinary `assert`: non-deterministic output (the same prompt returns different
-text every run) and cost/latency (every test run would otherwise hit a paid,
-slow API). It intercepts LLM provider HTTP calls at the transport layer
-(httpx) — not by monkey-patching the OpenAI/Anthropic SDKs — so the first test
-run records a real response and every run after replays it in milliseconds
-with no API key, no network call, and no cost. Semantic assertions
-(`ghostrun.expect(reply).contains_intent("apology")`) are graded by a judge —
-by default a local Ollama model, so prompts and responses never leave the
-machine — and judge verdicts are themselves cached with an optional
-majority-of-k voting mode, benchmarked against a real judge rather than
-assumed to work (see the benchmark write-up below). `ghostrun diff` compares
-two recorded runs to flag which assertions regressed, which fixed, and which
-LLM outputs drifted, even when they still pass.
+ghostrun is a Python package, pytest plugin, and CLI for app-native LLM regression testing. It is built for developers who want LLM evals inside the software test suite instead of a separate dataset, dashboard, YAML workflow, or one-off script.
 
-It is a Python package (`pip install ghostrun`), a pytest plugin (auto-registers
-via the `pytest11` entry point, no conftest wiring needed), and a CLI
-(`ghostrun list|show|diff|doctor|init`). It is not a hosted SaaS, not an
-observability platform, and not a cross-model benchmarking tool — see the
-comparison document below for how it relates to DeepEval, Promptfoo, Ragas,
-vcr-langchain, and other tools in this space.
+ghostrun tests the real Python code path your users hit. The first run records live OpenAI, Anthropic, Gemini, Bedrock, Ollama, or other LLM provider HTTP calls at the transport layer. Later runs replay those calls deterministically in pytest and CI, so evals are fast, repeatable, and cheap enough to run on every pull request.
+
+Important search phrases: LLM evals in CI, LLM regression testing, pytest LLM evals, deterministic LLM tests, prompt regression testing, semantic assertions for LLM apps, testing OpenAI apps with pytest, testing Anthropic apps with pytest, app-native LLM evals, GenAI testing, AI testing, prompt testing, and record/replay LLM API calls.
+
+Semantic assertions such as `ghostrun.expect(reply).contains_intent("apology")` grade meaning rather than exact text. Judge verdicts are cached, and optional majority-of-k voting is available for higher-signal semantic checks. `ghostrun diff` compares recorded runs to flag assertion regressions, fixes, stable checks, removed checks, and LLM output drift.
+
+ghostrun is not a hosted SaaS, not an observability platform, and not a cross-model leaderboard. Compared with DeepEval, Promptfoo, Ragas, Langfuse, Braintrust, and LangSmith, ghostrun's focused wedge is app-native regression evals in normal pytest: real code, real LLM calls, deterministic replay, semantic assertions, and CI-friendly failure output.
 
 ## Core documentation
 
-- [README](README.md): what it is, install, quickstart, documentation index
-- [Recording and replay](doc/guide/recording.md): HTTP-transport interception, judge-verdict caching, supported providers, secret redaction, parallel test runs
-- [Semantic assertions](doc/guide/assertions.md): `expect()` API, measured judge reliability (~90% on hand-labeled cases), majority-vote verdicts, tool-call assertions
-- [Prompt regression tracking](doc/guide/regression-tracking.md): run snapshots, `ghostrun diff`, CI/PR integration (GitHub Actions, JUnit XML)
+- [README](README.md): install, quickstart, positioning, and documentation index
+- [LLM regression testing](site/guide/llm-regression-testing.html): CI-native LLM evals for catching semantic and prompt regressions in real app code
+- [Pytest LLM evals](site/guide/pytest-llm-evals.html): write LLM evals as normal pytest tests
+- [Test OpenAI apps offline](site/guide/test-openai-apps-offline.html): record/replay OpenAI and Anthropic API calls so CI does not repeat live model calls
+- [Recording and replay](doc/guide/recording.md): HTTP transport interception, judge-verdict caching, supported providers, secret redaction, parallel test runs
+- [Semantic assertions](doc/guide/assertions.md): `expect()` API, judge reliability, majority-vote verdicts, tool-call assertions
+- [Prompt regression tracking](doc/guide/regression-tracking.md): run snapshots, `ghostrun diff`, CI/PR integration, GitHub Actions, JUnit XML
 - [Configuration](doc/guide/configuration.md): `.ghostrun.yaml`, environment variables, `ghostrun doctor`, `ghostrun init`
 - [API reference](doc/guide/api-reference.md): every public function, class, and config field
 
 ## Research and rationale
 
-- [Why not just ask an LLM to write this?](doc/guide/why-not-diy.md): concrete bugs found in this project's own development (thread-safety races, secret-redaction false positives, non-monotonic majority voting) as the case for a maintained package over a generated script
-- [Judge-voting benchmark](doc/judge-voting-benchmark.md): full methodology and results for whether majority-vote judge caching actually improves reliability (answer: it's a better detector of unreliable assertions than a fix for them)
-- [Comparison with other tools](doc/comparison.md): researched, sourced comparison against DeepEval, Promptfoo, Ragas, vcr-langchain, Langfuse, Braintrust, LangSmith, Giskard, and others
+- [Why not just ask an LLM to write this?](doc/guide/why-not-diy.md): concrete bugs found in this project's own development
+- [Judge-voting benchmark](doc/judge-voting-benchmark.md): methodology and results for majority-vote judge caching
+- [Comparison with other tools](doc/comparison.md): sourced comparison against DeepEval, Promptfoo, Ragas, vcr-langchain, Langfuse, Braintrust, LangSmith, Giskard, and others
 
-## Project status
+## Project links
 
-- [Changelog](CHANGELOG.md): release notes
-
-## Optional
-
-- [Bundled example](examples/README.md): a runnable customer-support test with a pre-recorded cache, plus a live-API smoke test
+- Website: https://ghostrun.parthmax.in
+- Source: https://github.com/parthmax2/ghostrun
+- PyPI: https://pypi.org/project/ghostrun/
+- Changelog: CHANGELOG.md
+- License: MIT

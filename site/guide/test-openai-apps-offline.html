@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Test OpenAI apps offline with pytest - ghostrun</title>
+<meta name="description" content="Use ghostrun to test OpenAI and Anthropic apps offline: record real LLM API calls once, replay them deterministically in pytest, and avoid repeated CI cost.">
+<link rel="canonical" href="https://ghostrun.parthmax.in/guide/test-openai-apps-offline.html">
+<meta name="keywords" content="test OpenAI app pytest, mock OpenAI calls pytest, record replay OpenAI API calls, test LLM apps offline">
+<link rel="icon" href="../assets/ghost-icon.svg">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header class="site-header"><button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="18" height="18"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg></button><a class="brand" href="../index.html"><img src="../assets/ghost-icon.svg" alt="">GhostRun</a><div class="header-spacer"></div><div class="search-wrap"><input class="search-input" id="search-input" type="text" placeholder="Search docs..." autocomplete="off"><div class="search-results" id="search-results"></div></div><div class="header-actions"><button class="icon-btn" id="theme-toggle" aria-label="Toggle theme">Aa</button><a class="icon-btn" href="https://github.com/parthmax2/ghostrun" target="_blank" rel="noopener" aria-label="GitHub repository">Git</a></div></header>
+<div class="scrim" id="scrim"></div>
+<div class="shell">
+  <nav class="sidebar" aria-label="Sidebar">
+    <div class="side-group">
+      <div class="side-group-title">Guide</div>
+      <a class="side-link" href="getting-started.html">Getting started</a>
+      <a class="side-link" href="llm-regression-testing.html">LLM regression testing</a>
+      <a class="side-link" href="pytest-llm-evals.html">Pytest LLM evals</a>
+      <a class="side-link active" href="test-openai-apps-offline.html">Test OpenAI apps offline</a>
+      <a class="side-link" href="recording.html">Recording and replay</a>
+      <a class="side-link" href="assertions.html">Semantic assertions</a>
+      <a class="side-link" href="regression-tracking.html">Prompt regression tracking</a>
+    </div>
+  </nav>
+  <main class="main">
+    <article class="article">
+      <div class="breadcrumb"><a href="../index.html">Home</a> / Guide</div>
+      <h1>Test OpenAI apps offline with pytest</h1>
+      <p class="lede">ghostrun records real OpenAI, Anthropic, and other LLM provider calls once, then replays them deterministically in CI.</p>
+
+      <h2>Why offline replay matters</h2>
+      <p>Live LLM tests are useful, but repeating the same API request on every local run and pull request is wasteful. It adds latency, requires secrets in CI, spends money, and can fail because the model changed wording.</p>
+
+      <h2>Record once</h2>
+      <pre><code>@ghostrun.record(model="gpt-4o-mini")
+def test_reply_generation():
+    reply = generate_reply("Where is my refund?")
+    ghostrun.expect(reply).contains_intent("refund policy")</code></pre>
+
+      <p>The first run records the provider HTTP response in <code>.ghostrun_cache/</code>. That cache can be committed after secret redaction, giving CI a deterministic fixture without hand-writing mocks.</p>
+
+      <h2>Replay in CI</h2>
+      <pre><code>pytest</code></pre>
+
+      <p>Every later run uses the recorded interaction. Your test stays connected to the real app path, but no longer depends on live network access or repeated provider calls.</p>
+
+      <h2>Better than hand mocks</h2>
+      <p>Hand-written mocks often drift from provider behavior. ghostrun records the real response shape your SDK received, then layers semantic assertions and regression diffing on top.</p>
+
+      <div class="callout">
+        <span class="callout-label">SEO note</span>
+        <p>This workflow is also what developers search for as "mock OpenAI calls in pytest", "record replay OpenAI API calls", and "test LLM apps offline".</p>
+      </div>
+
+      <div class="page-nav">
+        <a href="pytest-llm-evals.html"><span class="dir">Previous</span>Pytest LLM evals</a>
+        <a class="next" href="recording.html"><span class="dir">Next</span>Recording and replay</a>
+      </div>
+    </article>
+  </main>
+  <aside class="toc"><div class="toc-title">On this page</div><ul id="toc-list"></ul></aside>
+</div>
+<footer class="site-footer"><a href="https://github.com/parthmax2/ghostrun" target="_blank" rel="noopener">parthmax2/ghostrun</a> - MIT License</footer>
+<script src="../assets/search-index.js"></script>
+<script src="../assets/app.js"></script>
+</body>
+</html>

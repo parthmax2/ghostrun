@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LLM regression testing in pytest - ghostrun</title>
+<meta name="description" content="Learn how ghostrun catches LLM behavior regressions in CI by recording real app calls, replaying them deterministically, and asserting on meaning in pytest.">
+<link rel="canonical" href="https://ghostrun.parthmax.in/guide/llm-regression-testing.html">
+<meta name="keywords" content="LLM regression testing, prompt regression testing, deterministic LLM tests, LLM evals in CI, pytest LLM evals">
+<link rel="icon" href="../assets/ghost-icon.svg">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header class="site-header">
+  <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="18" height="18"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg></button>
+  <a class="brand" href="../index.html"><img src="../assets/ghost-icon.svg" alt="">GhostRun</a>
+  <div class="header-spacer"></div>
+  <div class="search-wrap"><span class="search-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span><input class="search-input" id="search-input" type="text" placeholder="Search docs..." autocomplete="off"><div class="search-results" id="search-results"></div></div>
+  <div class="header-actions"><button class="icon-btn" id="theme-toggle" aria-label="Toggle theme"><svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="4"/><line x1="12" y1="20" x2="12" y2="22"/></svg><svg class="icon-moon" viewBox="0 0 24 24" fill="currentColor"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button><a class="icon-btn" href="https://github.com/parthmax2/ghostrun" target="_blank" rel="noopener" aria-label="GitHub repository">Git</a></div>
+</header>
+<div class="scrim" id="scrim"></div>
+<div class="shell">
+  <nav class="sidebar" aria-label="Sidebar">
+    <div class="side-group">
+      <div class="side-group-title">Guide</div>
+      <a class="side-link" href="getting-started.html">Getting started</a>
+      <a class="side-link active" href="llm-regression-testing.html">LLM regression testing</a>
+      <a class="side-link" href="pytest-llm-evals.html">Pytest LLM evals</a>
+      <a class="side-link" href="test-openai-apps-offline.html">Test OpenAI apps offline</a>
+      <a class="side-link" href="recording.html">Recording and replay</a>
+      <a class="side-link" href="assertions.html">Semantic assertions</a>
+      <a class="side-link" href="regression-tracking.html">Prompt regression tracking</a>
+    </div>
+  </nav>
+  <main class="main">
+    <article class="article">
+      <div class="breadcrumb"><a href="../index.html">Home</a> / Guide</div>
+      <h1>LLM regression testing in pytest</h1>
+      <p class="lede">ghostrun catches LLM behavior regressions before they ship by turning real application calls into deterministic pytest evals.</p>
+
+      <h2>The problem</h2>
+      <p>LLM apps regress in ways ordinary unit tests miss. A prompt change can remove an apology, skip a refund policy, change tone, break JSON structure, or call the wrong tool while still producing plausible text.</p>
+      <p>Running those checks against live models in CI is slow, expensive, and flaky. Moving them into a separate eval platform can also drift away from the real code path users hit.</p>
+
+      <h2>The ghostrun approach</h2>
+      <ol>
+        <li>Write a normal pytest test around your real app function.</li>
+        <li>Record the live LLM API call once with <code>@ghostrun.record</code>.</li>
+        <li>Replay that call deterministically on every later test run.</li>
+        <li>Assert on meaning, tone, structure, and tool calls.</li>
+        <li>Use <code>ghostrun diff</code> to classify regressions, fixes, stable checks, added checks, and removed checks.</li>
+      </ol>
+
+      <pre><code>import ghostrun
+from my_app import generate_reply
+
+@ghostrun.record(model="gpt-4o-mini")
+def test_refund_reply_does_not_regress():
+    reply = generate_reply("Where is my refund?")
+
+    ghostrun.expect(reply).contains_intent("apology")
+    ghostrun.expect(reply).contains_intent("refund policy")
+    ghostrun.expect(reply).does_not_contain_intent("arguing")
+    ghostrun.expect(reply).tone_is("empathetic")</code></pre>
+
+      <h2>Why this is different from generic LLM evals</h2>
+      <p>Many eval tools start from a dataset, prompt matrix, trace, or dashboard. ghostrun starts from the Python code you already ship. That makes it best for app-native regression testing: CI checks that protect real user-facing behavior.</p>
+
+      <h2>Best fit</h2>
+      <ul>
+        <li>Testing OpenAI, Anthropic, Gemini, Bedrock, or Ollama-backed app code.</li>
+        <li>Checking chatbot responses, RAG answers, tool calls, JSON extraction, support workflows, and prompt changes.</li>
+        <li>Running LLM evals in pull requests without paying for the same call every time.</li>
+      </ul>
+
+      <div class="page-nav">
+        <a href="getting-started.html"><span class="dir">Previous</span>Getting started</a>
+        <a class="next" href="pytest-llm-evals.html"><span class="dir">Next</span>Pytest LLM evals</a>
+      </div>
+    </article>
+  </main>
+  <aside class="toc"><div class="toc-title">On this page</div><ul id="toc-list"></ul></aside>
+</div>
+<footer class="site-footer"><a href="https://github.com/parthmax2/ghostrun" target="_blank" rel="noopener">parthmax2/ghostrun</a> - MIT License</footer>
+<script src="../assets/search-index.js"></script>
+<script src="../assets/app.js"></script>
+</body>
+</html>

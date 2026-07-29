@@ -1,9 +1,9 @@
 site_name: ghostrun
 site_description: >-
-  pytest for LLMs: deterministic HTTP record/replay, local LLM-as-judge
-  semantic assertions, and prompt regression diffing for testing GenAI
-  applications in Python.
-site_url: https://parthmax2.github.io/ghostrun/
+  CI-native LLM evals for real applications: record LLM API calls once,
+  replay them deterministically in pytest, and catch semantic regressions
+  before they ship.
+site_url: https://ghostrun.parthmax.in/
 repo_url: https://github.com/parthmax2/ghostrun
 repo_name: parthmax2/ghostrun
 edit_uri: edit/main/doc/
