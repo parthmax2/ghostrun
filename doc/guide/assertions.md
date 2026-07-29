@@ -6,6 +6,7 @@ Judge-backed (uses the configured LLM judge):
 - `does_not_contain_intent(intent)`
 - `tone_is(tone)`
 - `matches(free_form_criterion)`
+- `is_grounded_in(context)`
 
 Deterministic (no model, instant):
 
@@ -32,6 +33,21 @@ subtle tone and sarcasm. Practical implications:
 
 Verdicts are cached (see [recording.md](recording.md)), so a suite is
 deterministic run-to-run even though the underlying model is stochastic.
+
+## RAG groundedness
+
+Use `is_grounded_in(context)` to check that a generated answer is supported by
+retrieved context and does not introduce claims absent from that context:
+
+```python
+answer = answer_question(question, retrieved_docs)
+context = "\n\n".join(doc.text for doc in retrieved_docs)
+
+ghostrun.expect(answer).is_grounded_in(context)
+```
+
+This is judge-backed, so it follows the same caching and replay behavior as
+other semantic assertions.
 
 ## Majority-vote verdicts (`judge.votes`)
 

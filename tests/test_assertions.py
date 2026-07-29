@@ -2,7 +2,19 @@ import pytest
 
 import ghostrun
 from ghostrun.assertions import SemanticAssertionError
+from ghostrun.judge.base import Grade
 from ghostrun.judge.echo import EchoJudge
+
+
+class ScriptedJudge:
+    def __init__(self, passed=True, reason=""):
+        self.passed = passed
+        self.reason = reason
+        self.calls = []
+
+    def grade(self, text, criterion):
+        self.calls.append((text, criterion))
+        return Grade(passed=self.passed, reason=self.reason)
 
 
 def test_contains_intent_pass_with_echo():
@@ -58,3 +70,31 @@ def test_injected_judge_used():
     # explicit judge injection bypasses global config
     e = ghostrun.expect("abc", judge=EchoJudge())
     e.contains_intent("abc")
+
+
+def test_is_grounded_in_passes_with_supporting_context():
+    judge = ScriptedJudge(passed=True, reason="supported by context")
+    result = ghostrun.expect("Refunds are processed within 5 days.", judge=judge).is_grounded_in(
+        "Refunds are processed within 5 days after approval."
+    )
+
+    assert result.text.startswith("Refunds")
+    assert judge.calls
+    text, criterion = judge.calls[0]
+    assert text == "Refunds are processed within 5 days."
+    assert "fully supported by the provided context" in criterion
+    assert "Refunds are processed within 5 days after approval." in criterion
+
+
+def test_is_grounded_in_fails_when_answer_adds_unsupported_claims():
+    judge = ScriptedJudge(passed=False, reason="24 hours is not in the context")
+
+    with pytest.raises(SemanticAssertionError, match="grounded in the provided context"):
+        ghostrun.expect("Refunds are processed within 24 hours.", judge=judge).is_grounded_in(
+            "Refunds are processed within 5 days after approval."
+        )
+
+
+def test_is_grounded_in_requires_context_string():
+    with pytest.raises(TypeError, match="is_grounded_in"):
+        ghostrun.expect("answer", judge=ScriptedJudge()).is_grounded_in(["not", "a", "string"])
