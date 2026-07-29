@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Comparison with other tools — ghostrun</title>
+<meta name="description" content="Researched comparison against DeepEval, Promptfoo, Ragas, vcr-langchain, Langfuse, Braintrust, LangSmith, Giskard, and others.">
+<link rel="icon" href="../assets/ghost-icon.svg">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="18" height="18"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>
+  </button>
+  <a class="brand" href="../index.html"><img src="../assets/ghost-icon.svg" alt="">GhostRun</a>
+  <div class="header-spacer"></div>
+  <div class="search-wrap">
+    <span class="search-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
+    <input class="search-input" id="search-input" type="text" placeholder="Search docs..." autocomplete="off">
+    <div class="search-results" id="search-results"></div>
+  </div>
+  <div class="header-actions">
+    <button class="icon-btn" id="theme-toggle" aria-label="Toggle theme">
+      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="4"/><line x1="12" y1="20" x2="12" y2="22"/><line x1="4.9" y1="4.9" x2="6.3" y2="6.3"/><line x1="17.7" y1="17.7" x2="19.1" y2="19.1"/><line x1="2" y1="12" x2="4" y2="12"/><line x1="20" y1="12" x2="22" y2="12"/><line x1="4.9" y1="19.1" x2="6.3" y2="17.7"/><line x1="17.7" y1="6.3" x2="19.1" y2="4.9"/></svg>
+      <svg class="icon-moon" viewBox="0 0 24 24" fill="currentColor"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    </button>
+    <a class="icon-btn" href="https://github.com/parthmax2/ghostrun" target="_blank" rel="noopener" aria-label="GitHub repository">
+      <svg viewBox="0 0 16 16" width="18" height="18" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+    </a>
+  </div>
+</header>
+
+<div class="scrim" id="scrim"></div>
+
+<div class="shell">
+  <nav class="sidebar" aria-label="Sidebar">
+    <div class="side-group">
+      <div class="side-group-title">Guide</div>
+      <a class="side-link" href="../guide/getting-started.html">Getting started</a>
+      <a class="side-link" href="../guide/recording.html">Recording and replay</a>
+      <a class="side-link" href="../guide/assertions.html">Semantic assertions</a>
+      <a class="side-link" href="../guide/regression-tracking.html">Prompt regression tracking</a>
+      <a class="side-link" href="../guide/configuration.html">Configuration</a>
+      <a class="side-link" href="../guide/api-reference.html">API reference</a>
+      <a class="side-link" href="../guide/why-not-diy.html">Why not just ask an LLM?</a>
+    </div>
+    <div class="side-group">
+      <div class="side-group-title">Research</div>
+      <a class="side-link active" href="comparison.html">Comparison with other tools</a>
+      <a class="side-link" href="judge-voting-benchmark.html">Judge-voting benchmark</a>
+    </div>
+  </nav>
+
+  <main class="main">
+    <article class="article">
+      <div class="breadcrumb"><a href="../index.html">Home</a> / Research</div>
+      <h1>ghostrun vs. the field — comparison research</h1>
+      <p class="lede"><strong>Last updated:</strong> 2026-07-24 &nbsp;·&nbsp; <strong>Method:</strong> live web research. This is not a marketing comparison — it's written to find out honestly where ghostrun is ahead, where it's behind, and where it's simply duplicating existing work.</p>
+
+      <h2>TL;DR</h2>
+      <p>ghostrun's individual pieces all have prior art, some of it more mature and better-funded. Its actual differentiation is a <strong>specific combination</strong> nobody else ships as one package:</p>
+      <ol>
+        <li><strong>Transport-level, zero-code-change record/replay</strong> of the application's own LLM calls (not just its judge calls) — you wrap existing code, no config file, no SDK-specific adapter, no dataset authoring step.</li>
+        <li><strong>Structured prompt-version regression diffing</strong> — classifying every assertion as regression/fix/stable/added/removed/<strong>not-evaluated</strong>, plus output-drift similarity — as a first-class CLI command.</li>
+        <li>Both of the above live <strong>inside plain pytest</strong>, not a separate CLI/YAML tool.</li>
+      </ol>
+      <p>Nobody else combines all three. Each one alone, however, has been done before — see below.</p>
+
+      <h2>Comparison table</h2>
+      <div class="table-scroll">
+      <table>
+        <thead>
+          <tr><th>Tool</th><th>Category</th><th>License / OSS</th><th>Ecosystem</th><th>Record/replay of the app's own LLM calls</th><th>Judge-verdict caching</th><th>Structured regression diff</th><th>Native to pytest</th><th>Maturity</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>ghostrun</strong></td><td>Testing framework</td><td>MIT, OSS</td><td>Python</td><td>✅ transport-level, any SDK, zero code change</td><td>✅ + not-run/removed distinction</td><td>✅ <code>ghostrun diff</code> with output-drift similarity</td><td>✅ native plugin</td><td>New (this project)</td></tr>
+          <tr><td><strong>DeepEval</strong></td><td>Testing framework</td><td>OSS (Confident AI has a paid cloud tier)</td><td>Python</td><td>❌ not documented — you already have the output; it caches the <em>grading</em>, not the app's provider call</td><td>✅ <code>-c</code> flag caches metric results per identical test case</td><td>❌ not documented</td><td>✅ <code>assert_test()</code>, <code>deepeval test run</code></td><td>Mature, active, described as "the closest thing to pytest for LLMs"</td></tr>
+          <tr><td><strong>Promptfoo</strong></td><td>Prompt/model comparison + red-teaming</td><td>OSS, 23k+ ⭐</td><td>Node.js/CLI, YAML config</td><td>❌ caches its <em>own</em> evaluation-matrix results for cost, not a generic transport-level replay of arbitrary app code</td><td>Partial — caches eval results, not framed as "judge verdict" specifically</td><td>⚠️ marketed as having "regression tracking" but docs describe pass/fail re-evaluation, not a structured diff report</td><td>❌ separate CLI, not a pytest plugin</td><td>Mature, very active, 10M+-user production pedigree claimed</td></tr>
+          <tr><td><strong>Ragas</strong></td><td>RAG evaluation metrics</td><td>OSS</td><td>Python</td><td>❌</td><td>❌</td><td>❌</td><td>Integrable, not native</td><td>Mature; narrow scope (RAG metrics only)</td></tr>
+          <tr><td><strong>vcr-langchain</strong></td><td>HTTP record/replay</td><td>OSS</td><td>Python, LangChain-only</td><td>✅ but explicitly incomplete — README states much LangChain functionality "hasn't gotten around to hijacking"</td><td>❌</td><td>❌</td><td>Via VCR.py/pytest-recording</td><td>Niche, limited scope, LangChain-coupled</td></tr>
+          <tr><td><strong>langchain-replay</strong></td><td>Agent decision replay</td><td>OSS</td><td>Python, LangChain/LangGraph</td><td>✅ for LangChain/LangGraph specifically, preserves real filesystem tool execution</td><td>❌</td><td>❌</td><td>Not pytest-native</td><td>Niche</td></tr>
+          <tr><td><strong>pytest-recording / VCR.py</strong></td><td>Generic HTTP replay</td><td>OSS</td><td>Python, any HTTP</td><td>✅ but generic HTTP, not LLM-aware (no judge, no tool-call parsing, no redaction)</td><td>❌</td><td>❌</td><td>✅ native</td><td>Mature, foundational, widely used</td></tr>
+          <tr><td><strong>CacheSaver</strong> (EMNLP 2025)</td><td>Research-inference caching</td><td>OSS, peer-reviewed</td><td>Python</td><td>✅ but framed for research/benchmark reproducibility, not CI/pytest</td><td>Generic response caching, not judge-verdict-specific</td><td>❌</td><td>❌</td><td>Academic, published, active</td></tr>
+          <tr><td><strong>Langfuse</strong></td><td>Observability + eval</td><td>OSS, self-hostable</td><td>Any</td><td>❌ (tracing/observability, not test replay)</td><td>❌</td><td>❌</td><td>❌</td><td>Mature, widely deployed</td></tr>
+          <tr><td><strong>Braintrust</strong></td><td>Eval-first platform</td><td>Proprietary SaaS, no self-host</td><td>Any</td><td>❌</td><td>Platform-side</td><td>Partial — "regression gates" in production monitoring sense</td><td>❌</td><td>Mature, funded, commercial</td></tr>
+          <tr><td><strong>LangSmith</strong></td><td>LangChain-native observability/eval</td><td>Proprietary</td><td>LangChain/LangGraph</td><td>❌</td><td>Platform-side</td><td>Partial</td><td>❌</td><td>Mature, commercial</td></tr>
+          <tr><td><strong>Giskard</strong></td><td>Adversarial/vulnerability scanning</td><td>Apache-2.0, OSS, 5,400+ ⭐</td><td>Python</td><td>❌ (different problem: red-teaming, not regression testing)</td><td>❌</td><td>❌</td><td>Integrable</td><td>Mature, active</td></tr>
+          <tr><td><strong>OpenAI Evals</strong></td><td>Benchmark registry</td><td>OSS</td><td>Python</td><td>❌ (registry/benchmark runner, not app-level replay)</td><td>❌</td><td>❌</td><td>❌</td><td>Mature but less actively the "default" now</td></tr>
+          <tr><td><strong>Inspect AI</strong> (UK AISI)</td><td>Agent/safety eval framework</td><td>OSS</td><td>Python</td><td>❌ (built for running evals/benchmarks, not testing your own app's calls)</td><td>❌</td><td>❌</td><td>❌</td><td>Mature, actively maintained</td></tr>
+        </tbody>
+      </table>
+      </div>
+      <p style="font-size:13px;color:var(--text-faint)">Legend: ✅ confirmed via docs/README · ⚠️ marketed but not confirmed in documentation · ❌ not found / not the tool's purpose</p>
+
+      <h2>Where ghostrun is genuinely ahead</h2>
+      <ul>
+        <li><strong>Zero-code-change replay of the actual application under test.</strong> DeepEval, Promptfoo, Ragas, and the observability platforms all assume you bring the <em>output</em> to them (a test case, a dataset row, a logged trace). None of them intercept your app's own live HTTP calls to OpenAI/Anthropic/etc. transparently. ghostrun's httpx-transport interception means you wrap existing code with <code>@ghostrun.record</code> and it works, regardless of which SDK or provider you used to write it — no adapter, no config file.</li>
+        <li><strong>LangChain-agnostic.</strong> vcr-langchain and langchain-replay — the two tools closest to ghostrun's replay mechanism — are explicitly coupled to LangChain and admit incomplete coverage. ghostrun works at the HTTP layer underneath any SDK.</li>
+        <li><strong>Structured regression diffing with a not-evaluated state.</strong> Nothing found distinguishes "this assertion was deleted" from "this assertion never ran because the test aborted earlier" — a real reporting bug found and fixed in ghostrun's own implementation (see the changelog). This is a small but real quality difference.</li>
+        <li><strong>All of this lives inside pytest</strong>, not a separate CLI/YAML/dataset workflow — closer to the everyday habits of a Python developer than Promptfoo's Node/YAML model.</li>
+      </ul>
+
+      <h2>Where ghostrun is duplicating prior art</h2>
+      <p><em>Be honest about this in any paper or pitch:</em></p>
+      <ul>
+        <li><strong>"Cache judge verdicts."</strong> DeepEval already ships this (<code>-c</code> flag, disk-backed, keyed on identical test cases). ghostrun's version adds a <code>(backend, model, text, criterion)</code> key and a <code>replay</code>/<code>record</code>/<code>auto</code> mode distinction, which is more precise, but the <em>concept</em> is not new.</li>
+        <li><strong>"Record/replay LLM HTTP calls."</strong> vcr-langchain, langchain-replay, and pytest-recording/VCR.py (generic) all predate this. ghostrun's contribution here is breadth (provider-agnostic, not LangChain-locked) and integration quality, not the underlying idea.</li>
+        <li><strong>"LLM-as-judge semantic assertions in pytest."</strong> DeepEval's <code>assert_test()</code> with G-Eval-style metrics is materially the same pitch, more mature, with 50+ pre-built metrics vs. ghostrun's five.</li>
+      </ul>
+
+      <h2>What's still a genuinely open question</h2>
+      <p>See the <a href="judge-voting-benchmark.html">judge-voting benchmark</a>. Whether <strong>caching a single judge verdict</strong> (ghostrun's and DeepEval's shared default) is a safe engineering tradeoff given the now-published judge flip-rate literature (~13.6% mean flip rate per "The Coin Flip Judge?") is <em>not</em> answered by either tool's documentation, or by the flip-rate papers themselves (which recommend majority-vote-of-11+, not caching one draw). That gap — quantifying the reliability/cost tradeoff of N=1 cached verdict vs. N=k majority-vote caching, specifically in a CI-regression-gating context — appears to still be open, and is the sharpest available research contribution building on this codebase.</p>
+
+      <h2>Sources</h2>
+      <ul style="font-size:14px">
+        <li><a href="https://deepeval.com/docs/evaluation-unit-testing-in-ci-cd" target="_blank" rel="noopener">DeepEval — Unit Testing in CI/CD</a></li>
+        <li><a href="https://deepeval.com/docs/evaluation-flags-and-configs" target="_blank" rel="noopener">DeepEval — Flags and Configs</a></li>
+        <li><a href="https://github.com/confident-ai/deepeval/blob/main/deepeval/test_run/cache.py" target="_blank" rel="noopener">DeepEval cache implementation</a></li>
+        <li><a href="https://www.promptfoo.dev/docs/intro/" target="_blank" rel="noopener">Promptfoo — Intro docs</a></li>
+        <li><a href="https://github.com/promptfoo" target="_blank" rel="noopener">Promptfoo GitHub org</a></li>
+        <li><a href="https://github.com/amosjyng/vcr-langchain" target="_blank" rel="noopener">vcr-langchain</a></li>
+        <li><a href="https://github.com/sixty-north/langchain-replay" target="_blank" rel="noopener">langchain-replay</a></li>
+        <li><a href="https://til.simonwillison.net/pytest/pytest-recording-vcr" target="_blank" rel="noopener">Using VCR and pytest with pytest-recording</a></li>
+        <li><a href="https://aclanthology.org/2025.findings-emnlp.1402/" target="_blank" rel="noopener">CacheSaver (EMNLP 2025 Findings)</a></li>
+        <li><a href="https://github.com/au-clan/cachesaver" target="_blank" rel="noopener">CacheSaver GitHub</a></li>
+        <li><a href="https://latitude.so/blog/best-llm-observability-tools-agents-latitude-vs-langfuse-langsmith" target="_blank" rel="noopener">Langfuse / Braintrust / LangSmith comparison — Latitude</a></li>
+        <li><a href="https://github.com/Giskard-AI/giskard-oss" target="_blank" rel="noopener">Giskard-AI/giskard-oss</a></li>
+        <li><a href="https://github.com/openai/evals" target="_blank" rel="noopener">OpenAI Evals</a></li>
+        <li><a href="https://hamel.dev/notes/llm/evals/inspect.html" target="_blank" rel="noopener">Inspect AI overview — Hamel's Blog</a></li>
+        <li><a href="https://arxiv.org/html/2606.13685" target="_blank" rel="noopener">The Coin Flip Judge? Reliability and Bias in LLM-as-a-Judge Evaluation</a></li>
+      </ul>
+
+      <div class="callout warning">
+        <span class="callout-label">Caveat</span>
+        <p>Several of these sources are 2026 blog/SEO comparison articles, not primary documentation — used here for triangulation, cross-checked against official docs/READMEs where possible, and flagged with ⚠️ in the table where a claim (e.g., Promptfoo's "regression tracking") could not be confirmed from primary docs.</p>
+      </div>
+
+      <div class="page-nav">
+        <a href="judge-voting-benchmark.html"><span class="dir">Previous</span>Judge-voting benchmark</a>
+      </div>
+    </article>
+  </main>
+
+  <aside class="toc">
+    <div class="toc-title">On this page</div>
+    <ul id="toc-list"></ul>
+  </aside>
+</div>
+
+<footer class="site-footer">
+  <a href="https://github.com/parthmax2/ghostrun" target="_blank" rel="noopener">parthmax2/ghostrun</a> · MIT License
+</footer>
+
+<script src="../assets/search-index.js"></script>
+<script src="../assets/app.js"></script>
+</body>
+</html>

@@ -1,4 +1,4 @@
-(function () {
+﻿(function () {
   "use strict";
 
   /* ---------------------------------------------------------------------
@@ -18,6 +18,22 @@
   var root = document.documentElement;
   var THEME_KEY = "ghostrun-theme";
 
+  function getStoredTheme() {
+    try {
+      return localStorage.getItem(THEME_KEY);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function setStoredTheme(theme) {
+    try {
+      localStorage.setItem(THEME_KEY, theme);
+    } catch (e) {
+      /* Theme still applies for this page view when storage is unavailable. */
+    }
+  }
+
   function applyTheme(theme) {
     root.setAttribute("data-theme", theme);
     var btn = document.getElementById("theme-toggle");
@@ -25,7 +41,7 @@
   }
 
   function initTheme() {
-    var stored = localStorage.getItem(THEME_KEY);
+    var stored = getStoredTheme();
     var theme = stored || (window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark");
     applyTheme(theme);
   }
@@ -33,7 +49,7 @@
   function toggleTheme() {
     var current = root.getAttribute("data-theme") === "light" ? "light" : "dark";
     var next = current === "light" ? "dark" : "light";
-    localStorage.setItem(THEME_KEY, next);
+    setStoredTheme(next);
     applyTheme(next);
   }
 
@@ -77,14 +93,28 @@
       btn.addEventListener("click", function () {
         var code = pre.querySelector("code");
         var text = code ? code.textContent : pre.textContent;
-        navigator.clipboard.writeText(text).then(function () {
-          btn.textContent = "Copied";
-          btn.classList.add("copied");
+        if (!navigator.clipboard || !navigator.clipboard.writeText) {
+          btn.textContent = "Unavailable";
           setTimeout(function () {
             btn.textContent = "Copy";
-            btn.classList.remove("copied");
           }, 1500);
-        });
+          return;
+        }
+        navigator.clipboard.writeText(text)
+          .then(function () {
+            btn.textContent = "Copied";
+            btn.classList.add("copied");
+            setTimeout(function () {
+              btn.textContent = "Copy";
+              btn.classList.remove("copied");
+            }, 1500);
+          })
+          .catch(function () {
+            btn.textContent = "Failed";
+            setTimeout(function () {
+              btn.textContent = "Copy";
+            }, 1500);
+          });
       });
       pre.appendChild(btn);
     });
@@ -166,15 +196,21 @@
           a.href = SITE_BASE + m.url;
           a.className = "search-result";
           if (i === 0) a.classList.add("active");
-          a.innerHTML =
-            '<span class="result-title">' +
-            m.title +
-            ' <span class="result-crumb">' +
-            m.section +
-            "</span></span>" +
-            '<span class="result-excerpt">' +
-            m.excerpt +
-            "</span>";
+          var title = document.createElement("span");
+          title.className = "result-title";
+          title.appendChild(document.createTextNode(m.title + " "));
+
+          var crumb = document.createElement("span");
+          crumb.className = "result-crumb";
+          crumb.textContent = m.section;
+          title.appendChild(crumb);
+
+          var excerpt = document.createElement("span");
+          excerpt.className = "result-excerpt";
+          excerpt.textContent = m.excerpt;
+
+          a.appendChild(title);
+          a.appendChild(excerpt);
           results.appendChild(a);
         });
         results.classList.add("open");
