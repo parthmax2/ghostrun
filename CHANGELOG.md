@@ -4,7 +4,15 @@ All notable changes to ghostrun are documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/), and this project adheres to
 [Semantic Versioning](https://semver.org/).
 
-## [Unreleased]
+## [0.1.5] - 2026-07-29
+
+### Added
+- SEO landing pages for LLM regression testing, pytest LLM evals, and testing OpenAI apps offline.
+- Hosted-site crawler metadata, including `robots.txt`, `sitemap.xml`, canonical URLs, Open Graph/Twitter tags, and JSON-LD.
+
+### Changed
+- Reposition project metadata around CI-native LLM evals for real applications.
+- Update PyPI metadata, README messaging, docs metadata, `llms.txt`, and hosted site metadata for `https://ghostrun.parthmax.in`.
 
 ## [0.1.1] - 2026-07-28
 
