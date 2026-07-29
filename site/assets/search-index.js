@@ -3,8 +3,8 @@ window.GHOSTRUN_SEARCH_INDEX = [
     title: "ghostrun",
     section: "Home",
     url: "index.html",
-    excerpt: "pytest for LLMs — deterministic record/replay and semantic assertions, local-first and privacy-first.",
-    keywords: "home overview pitch"
+    excerpt: "CI-native LLM evals for real applications: record API calls once, replay in CI, and catch semantic regressions.",
+    keywords: "home overview pitch llm evals ci regression testing pytest"
   },
   {
     title: "Getting started",
@@ -12,6 +12,27 @@ window.GHOSTRUN_SEARCH_INDEX = [
     url: "guide/getting-started.html",
     excerpt: "Install ghostrun, pull an Ollama model, and scaffold a working first test with ghostrun init.",
     keywords: "install pip ollama init quickstart pytest"
+  },
+  {
+    title: "LLM regression testing",
+    section: "Guide",
+    url: "guide/llm-regression-testing.html",
+    excerpt: "Catch LLM behavior regressions in CI by recording real app calls, replaying them deterministically, and asserting on meaning.",
+    keywords: "llm regression testing prompt regression testing deterministic llm tests ci semantic regression"
+  },
+  {
+    title: "Pytest LLM evals",
+    section: "Guide",
+    url: "guide/pytest-llm-evals.html",
+    excerpt: "Write LLM evals as normal pytest tests around the real application code path your users hit.",
+    keywords: "pytest llm evals llm testing pytest llm evals python semantic assertions"
+  },
+  {
+    title: "Test OpenAI apps offline",
+    section: "Guide",
+    url: "guide/test-openai-apps-offline.html",
+    excerpt: "Record real OpenAI and Anthropic API calls once, then replay them offline and deterministically in pytest.",
+    keywords: "test openai app pytest mock openai calls pytest record replay openai api calls offline llm tests"
   },
   {
     title: "Recording and replay",

@@ -1,10 +1,41 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>ghostrun â€” pytest for LLMs</title>
-<meta name="description" content="Deterministic HTTP record/replay, local LLM-as-judge semantic assertions, and prompt regression diffing for testing GenAI applications in Python.">
+<title>ghostrun - CI-native LLM evals for pytest</title>
+<meta name="description" content="ghostrun turns real LLM app behavior into deterministic pytest evals: record API calls once, replay them in CI, and catch semantic regressions before they ship.">
+<link rel="canonical" href="https://ghostrun.parthmax.in/">
+<meta name="author" content="parthmax2">
+<meta name="keywords" content="LLM evals, LLM regression testing, pytest LLM evals, deterministic LLM tests, prompt regression testing, semantic assertions, OpenAI testing, Anthropic testing, CI testing">
+<meta property="og:type" content="website">
+<meta property="og:title" content="ghostrun - CI-native LLM evals for pytest">
+<meta property="og:description" content="Record real LLM API calls once, replay them deterministically in pytest, and catch semantic regressions before they ship.">
+<meta property="og:url" content="https://ghostrun.parthmax.in/">
+<meta property="og:site_name" content="ghostrun">
+<meta property="og:image" content="https://ghostrun.parthmax.in/assets/ghostrun-hero.gif">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="ghostrun - CI-native LLM evals for pytest">
+<meta name="twitter:description" content="App-native LLM regression testing in pytest: record calls once, replay in CI, assert on meaning.">
+<meta name="twitter:image" content="https://ghostrun.parthmax.in/assets/ghostrun-hero.gif">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareSourceCode",
+  "name": "ghostrun",
+  "description": "CI-native LLM evals for real applications: record LLM API calls once, replay them deterministically in pytest, and catch semantic regressions before they ship.",
+  "codeRepository": "https://github.com/parthmax2/ghostrun",
+  "url": "https://ghostrun.parthmax.in/",
+  "programmingLanguage": "Python",
+  "license": "https://github.com/parthmax2/ghostrun/blob/main/LICENSE",
+  "author": {
+    "@type": "Person",
+    "name": "parthmax2",
+    "url": "https://github.com/parthmax2"
+  },
+  "keywords": ["LLM evals", "LLM regression testing", "pytest", "prompt regression testing", "semantic assertions", "OpenAI testing", "Anthropic testing"]
+}
+</script>
 <link rel="icon" href="assets/ghost-icon.svg">
 <link rel="stylesheet" href="assets/style.css">
 </head>
@@ -39,6 +70,9 @@
     <div class="side-group">
       <div class="side-group-title">Guide</div>
       <a class="side-link" href="guide/getting-started.html">Getting started</a>
+      <a class="side-link" href="guide/llm-regression-testing.html">LLM regression testing</a>
+      <a class="side-link" href="guide/pytest-llm-evals.html">Pytest LLM evals</a>
+      <a class="side-link" href="guide/test-openai-apps-offline.html">Test OpenAI apps offline</a>
       <a class="side-link" href="guide/recording.html">Recording and replay</a>
       <a class="side-link" href="guide/assertions.html">Semantic assertions</a>
       <a class="side-link" href="guide/regression-tracking.html">Prompt regression tracking</a>
@@ -57,12 +91,9 @@
     <div class="article" style="max-width:960px">
 
       <div class="home-hero">
-        <video class="hero-gif" autoplay loop muted playsinline poster="assets/ghostrun-hero-poster.jpg" aria-label="A ghost travels to the LLM API once, then instantly reappears with the result on every run after">
-          <source src="assets/ghostrun-hero.webm" type="video/webm">
-          <img src="assets/ghostrun-hero.gif" width="560" height="315" alt="A ghost travels to the LLM API once, then instantly reappears with the result on every run after">
-        </video>
-        <h1>pytest for LLMs</h1>
-        <p class="tagline">Deterministic record/replay and semantic assertions for GenAI apps â€” local-first, privacy-first, zero SaaS lock-in.</p>
+        <img class="hero-gif" src="assets/ghostrun-hero.gif" alt="A ghost travels to the LLM API once, then instantly reappears with the result on every run after">
+        <h1>CI-native LLM evals for real applications</h1>
+        <p class="tagline">ghostrun turns real LLM app behavior into deterministic pytest evals: record API calls once, replay them in CI, and catch semantic regressions before they ship.</p>
         <div class="home-cta">
           <a class="btn btn-primary" href="guide/getting-started.html">Get started</a>
           <a class="btn btn-ghost" href="https://github.com/parthmax2/ghostrun" target="_blank" rel="noopener">View on GitHub</a>
@@ -78,20 +109,20 @@ pytest test_ghostrun_example.py</code></pre>
 
       <div class="home-grid">
         <div class="home-card">
+          <h3>LLM regression tests</h3>
+          <p>Run evals against the real Python code path your users hit, then fail CI when meaning, tone, tool calls, or prompt behavior regresses.</p>
+        </div>
+        <div class="home-card">
           <h3>Deterministic replay</h3>
-          <p>The first run records real LLM HTTP calls to a local <code>.ghostrun_cache/</code>; every run after replays them instantly. Zero API cost, zero latency, zero flakiness.</p>
+          <p>Record live OpenAI, Anthropic, or other LLM HTTP calls once. Every run after replays instantly from <code>.ghostrun_cache/</code>.</p>
         </div>
         <div class="home-card">
           <h3>Semantic assertions</h3>
-          <p>Assert on <em>meaning</em> (<code>contains_intent</code>, <code>tone_is</code>, â€¦), graded by a local Ollama model by default. Your prompts and data never leave your machine.</p>
-        </div>
-        <div class="home-card">
-          <h3>Regression tracking</h3>
-          <p>Snapshot runs and diff them: classify every assertion as regression / fix / stable / added / removed, plus output-drift similarity.</p>
+          <p>Assert on <em>meaning</em> with <code>contains_intent</code>, <code>tone_is</code>, and <code>matches</code>, instead of brittle exact strings.</p>
         </div>
         <div class="home-card">
           <h3>Native to pytest</h3>
-          <p>No cloud dashboard, no custom CLI to learn, no dataset to author by hand. Auto-registered as a pytest plugin â€” just <code>pytest</code>.</p>
+          <p>No dashboard migration, no prompt playground workflow, no separate dataset step. Write app-native LLM evals like normal software tests.</p>
         </div>
       </div>
 
@@ -99,6 +130,9 @@ pytest test_ghostrun_example.py</code></pre>
         <h2 style="border-top:none">Guide</h2>
         <ul>
           <li><a href="guide/getting-started.html">Getting started</a></li>
+          <li><a href="guide/llm-regression-testing.html">LLM regression testing</a></li>
+          <li><a href="guide/pytest-llm-evals.html">Pytest LLM evals</a></li>
+          <li><a href="guide/test-openai-apps-offline.html">Test OpenAI apps offline</a></li>
           <li><a href="guide/recording.html">Recording and replay</a></li>
           <li><a href="guide/assertions.html">Semantic assertions</a></li>
           <li><a href="guide/regression-tracking.html">Prompt regression tracking</a></li>
@@ -119,7 +153,7 @@ pytest test_ghostrun_example.py</code></pre>
 </div>
 
 <footer class="site-footer">
-  <a href="https://github.com/parthmax2/ghostrun" target="_blank" rel="noopener">parthmax2/ghostrun</a> Â· MIT License
+  <a href="https://github.com/parthmax2/ghostrun" target="_blank" rel="noopener">parthmax2/ghostrun</a> - MIT License
 </footer>
 
 <script src="assets/search-index.js"></script>

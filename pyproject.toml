@@ -5,19 +5,21 @@ build-backend = "hatchling.build"
 [project]
 name = "ghostrun"
 version = "0.1.1"
-description = "pytest for LLMs: deterministic HTTP record/replay, local LLM-as-judge semantic assertions, and prompt regression diffing for testing GenAI applications."
+description = "CI-native LLM evals for real apps: record LLM API calls once, replay them deterministically in pytest, and catch semantic regressions before they ship."
 readme = "README.md"
 requires-python = ">=3.9"
 license = { text = "MIT" }
 authors = [{ name = "parthmax2" }]
 keywords = [
-    "llm", "llm-testing", "llm-eval", "llm-evaluation", "llm-as-judge",
-    "pytest", "pytest-plugin", "testing", "unit-testing",
-    "genai", "generative-ai", "ai-testing", "agent-testing",
-    "openai", "anthropic", "ollama",
+    "llm", "llm-evals", "llm-eval", "llm-evaluation", "llm-as-judge",
+    "llm-testing", "llm-regression-testing", "pytest", "pytest-plugin",
+    "testing", "unit-testing", "ci", "ci-cd",
+    "genai", "generative-ai", "ai-testing", "agent-testing", "app-testing",
+    "openai", "anthropic", "ollama", "chatbot-testing",
     "record-replay", "vcr", "http-mocking", "http-cache",
-    "prompt-testing", "prompt-regression", "regression-testing",
-    "semantic-assertions", "deterministic-testing", "ci-cd",
+    "prompt-testing", "prompt-regression", "prompt-regression-testing",
+    "regression-testing", "semantic-assertions", "deterministic-testing",
+    "deterministic-llm-tests", "offline-testing",
 ]
 classifiers = [
     "Development Status :: 3 - Alpha",
@@ -48,10 +50,13 @@ dev = ["pytest>=7.0"]
 ghostrun = "ghostrun.cli:main"
 
 [project.urls]
-Homepage = "https://github.com/parthmax2/ghostrun"
+Homepage = "https://ghostrun.parthmax.in"
+Source = "https://github.com/parthmax2/ghostrun"
 Issues = "https://github.com/parthmax2/ghostrun/issues"
-Documentation = "https://github.com/parthmax2/ghostrun#documentation"
+Documentation = "https://ghostrun.parthmax.in"
 Changelog = "https://github.com/parthmax2/ghostrun/blob/main/CHANGELOG.md"
+Repository = "https://github.com/parthmax2/ghostrun"
+Author = "https://github.com/parthmax2"
 
 # Register the pytest plugin so `import ghostrun` isn't required to activate it.
 [project.entry-points.pytest11]

@@ -5,11 +5,12 @@
   </picture>
 </p>
 
-<h3 align="center">pytest for LLMs</h3>
-<p align="center">Deterministic record/replay and semantic assertions for GenAI apps — local-first, privacy-first, zero SaaS lock-in.</p>
+<h3 align="center">CI-native LLM evals for real applications.</h3>
+<p align="center">ghostrun turns real LLM app behavior into deterministic pytest evals: record API calls once, replay them in CI, and catch semantic regressions before they ship.</p>
 
 <p align="center">
   <a href="https://pypi.org/project/ghostrun/"><img alt="PyPI" src="https://img.shields.io/pypi/v/ghostrun.svg"></a>
+  <a href="https://pypi.org/project/ghostrun/"><img alt="PyPI downloads" src="https://static.pepy.tech/badge/ghostrun"></a>
   <a href="LICENSE"><img alt="License: MIT" src="https://img.shields.io/badge/license-MIT-blue.svg"></a>
   <a href="pyproject.toml"><img alt="Python 3.9+" src="https://img.shields.io/badge/python-3.9%2B-blue.svg"></a>
   <a href="https://github.com/parthmax2/ghostrun/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/parthmax2/ghostrun/actions/workflows/ci.yml/badge.svg"></a>
@@ -31,7 +32,7 @@
 ---
 
 > [!TIP]
-> Every real test run of an LLM feature means a live API call — slow, costs money, and flaky, since the model never says the same thing twice. ghostrun records the call once, replays it instantly forever after, and grades the *meaning* of the output instead of matching exact text.
+> LLM evals often live outside the product: separate datasets, dashboards, YAML files, and one-off scripts. ghostrun keeps evals inside normal `pytest`, runs them against the real code path your users hit, records the live LLM call once, and replays it deterministically in CI.
 
 ### The problem
 
@@ -40,7 +41,9 @@ reply = generate_reply("Where is my refund?")
 assert reply == "I'm sorry for the delay..."   # fails tomorrow: LLM never says the same thing twice
 ```
 
-### What ghostrun does about it
+LLM apps need evals, but live model calls make test suites painful: they cost money, need API keys in CI, run slowly, and fail for reasons unrelated to your code. Generic eval platforms are powerful, but they often test a prompt, dataset, or trace outside your application. ghostrun focuses on app-native LLM regression testing: the exact Python code path your users exercise.
+
+### How ghostrun fixes it
 
 1. **Deterministic replay** — the first run records real LLM HTTP calls to a local `.ghostrun_cache/`; every run after replays them instantly from disk. Zero API cost, zero latency, zero flakiness, no key needed in CI.
 2. **Semantic assertions** — assert on *meaning*, not exact text:
@@ -51,6 +54,8 @@ assert reply == "I'm sorry for the delay..."   # fails tomorrow: LLM never says 
    Graded by a **local Ollama model** by default — your prompts and data never leave your machine. That grading verdict gets cached too, so it's also free and deterministic after the first run.
 
 No cloud dashboard. No custom CLI to learn. No dataset to author by hand. Just `pytest`.
+
+**Search terms this project is built for:** LLM evals in CI, LLM regression testing, pytest LLM evals, deterministic LLM tests, prompt regression testing, semantic assertions for LLM apps, and testing OpenAI or Anthropic applications with pytest.
 
 ---
 
@@ -135,6 +140,9 @@ Start here, in order:
 
 | Guide | What's in it |
 | :--- | :--- |
+| [LLM regression testing](https://ghostrun.parthmax.in/guide/llm-regression-testing.html) | CI-native LLM evals for catching semantic and prompt regressions in real app code |
+| [Pytest LLM evals](https://ghostrun.parthmax.in/guide/pytest-llm-evals.html) | How to write LLM evals as normal pytest tests instead of dashboard-only workflows |
+| [Test OpenAI apps offline](https://ghostrun.parthmax.in/guide/test-openai-apps-offline.html) | Record/replay OpenAI and Anthropic API calls so CI does not repeat live model calls |
 | [doc/guide/recording.md](doc/guide/recording.md) | How record/replay works, judge-verdict caching, supported providers, secret redaction, parallel test runs |
 | [doc/guide/assertions.md](doc/guide/assertions.md) | Semantic assertions, judge reliability (benchmarked, not asserted), majority-vote verdicts, tool/function-call assertions |
 | [doc/guide/configuration.md](doc/guide/configuration.md) | `.ghostrun.yaml`, environment variables, pytest flags, `ghostrun doctor`, `ghostrun init` |
@@ -156,7 +164,7 @@ Start here, in order:
 </details>
 
 A hosted, searchable version of this documentation is planned at
-[parthmax2.github.io/ghostrun](https://parthmax2.github.io/ghostrun/) (config
+[ghostrun.parthmax.in](https://ghostrun.parthmax.in/) (config
 in `mkdocs.yml`, builds via `.github/workflows/docs.yml`).
 
 ## Roadmap
