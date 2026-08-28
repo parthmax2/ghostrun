@@ -1,6 +1,6 @@
 # ghostrun
 
-> CI-native LLM evals for real applications: record LLM API calls once, replay them deterministically in pytest, and catch semantic regressions before they ship.
+> pytest for LLMs — Write fast, zero-cost tests for your AI prompts, and optimize them automatically when they fail.
 
 ghostrun is a Python package, pytest plugin, and CLI for app-native LLM regression testing. It is built for developers who want LLM evals inside the software test suite instead of a separate dataset, dashboard, YAML workflow, or one-off script.
 

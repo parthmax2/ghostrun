@@ -2,8 +2,8 @@
   <img alt="ghostrun logo" src="assets/ghost-logo.webp" width="360">
 </p>
 
-<h3 align="center">CI-native LLM evals for real applications.</h3>
-<p align="center">ghostrun turns real LLM app behavior into deterministic pytest evals: record API calls once, replay them in CI, and catch semantic regressions before they ship.</p>
+<h3 align="center">pytest for LLMs — Write fast, zero-cost tests for your AI prompts, and optimize them automatically when they fail.</h3>
+<p align="center">ghostrun gives you the two things most Gen AI developers end up building from scratch: a way to write reliable, offline-ready prompt tests, and a way to automatically optimize those prompts when they break. Both live in plain Python and plain <code>pytest</code> — no cloud dashboards, no complex YAML, no extra test harnesses.</p>
 
 <p align="center">
   <a href="https://pypi.org/project/ghostrun/"><img alt="PyPI" src="https://img.shields.io/pypi/v/ghostrun.svg"></a>
@@ -29,30 +29,26 @@
 ---
 
 > [!TIP]
-> LLM evals often live outside the product: separate datasets, dashboards, YAML files, and one-off scripts. ghostrun keeps evals inside normal `pytest`, runs them against the real code path your users hit, records the live LLM call once, and replays it deterministically in CI.
+> **TDD for LLMs (Test-Driven Prompts):** Instead of guessing prompts in a notebook, write your test and criteria first (using `ghostrun.expect`), then let the optimizer (`ghostrun craft`) automatically tune the prompt instructions and few-shots to pass the test.
 
-### The problem
+### The Problem: Why LLM testing is frustrating
 
-```python
-reply = generate_reply("Where is my refund?")
-assert reply == "I'm sorry for the delay..."   # fails tomorrow: LLM never says the same thing twice
-```
-
-LLM apps need evals, but live model calls make test suites painful: they cost money, need API keys in CI, run slowly, and fail for reasons unrelated to your code. Generic eval platforms are powerful, but they often test a prompt, dataset, or trace outside your application. ghostrun focuses on app-native LLM regression testing: the exact Python code path your users exercise.
+Building an AI application usually leaves you with three painful problems:
+1. **Slow & Expensive Tests:** Every time you run `pytest`, your test suite calls OpenAI/Anthropic APIs, costing you money and taking forever to finish.
+2. **Brittle Exact Assertions:** LLM outputs change slightly on every run. Writing `assert reply == "expected"` fails randomly because the LLM used a different word.
+3. **The Prompt Guessing Game:** When you edit a prompt to fix one edge case, you have no easy way to know if you silently broke another output somewhere else.
 
 ### How ghostrun fixes it
 
-1. **Deterministic replay** — the first run records real LLM HTTP calls to a local `.ghostrun_cache/`; every run after replays them instantly from disk. Zero API cost, zero latency, zero flakiness, no key needed in CI.
-2. **Semantic assertions** — assert on *meaning*, not exact text:
-   ```python
-   ghostrun.expect(reply).contains_intent("apology")
-   ghostrun.expect(reply).tone_is("empathetic")
-   ```
-   Graded by a **local Ollama model** by default — your prompts and data never leave your machine. That grading verdict gets cached too, so it's also free and deterministic after the first run.
+`ghostrun` solves all three issues by bringing standard software testing workflows to AI:
 
-No cloud dashboard. No custom CLI to learn. No dataset to author by hand. Just `pytest`.
+*   **Fast & Free Tests (Deterministic Replay):** Wrap your test in `@ghostrun.record`. The first run hits the real API and saves the response; every run after replays it instantly from disk. Tests run in **0.05 seconds**, cost nothing, and run fully offline in CI.
+*   **No More Flakiness (Semantic Assertions):** Assert on meaning and intent instead of exact text. `ghostrun.expect(reply).tone_is("empathetic")` is graded by a free, local judge (via Ollama) so your data stays private.
+*   **Self-Healing Prompts (Optimizers):** If your prompt fails the test, run `ghostrun craft` with your target criteria and training examples. The optimizer automatically searches for the best instructions and few-shot examples to pass your tests.
 
-**Search terms this project is built for:** LLM evals in CI, LLM regression testing, pytest LLM evals, deterministic LLM tests, prompt regression testing, semantic assertions for LLM apps, and testing OpenAI or Anthropic applications with pytest.
+No SaaS dashboards. No complicated YAML. Just Python and `pytest`.
+
+**Search terms this project is built for:** LLM evals in CI, LLM regression testing, pytest LLM evals, deterministic LLM tests, prompt engineering framework, prompt optimization, few-shot example selection, semantic assertions for LLM apps, and testing OpenAI or Anthropic applications with pytest.
 
 ---
 
