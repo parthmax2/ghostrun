@@ -24,7 +24,7 @@ from .config import Config, get_config, load_config, reset_config, set_config
 from .interceptor import CacheMiss, UnsupportedHttpx
 from .record import record, recording
 
-__version__ = "0.1.1"
+__version__ = "2.0.0"
 
 
 def configure(**kwargs) -> Config:

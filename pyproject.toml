@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "ghostrun"
-version = "0.1.1"
+version = "2.0.0"
 description = "CI-native LLM evals for real apps: record LLM API calls once, replay them deterministically in pytest, and catch semantic regressions before they ship."
 readme = "README.md"
 requires-python = ">=3.9"
