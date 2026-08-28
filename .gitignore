@@ -27,3 +27,11 @@ doc/prd.md
 doc/task.md
 SEO_GROWTH_PLAN.md
 parthmax-journey.md
+
+# Decide later — not ready to push yet
+ghostrun-pet/
+benchmark/
+
+# Replaced by ghost-logo.webp — keep webp, drop the heavy PNGs
+assets/ghost-logo.png
+site/assets/ghost-logo.png

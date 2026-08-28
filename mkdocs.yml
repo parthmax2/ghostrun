@@ -13,8 +13,8 @@ site_dir: _mkdocs_build
 
 theme:
   name: material
-  logo: assets/ghost-icon.svg
-  favicon: assets/ghost-icon.svg
+  logo: assets/ghost-icon.png
+  favicon: assets/ghost-icon.png
   icon:
     repo: fontawesome/brands/github
   palette:

@@ -1,8 +1,5 @@
 <p align="center">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="assets/wordmark-dark.svg">
-    <img alt="ghostrun" src="assets/wordmark-light.svg" width="480">
-  </picture>
+  <img alt="ghostrun logo" src="assets/ghost-logo.webp" width="360">
 </p>
 
 <h3 align="center">CI-native LLM evals for real applications.</h3>
