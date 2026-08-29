@@ -169,9 +169,9 @@ Start here, in order:
 
 | Guide | What's in it |
 | :--- | :--- |
-| [LLM regression testing](https:// ghostrun.parthmax.tech/guide/llm-regression-testing.html) | CI-native LLM evals for catching semantic and prompt regressions in real app code |
-| [Pytest LLM evals](https:// ghostrun.parthmax.tech/guide/pytest-llm-evals.html) | How to write LLM evals as normal pytest tests instead of dashboard-only workflows |
-| [Test OpenAI apps offline](https:// ghostrun.parthmax.tech/guide/test-openai-apps-offline.html) | Record/replay OpenAI and Anthropic API calls so CI does not repeat live model calls |
+| [LLM regression testing](https://ghostrun.parthmax.tech/guide/llm-regression-testing.html) | CI-native LLM evals for catching semantic and prompt regressions in real app code |
+| [Pytest LLM evals](https://ghostrun.parthmax.tech/guide/pytest-llm-evals.html) | How to write LLM evals as normal pytest tests instead of dashboard-only workflows |
+| [Test OpenAI apps offline](https://ghostrun.parthmax.tech/guide/test-openai-apps-offline.html) | Record/replay OpenAI and Anthropic API calls so CI does not repeat live model calls |
 | [doc/guide/recording.md](doc/guide/recording.md) | How record/replay works, judge-verdict caching, supported providers, secret redaction, parallel test runs |
 | [doc/guide/assertions.md](doc/guide/assertions.md) | Semantic assertions, judge reliability (benchmarked, not asserted), majority-vote verdicts, tool/function-call assertions |
 | [doc/guide/craft.md](doc/guide/craft.md) | Prompt synthesis, signatures (`input -> output`), Bayesian instruction search, and few-shot bootstrapping |
@@ -194,7 +194,7 @@ Start here, in order:
 </details>
 
 A hosted, searchable version of this documentation is planned at
-[ ghostrun.parthmax.tech](https:// ghostrun.parthmax.tech/) (config
+[ghostrun.parthmax.tech](https://ghostrun.parthmax.tech/) (config
 in `mkdocs.yml`, builds via `.github/workflows/docs.yml`).
 
 ## Roadmap

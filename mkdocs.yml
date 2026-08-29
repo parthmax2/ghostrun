@@ -2,7 +2,7 @@ site_name: ghostrun
 site_description: >-
   pytest for LLMs — Write fast, zero-cost tests for your AI prompts,
   and optimize them automatically when they fail.
-site_url: https:// ghostrun.parthmax.tech/
+site_url: https://ghostrun.parthmax.tech/
 repo_url: https://github.com/parthmax2/ghostrun
 repo_name: parthmax2/ghostrun
 edit_uri: edit/main/doc/

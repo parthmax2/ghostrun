@@ -56,10 +56,10 @@ dev = [
 ghostrun = "ghostrun.cli:main"
 
 [project.urls]
-Homepage = "https:// ghostrun.parthmax.tech"
+Homepage = "https://ghostrun.parthmax.tech"
 Source = "https://github.com/parthmax2/ghostrun"
 Issues = "https://github.com/parthmax2/ghostrun/issues"
-Documentation = "https:// ghostrun.parthmax.tech"
+Documentation = "https://ghostrun.parthmax.tech"
 Changelog = "https://github.com/parthmax2/ghostrun/blob/main/CHANGELOG.md"
 Repository = "https://github.com/parthmax2/ghostrun"
 Author = "https://github.com/parthmax2"

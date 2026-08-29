@@ -32,7 +32,7 @@ ghostrun is not a hosted SaaS, not an observability platform, and not a cross-mo
 
 ## Project links
 
-- Website: https:// ghostrun.parthmax.tech
+- Website: https://ghostrun.parthmax.tech
 - Source: https://github.com/parthmax2/ghostrun
 - PyPI: https://pypi.org/project/ghostrun/
 - Changelog: CHANGELOG.md
