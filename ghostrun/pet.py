@@ -168,14 +168,42 @@ def run_pet(
         new_y = root.winfo_y() + (event.y - drag_data["y"])
         root.geometry(f"+{new_x}+{new_y}")
 
+    # Custom frame intervals per animation state matching preview.html
+    ANIM_SPEEDS = {
+        "idle": 120,
+        "running-right": 110,
+        "running-left": 110,
+        "waving": 120,
+        "jumping": 100,
+        "failed": 150,
+        "waiting": 120,
+        "running": 80,
+        "thinking": 70,
+        "review": 90,
+    }
+
+    # Normalize aliases
+    if initial_anim == "thinking":
+        initial_anim = "running"
+
     def on_canvas_click(event):
         # Generous bounding box check for top-right close area
         if event.x >= total_w - 28 and event.y <= 28:
             do_close()
             return
 
-        # Cycle animation states on pet click
-        anim_cycle = ["idle", "running-right", "jumping", "waving", "review", "failed"]
+        # Cycle all 9 animation states on pet click
+        anim_cycle = [
+            "idle",
+            "running-right",
+            "running-left",
+            "jumping",
+            "waving",
+            "review",
+            "running",
+            "waiting",
+            "failed",
+        ]
         curr = current_state["anim"]
         next_idx = (anim_cycle.index(curr) + 1) % len(anim_cycle) if curr in anim_cycle else 0
         current_state["anim"] = anim_cycle[next_idx]
@@ -218,15 +246,17 @@ def run_pet(
             return
         anim = current_state["anim"]
         idx = current_state["frame_idx"]
-        frames = tk_frames.get(anim, tk_frames["idle"])
+        frames = tk_frames.get(anim, tk_frames.get("running" if anim == "thinking" else "idle"))
 
         canvas.itemconfig(image_item, image=frames[idx % len(frames)])
         current_state["frame_idx"] = (idx + 1) % len(frames)
-        current_state["anim_job"] = root.after(100, update_frame)
+        
+        speed = ANIM_SPEEDS.get(anim, 100)
+        current_state["anim_job"] = root.after(speed, update_frame)
 
     print("\n👻 GhostRun Desktop Pet is active!")
     print("- Hover: Click the red '✕' button to close")
-    print("- Left Click: Cycle animations (idle / running / jumping / waving / review / failed)")
+    print("- Left Click: Cycle through all 9 tactical animations")
     print("- Left Drag: Move pet anywhere on your screen\n")
 
     update_frame()

@@ -123,8 +123,75 @@
       <div class="article" style="max-width:960px">
 
         <div class="home-hero">
-          <img class="hero-gif" src="assets/ghostrun-hero.gif"
-            alt="A ghost travels to the LLM API once, then instantly reappears with the result on every run after">
+          <!-- Interactive Live Mascot Canvas -->
+          <div style="display:flex; flex-direction:column; align-items:center; margin-bottom:1.5rem;">
+            <div id="hero-pet" style="width:115px; height:125px; background:url('assets/spritesheet.png') 0px 0px no-repeat; background-size:920px 1125px; image-rendering:pixelated; cursor:pointer; filter:drop-shadow(0 0 16px rgba(255,59,48,0.4)); transition:transform 0.15s ease;" title="Click me to change animation!"></div>
+            <div style="display:flex; gap:6px; margin-top:8px; flex-wrap:wrap; justify-content:center;">
+              <button onclick="setPetState(0)" class="pet-pill active" id="pill-0">Idle</button>
+              <button onclick="setPetState(1)" class="pet-pill" id="pill-1">Run</button>
+              <button onclick="setPetState(4)" class="pet-pill" id="pill-4">Jump 🏆</button>
+              <button onclick="setPetState(3)" class="pet-pill" id="pill-3">Wave 👋</button>
+              <button onclick="setPetState(7)" class="pet-pill" id="pill-7">Think ⚡</button>
+              <button onclick="setPetState(8)" class="pet-pill" id="pill-8">Review 🎖️</button>
+              <button onclick="setPetState(5)" class="pet-pill" id="pill-5">Fail 💀</button>
+            </div>
+          </div>
+
+          <style>
+            .pet-pill {
+              background: rgba(255,255,255,0.06);
+              border: 1px solid rgba(255,255,255,0.12);
+              color: #a0a0a5;
+              padding: 3px 10px;
+              border-radius: 999px;
+              font-size: 0.78rem;
+              cursor: pointer;
+              transition: all 0.2s;
+            }
+            .pet-pill:hover, .pet-pill.active {
+              background: #ff3b30;
+              color: #fff;
+              border-color: #ff3b30;
+              box-shadow: 0 0 10px rgba(255,59,48,0.5);
+            }
+          </style>
+
+          <script>
+            let currentPetRow = 0;
+            let currentPetFrame = 0;
+            let petTimer = null;
+            const heroPet = document.getElementById('hero-pet');
+            const fw = 115, fh = 125;
+
+            const petSpeeds = { 0: 120, 1: 110, 3: 120, 4: 100, 5: 150, 7: 70, 8: 90 };
+
+            function updateHeroPet() {
+              currentPetFrame = (currentPetFrame + 1) % 8;
+              if (heroPet) {
+                heroPet.style.backgroundPosition = `-${currentPetFrame * fw}px -${currentPetRow * fh}px`;
+              }
+            }
+
+            function setPetState(row) {
+              currentPetRow = row;
+              currentPetFrame = 0;
+              document.querySelectorAll('.pet-pill').forEach(b => b.classList.remove('active'));
+              const activeBtn = document.getElementById(`pill-${row}`);
+              if (activeBtn) activeBtn.classList.add('active');
+              if (petTimer) clearInterval(petTimer);
+              petTimer = setInterval(updateHeroPet, petSpeeds[row] || 110);
+            }
+
+            if (heroPet) {
+              heroPet.addEventListener('click', () => {
+                const states = [0, 1, 4, 3, 7, 8, 5];
+                const nextIdx = (states.indexOf(currentPetRow) + 1) % states.length;
+                setPetState(states[nextIdx]);
+              });
+              setPetState(0);
+            }
+          </script>
+
           <h1>pytest for LLMs</h1>
           <p class="tagline">Write fast, zero-cost tests for your AI prompts, and optimize them automatically when they
             fail.</p>
@@ -139,7 +206,7 @@
           <pre><code>pip install ghostrun
 ollama pull llama3.2:3b   # for the default local judge
 ghostrun init              # scaffolds a working first test
-pytest test_ghostrun_example.py</code></pre>
+ghostrun run               # runs tests with live animated mascot</code></pre>
         </div>
 
         <div class="home-grid">
