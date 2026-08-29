@@ -222,6 +222,12 @@ def craft(
     with out_path.open("w", encoding="utf-8") as fh:
         json.dump(result.to_json(), fh, indent=2, ensure_ascii=False)
 
+    try:
+        from ..pet import spawn_pet_async
+        spawn_pet_async(anim="review", auto_close_ms=3500)
+    except Exception:
+        pass
+
     return result
 
 

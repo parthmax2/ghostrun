@@ -204,6 +204,13 @@ def cmd_init(args) -> int:
     print(f"  {step + 2}. pytest {args.filename}          # instant, from cache")
     print()
     print("Run `ghostrun doctor` any time to check your setup.")
+
+    try:
+        from .pet import spawn_pet_async
+        spawn_pet_async(anim="waving", auto_close_ms=3500)
+    except Exception:
+        pass
+
     return 0
 
 

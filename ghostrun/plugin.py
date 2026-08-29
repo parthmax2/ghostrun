@@ -39,6 +39,8 @@ def pytest_addoption(parser):
     group.addoption("--ghostrun-label", action="store", default=None,
                     metavar="TEXT",
                     help="Free-form label stored with the snapshot, e.g. a prompt version.")
+    group.addoption("--ghostrun-no-pet", action="store_true", default=False,
+                    help="Disable automatic desktop mascot reaction popup on test completion.")
 
 
 def pytest_configure(config):
@@ -100,9 +102,25 @@ def pytest_sessionfinish(session, exitstatus):
             reporter.write_line(f"[ghostrun] saved snapshot {explicit!r} -> {path}")
 
     if reporter is not None:
-        block = _mascot.render(_interceptor.get_stats())
+        stats = _interceptor.get_stats()
+        block = _mascot.render(stats)
         if block:
             reporter.write_line(block)
+
+        # Automatic interactive mascot animation on local runs:
+        # If tests passed with cache/replays -> victory dance ("jumping")
+        # If test suite failed -> "failed"
+        # If new fixtures recorded -> "waving"
+        if not session.config.getoption("--ghostrun-no-pet", False):
+            try:
+                from .pet import spawn_pet_async
+                if exitstatus == 0:
+                    anim = "jumping" if stats.get("replayed", 0) > 0 else "waving"
+                else:
+                    anim = "failed"
+                spawn_pet_async(anim=anim, auto_close_ms=3500)
+            except Exception:
+                pass
 
 
 @pytest.fixture

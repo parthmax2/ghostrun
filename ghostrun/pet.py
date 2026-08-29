@@ -131,7 +131,20 @@ def run_pet(
     )
 
     def do_close(event=None):
-        root.destroy()
+        if current_state.get("anim_job"):
+            try:
+                root.after_cancel(current_state["anim_job"])
+            except Exception:
+                pass
+        if current_state.get("leave_job"):
+            try:
+                root.after_cancel(current_state["leave_job"])
+            except Exception:
+                pass
+        try:
+            root.destroy()
+        except Exception:
+            pass
 
     # Direct click on the close button widget tag
     canvas.tag_bind("close_tag", "<Button-1>", do_close)
@@ -150,7 +163,7 @@ def run_pet(
     def on_canvas_click(event):
         # Generous bounding box check for top-right close area
         if event.x >= total_w - 28 and event.y <= 28:
-            root.destroy()
+            do_close()
             return
 
         # Cycle animation states on pet click
@@ -187,13 +200,15 @@ def run_pet(
     canvas.bind("<Motion>", show_close_btn)
 
     def update_frame():
+        if not root.winfo_exists():
+            return
         anim = current_state["anim"]
         idx = current_state["frame_idx"]
         frames = tk_frames.get(anim, tk_frames["idle"])
 
         canvas.itemconfig(image_item, image=frames[idx % len(frames)])
         current_state["frame_idx"] = (idx + 1) % len(frames)
-        root.after(100, update_frame)
+        current_state["anim_job"] = root.after(100, update_frame)
 
     print("\n👻 GhostRun Desktop Pet is active!")
     print("- Hover: Click the red '✕' button to close")
@@ -206,3 +221,37 @@ def run_pet(
         root.after(auto_close_ms, root.destroy)
 
     root.mainloop()
+
+
+def spawn_pet_async(
+    anim: str = "jumping",
+    auto_close_ms: int = 3500,
+    width: int = 96,
+) -> None:
+    """Spawn the floating pet in a non-blocking background daemon subprocess.
+
+    Safely fails silently on headless/CI/non-interactive systems so it never breaks test suites.
+    """
+    if os.environ.get("GHOSTRUN_NO_PET") or os.environ.get("CI") or os.environ.get("NO_COLOR"):
+        return
+
+    # Check if stdout is an interactive terminal
+    if not (hasattr(sys.stdout, "isatty") and sys.stdout.isatty()):
+        return
+
+    try:
+        import subprocess
+        cmd = [
+            sys.executable,
+            "-c",
+            f"from ghostrun.pet import run_pet; run_pet(width={width}, initial_anim={anim!r}, auto_close_ms={auto_close_ms})",
+        ]
+        subprocess.Popen(
+            cmd,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+            stdin=subprocess.DEVNULL,
+            start_new_session=True,
+        )
+    except Exception:
+        pass  # Never crash user tests if GUI fails to spawn
