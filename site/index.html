@@ -47,7 +47,7 @@
       left: 0;
       width: 100vw;
       height: 100vh;
-      background: #000000;
+      background: #0b0e1a;
       z-index: 999999;
       display: flex;
       flex-direction: column;
@@ -61,6 +61,79 @@
       visibility: hidden;
       pointer-events: none;
     }
+    .intro-launch-card {
+      position: relative;
+      z-index: 20;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      background: rgba(19, 26, 46, 0.85);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(139, 157, 255, 0.3);
+      padding: 3rem 2.5rem;
+      border-radius: 20px;
+      box-shadow: 0 24px 64px rgba(0, 0, 0, 0.8), 0 0 32px rgba(139, 157, 255, 0.25);
+      max-width: 480px;
+      width: 90%;
+      transition: opacity 0.4s, transform 0.4s;
+    }
+    .intro-launch-card.hide {
+      opacity: 0;
+      transform: scale(0.92);
+      pointer-events: none;
+    }
+    .launch-mascot {
+      width: 96px;
+      height: 104px;
+      background: url('assets/spritesheet.png') 0px 0px no-repeat;
+      background-size: 768px 936px;
+      image-rendering: pixelated;
+      filter: drop-shadow(0 0 20px rgba(139, 157, 255, 0.7));
+      margin-bottom: 1.2rem;
+    }
+    .btn-launch-exp {
+      background: linear-gradient(135deg, #8b9dff, #5fd0a0);
+      color: #0b0e1a;
+      border: none;
+      font-weight: 700;
+      font-size: 1.05rem;
+      padding: 14px 32px;
+      border-radius: 999px;
+      cursor: pointer;
+      box-shadow: 0 8px 24px rgba(139, 157, 255, 0.4);
+      transition: all 0.2s;
+      margin-top: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .btn-launch-exp:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 32px rgba(139, 157, 255, 0.8);
+    }
+    .intro-loader-wrap {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      position: absolute;
+      z-index: 25;
+    }
+    .intro-loader-wrap.active {
+      display: flex;
+    }
+    .intro-spinner {
+      width: 50px;
+      height: 50px;
+      border: 3px solid rgba(139, 157, 255, 0.2);
+      border-top-color: #8b9dff;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
     .intro-video-container {
       position: absolute;
       top: 0;
@@ -68,6 +141,11 @@
       width: 100vw;
       height: 100vh;
       overflow: hidden;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+    .intro-video-container.playing {
+      opacity: 1;
     }
     .intro-video-container video {
       width: 100%;
@@ -80,11 +158,14 @@
       bottom: 30px;
       left: 30px;
       right: 30px;
-      display: flex;
+      display: none;
       align-items: center;
       justify-content: space-between;
-      z-index: 10;
+      z-index: 30;
       pointer-events: none;
+    }
+    .intro-hud.active {
+      display: flex;
     }
     .intro-tag {
       display: flex;
@@ -200,43 +281,82 @@
 
 <body>
 
-  <!-- Full-Screen Cinematic Video Intro on First Launch -->
+  <!-- Full-Screen Cinematic Video Intro Experience -->
   <div id="cinema-intro">
-    <div class="intro-video-container">
-      <video id="intro-vid" autoplay muted playsinline poster="assets/ghostrun-hero.gif">
+    <!-- Step 1: Launch Card (Unlocks Full Browser Audio on Click) -->
+    <div class="intro-launch-card" id="launch-card">
+      <div class="launch-mascot" id="launch-sprite"></div>
+      <h2 style="color:#e7eaff; margin:0 0 0.5rem 0; font-size:1.6rem;">GhostRun 2.0.5</h2>
+      <p style="color:#9aa4c7; margin:0; font-size:0.95rem; line-height:1.5;">
+        pytest for AI Apps — Fast, free, offline testing and self-improving prompt optimization.
+      </p>
+      <button class="btn-launch-exp" onclick="startMissionExperience()">
+        ▶ Play Briefing (With Sound)
+      </button>
+      <a href="javascript:void(0)" onclick="dismissIntro()" style="color:#6b7396; font-size:0.8rem; margin-top:1rem; text-decoration:none;">
+        Skip Intro &amp; Enter Docs →
+      </a>
+    </div>
+
+    <!-- Step 2: Cyber Loading Spinner Animation -->
+    <div class="intro-loader-wrap" id="intro-loader">
+      <div class="intro-spinner"></div>
+      <div style="color:#8b9dff; font-family:var(--font-mono); font-size:0.85rem; margin-top:1.2rem; letter-spacing:1px;">
+        INITIALIZING MISSION VIDEO...
+      </div>
+    </div>
+
+    <!-- Step 3: Edge-to-Edge Full Screen Video with Audio -->
+    <div class="intro-video-container" id="intro-vid-box">
+      <video id="intro-vid" playsinline poster="assets/ghostrun-hero.gif">
         <source src="assets/ghostrun-hero.webm" type="video/webm">
         <source src="assets/ghostrun-hero.mp4" type="video/mp4">
       </video>
     </div>
-    <div class="intro-hud">
+
+    <!-- Step 4: Floating Cyber HUD Controls -->
+    <div class="intro-hud" id="intro-hud">
       <div class="intro-tag">
         <span style="display:inline-block; width:8px; height:8px; background:#5fd0a0; border-radius:50%; box-shadow:0 0 8px #5fd0a0;"></span>
-        GHOSTRUN v2.0.5 // MISSION BRIEFING
+        GHOSTRUN v2.0.5 // BRIEFING IN PROGRESS
       </div>
-      <div style="display:flex; align-items:center; gap:12px; pointer-events:auto;">
-        <button class="intro-skip-btn" id="intro-mute-btn" onclick="toggleAudio()" style="padding:10px 18px;">
-          <span id="mute-icon">🔊 Sound On</span>
-        </button>
-        <button class="intro-skip-btn" id="intro-skip" onclick="dismissIntro()">
-          Enter GhostRun →
-        </button>
-      </div>
+      <button class="intro-skip-btn" id="intro-skip" onclick="dismissIntro()">
+        Enter GhostRun →
+      </button>
     </div>
   </div>
 
   <script>
-    function toggleAudio() {
+    function startMissionExperience() {
+      var card = document.getElementById('launch-card');
+      var loader = document.getElementById('intro-loader');
+      var vidBox = document.getElementById('intro-vid-box');
+      var hud = document.getElementById('intro-hud');
       var vid = document.getElementById('intro-vid');
-      var icon = document.getElementById('mute-icon');
-      if (vid) {
-        vid.muted = !vid.muted;
-        if (vid.muted) {
-          icon.textContent = "🔇 Muted";
-        } else {
-          icon.textContent = "🔊 Sound On";
-          vid.play().catch(function(){});
+
+      // 1. Hide Launch Card
+      if (card) card.classList.add('hide');
+
+      // 2. Show Cyber Loading Animation
+      if (loader) loader.classList.add('active');
+
+      // 3. Start Video with Sound after brief loading animation
+      setTimeout(function() {
+        if (loader) loader.classList.remove('active');
+        if (vidBox) vidBox.classList.add('playing');
+        if (hud) hud.classList.add('active');
+        if (vid) {
+          vid.muted = false;
+          vid.volume = 1.0;
+          vid.currentTime = 0;
+          vid.play().catch(function() {
+            // Fallback if blocked
+            vid.muted = true;
+            vid.play();
+          });
+          vid.addEventListener('ended', dismissIntro);
         }
-      }
+      }, 700);
     }
 
     function dismissIntro() {
@@ -254,22 +374,21 @@
     }
 
     (function() {
+      // Animate mascot sprite on launch card
+      var sprite = document.getElementById('launch-sprite');
+      var frame = 0;
+      setInterval(function() {
+        frame = (frame + 1) % 8;
+        if (sprite) sprite.style.backgroundPosition = '-' + (frame * 96) + 'px -0px';
+      }, 120);
+
       // If user already watched intro in this session, skip it automatically
       try {
         if (sessionStorage.getItem('ghostrun_intro_seen') === 'true') {
           var el = document.getElementById('cinema-intro');
           if (el) el.style.display = 'none';
-          return;
         }
       } catch(e) {}
-
-      var vid = document.getElementById('intro-vid');
-      if (vid) {
-        // Automatically transition into the main site when video finishes
-        vid.addEventListener('ended', dismissIntro);
-        // Fallback safety timeout if autoplay is blocked
-        setTimeout(dismissIntro, 11000);
-      }
     })();
   </script>
 
