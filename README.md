@@ -1,5 +1,5 @@
 <p align="center">
-  <img alt="ghostrun logo" src="assets/ghost-logo.webp" width="360">
+  <img alt="ghostrun logo" src="https://raw.githubusercontent.com/parthmax2/ghostrun/main/assets/ghost-logo.webp" width="360">
 </p>
 
 <h3 align="center">pytest for LLMs — Write fast, zero-cost tests for your AI prompts, and optimize them automatically when they fail.</h3>
@@ -18,12 +18,13 @@
   <a href="#is-this-for-you">Is this for you?</a> ·
   <a href="#install">Install</a> ·
   <a href="#quickstart">Quickstart</a> ·
+  <a href="#prompt-optimization-ghostrun-craft">Prompt Optimization</a> ·
   <a href="#documentation">Documentation</a> ·
   <a href="#roadmap">Roadmap</a>
 </h4>
 
 <p align="center">
-  <img src="assets/ghostrun-hero.gif" alt="ghostrun: a ghost travels to the LLM API once, then instantly reappears with the result on every run after" width="640">
+  <img src="https://raw.githubusercontent.com/parthmax2/ghostrun/main/assets/ghostrun-hero.gif" alt="ghostrun: a ghost travels to the LLM API once, then instantly reappears with the result on every run after" width="640">
 </p>
 
 ---
@@ -113,6 +114,41 @@ you call a judge-backed assertion (`contains_intent`, `tone_is`, `matches`).
 Deterministic assertions (`contains`, `is_valid_json`) and tool-call assertions
 never invoke it.
 
+## Prompt Optimization (`ghostrun craft`)
+
+Where `@ghostrun.record` and `expect(...)` **test** an existing prompt, `ghostrun craft` **builds and optimizes** one.
+
+Instead of hand-writing brittle prompts and guessing edge cases, declare a typed input/output signature (`"inputs -> outputs"`) and let `ghostrun craft` automatically search for winning instructions and discover high-value few-shot demonstrations:
+
+```python
+from ghostrun.craft import craft
+
+# Automatically synthesize prompt instructions & select passing few-shots
+crafted = craft(
+    name="refund_classifier",
+    signature="customer_message -> is_refund_request, urgency",
+    examples_path="dataset/support_queries.jsonl",
+    criterion="Accurately flags refund requests and evaluates urgency",
+    model="gpt-4o-mini",
+    budget=10,  # Bayesian search over instruction candidates & demo bootstrapping
+)
+
+print(crafted.instructions)
+# Resulting prompt artifacts and demos are saved locally for test replay
+```
+
+Or optimize directly from the CLI:
+
+```bash
+ghostrun craft refund_classifier \
+    --signature "customer_message -> is_refund_request, urgency" \
+    --examples dataset.jsonl \
+    --criterion "Accurately flags refund requests and evaluates urgency" \
+    --model gpt-4o-mini
+```
+
+Learn more in the [Prompt Crafting Guide](doc/guide/craft.md).
+
 ## Is this for you?
 
 **Use ghostrun if** you're writing pytest tests around code that calls an LLM
@@ -133,11 +169,12 @@ Start here, in order:
 
 | Guide | What's in it |
 | :--- | :--- |
-| [LLM regression testing](https://ghostrun.parthmax.in/guide/llm-regression-testing.html) | CI-native LLM evals for catching semantic and prompt regressions in real app code |
-| [Pytest LLM evals](https://ghostrun.parthmax.in/guide/pytest-llm-evals.html) | How to write LLM evals as normal pytest tests instead of dashboard-only workflows |
-| [Test OpenAI apps offline](https://ghostrun.parthmax.in/guide/test-openai-apps-offline.html) | Record/replay OpenAI and Anthropic API calls so CI does not repeat live model calls |
+| [LLM regression testing](https:// ghostrun.parthmax.tech/guide/llm-regression-testing.html) | CI-native LLM evals for catching semantic and prompt regressions in real app code |
+| [Pytest LLM evals](https:// ghostrun.parthmax.tech/guide/pytest-llm-evals.html) | How to write LLM evals as normal pytest tests instead of dashboard-only workflows |
+| [Test OpenAI apps offline](https:// ghostrun.parthmax.tech/guide/test-openai-apps-offline.html) | Record/replay OpenAI and Anthropic API calls so CI does not repeat live model calls |
 | [doc/guide/recording.md](doc/guide/recording.md) | How record/replay works, judge-verdict caching, supported providers, secret redaction, parallel test runs |
 | [doc/guide/assertions.md](doc/guide/assertions.md) | Semantic assertions, judge reliability (benchmarked, not asserted), majority-vote verdicts, tool/function-call assertions |
+| [doc/guide/craft.md](doc/guide/craft.md) | Prompt synthesis, signatures (`input -> output`), Bayesian instruction search, and few-shot bootstrapping |
 | [doc/guide/configuration.md](doc/guide/configuration.md) | `.ghostrun.yaml`, environment variables, pytest flags, `ghostrun doctor`, `ghostrun init` |
 
 <details>
@@ -157,7 +194,7 @@ Start here, in order:
 </details>
 
 A hosted, searchable version of this documentation is planned at
-[ghostrun.parthmax.in](https://ghostrun.parthmax.in/) (config
+[ ghostrun.parthmax.tech](https:// ghostrun.parthmax.tech/) (config
 in `mkdocs.yml`, builds via `.github/workflows/docs.yml`).
 
 ## Roadmap
@@ -166,6 +203,7 @@ in `mkdocs.yml`, builds via `.github/workflows/docs.yml`).
 - [x] Semantic assertions (`contains_intent`, `tone_is`, `matches`) via local Ollama or an offline `echo` stub
 - [x] Judge-verdict caching, including majority-vote grading (`judge.votes`) with a benchmarked reliability tradeoff
 - [x] Tool/function-call assertions (`expect_tool_calls`)
+- [x] Prompt synthesis & optimization (`ghostrun craft`, `Signature`, `BootstrapFewShot`, `BayesianSearch`)
 - [x] Prompt regression tracking — `ghostrun diff`, PR-comment and JUnit CI output
 - [x] `ghostrun init` / `ghostrun doctor` — scaffolding and setup diagnostics in one command
 - [x] Secret redaction so the cache is safe to commit

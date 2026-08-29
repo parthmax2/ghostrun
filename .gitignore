@@ -35,3 +35,6 @@ benchmark/
 # Replaced by ghost-logo.webp — keep webp, drop the heavy PNGs
 assets/ghost-logo.png
 site/assets/ghost-logo.png
+
+.env
+external/

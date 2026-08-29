@@ -1,42 +1,64 @@
 <!doctype html>
 <html lang="en">
+
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Pytest LLM evals - ghostrun</title>
-<meta name="description" content="Write LLM evals as normal pytest tests with ghostrun. Record real app calls once, replay them in CI, and assert on meaning instead of exact strings.">
-<link rel="canonical" href="https://ghostrun.parthmax.in/guide/pytest-llm-evals.html">
-<meta name="keywords" content="pytest LLM evals, LLM testing pytest, LLM evals python, semantic assertions pytest, GenAI testing">
-<link rel="icon" href="../assets/ghost-icon.png">
-<link rel="stylesheet" href="../assets/style.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pytest LLM evals - ghostrun</title>
+  <meta name="description"
+    content="Write LLM evals as normal pytest tests with ghostrun. Record real app calls once, replay them in CI, and assert on meaning instead of exact strings.">
+  <link rel="canonical" href="https:// ghostrun.parthmax.tech/guide/pytest-llm-evals.html">
+  <meta name="keywords"
+    content="pytest LLM evals, LLM testing pytest, LLM evals python, semantic assertions pytest, GenAI testing">
+  <link rel="icon" href="../assets/ghost-icon.png">
+  <link rel="stylesheet" href="../assets/style.css">
 </head>
+
 <body>
-<header class="site-header"><button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="18" height="18"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg></button><a class="brand" href="../index.html"><img src="../assets/ghost-icon.png" alt="">GhostRun</a><div class="header-spacer"></div><div class="search-wrap"><span class="search-icon"></span><input class="search-input" id="search-input" type="text" placeholder="Search docs..." autocomplete="off"><div class="search-results" id="search-results"></div></div><div class="header-actions"><button class="icon-btn" id="theme-toggle" aria-label="Toggle theme">Aa</button><a class="icon-btn" href="https://github.com/parthmax2/ghostrun" target="_blank" rel="noopener" aria-label="GitHub repository">Git</a></div></header>
-<div class="scrim" id="scrim"></div>
-<div class="shell">
-  <nav class="sidebar" aria-label="Sidebar">
-    <div class="side-group">
-      <div class="side-group-title">Guide</div>
-      <a class="side-link" href="getting-started.html">Getting started</a>
-      <a class="side-link" href="llm-regression-testing.html">LLM regression testing</a>
-      <a class="side-link active" href="pytest-llm-evals.html">Pytest LLM evals</a>
-      <a class="side-link" href="test-openai-apps-offline.html">Test OpenAI apps offline</a>
-      <a class="side-link" href="recording.html">Recording and replay</a>
-      <a class="side-link" href="assertions.html">Semantic assertions</a>
-      <a class="side-link" href="regression-tracking.html">Prompt regression tracking</a>
+  <header class="site-header"><button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation"><svg
+        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="18"
+        height="18">
+        <line x1="4" y1="7" x2="20" y2="7" />
+        <line x1="4" y1="12" x2="20" y2="12" />
+        <line x1="4" y1="17" x2="20" y2="17" />
+      </svg></button><a class="brand" href="../index.html"><img src="../assets/ghost-icon.png" alt="">GhostRun</a>
+    <div class="header-spacer"></div>
+    <div class="search-wrap"><span class="search-icon"></span><input class="search-input" id="search-input" type="text"
+        placeholder="Search docs..." autocomplete="off">
+      <div class="search-results" id="search-results"></div>
     </div>
-  </nav>
-  <main class="main">
-    <article class="article">
-      <div class="breadcrumb"><a href="../index.html">Home</a> / Guide</div>
-      <h1>Pytest LLM evals</h1>
-      <p class="lede">ghostrun lets Python developers write LLM evals as ordinary pytest tests, next to the code they protect.</p>
+    <div class="header-actions"><button class="icon-btn" id="theme-toggle" aria-label="Toggle theme">Aa</button><a
+        class="icon-btn" href="https://github.com/parthmax2/ghostrun" target="_blank" rel="noopener"
+        aria-label="GitHub repository">Git</a></div>
+  </header>
+  <div class="scrim" id="scrim"></div>
+  <div class="shell">
+    <nav class="sidebar" aria-label="Sidebar">
+      <div class="side-group">
+        <div class="side-group-title">Guide</div>
+        <a class="side-link" href="getting-started.html">Getting started</a>
+        <a class="side-link" href="llm-regression-testing.html">LLM regression testing</a>
+        <a class="side-link active" href="pytest-llm-evals.html">Pytest LLM evals</a>
+        <a class="side-link" href="test-openai-apps-offline.html">Test OpenAI apps offline</a>
+        <a class="side-link" href="recording.html">Recording and replay</a>
+        <a class="side-link" href="assertions.html">Semantic assertions</a>
+        <a class="side-link" href="regression-tracking.html">Prompt regression tracking</a>
+      </div>
+    </nav>
+    <main class="main">
+      <article class="article">
+        <div class="breadcrumb"><a href="../index.html">Home</a> / Guide</div>
+        <h1>Pytest LLM evals</h1>
+        <p class="lede">ghostrun lets Python developers write LLM evals as ordinary pytest tests, next to the code they
+          protect.</p>
 
-      <h2>Why pytest is the right home</h2>
-      <p>Developers already trust pytest for regressions, fixtures, CI, failure output, and pull request checks. LLM evals should fit that workflow instead of forcing every app team into a separate dashboard or YAML-only eval system.</p>
+        <h2>Why pytest is the right home</h2>
+        <p>Developers already trust pytest for regressions, fixtures, CI, failure output, and pull request checks. LLM
+          evals should fit that workflow instead of forcing every app team into a separate dashboard or YAML-only eval
+          system.</p>
 
-      <h2>What an eval looks like</h2>
-      <pre><code>@ghostrun.record(model="gpt-4o-mini")
+        <h2>What an eval looks like</h2>
+        <pre><code>@ghostrun.record(model="gpt-4o-mini")
 def test_support_reply_semantics():
     reply = generate_reply("I was charged twice")
 
@@ -44,30 +66,37 @@ def test_support_reply_semantics():
     ghostrun.expect(reply).contains_intent("offer next step")
     ghostrun.expect(reply).tone_is("calm")</code></pre>
 
-      <p>The first run records the real LLM call. Later runs replay the response and evaluate the assertions without repeating the provider request.</p>
+        <p>The first run records the real LLM call. Later runs replay the response and evaluate the assertions without
+          repeating the provider request.</p>
 
-      <h2>What to test</h2>
-      <ul>
-        <li>Intent: did the reply include the required policy or instruction?</li>
-        <li>Tone: did the answer stay empathetic, concise, professional, or safe?</li>
-        <li>Negative behavior: did it avoid arguing, hallucinating, or leaking internal details?</li>
-        <li>Structure: did it produce valid JSON, expected fields, or tool calls?</li>
-        <li>Regression state: did a prompt edit make an assertion fail compared with the previous run?</li>
-      </ul>
+        <h2>What to test</h2>
+        <ul>
+          <li>Intent: did the reply include the required policy or instruction?</li>
+          <li>Tone: did the answer stay empathetic, concise, professional, or safe?</li>
+          <li>Negative behavior: did it avoid arguing, hallucinating, or leaking internal details?</li>
+          <li>Structure: did it produce valid JSON, expected fields, or tool calls?</li>
+          <li>Regression state: did a prompt edit make an assertion fail compared with the previous run?</li>
+        </ul>
 
-      <h2>When to use ghostrun</h2>
-      <p>Use ghostrun when you want app-native LLM evals in Python: real code, real calls, deterministic replay, semantic assertions, and CI-friendly failures.</p>
+        <h2>When to use ghostrun</h2>
+        <p>Use ghostrun when you want app-native LLM evals in Python: real code, real calls, deterministic replay,
+          semantic assertions, and CI-friendly failures.</p>
 
-      <div class="page-nav">
-        <a href="llm-regression-testing.html"><span class="dir">Previous</span>LLM regression testing</a>
-        <a class="next" href="test-openai-apps-offline.html"><span class="dir">Next</span>Test OpenAI apps offline</a>
-      </div>
-    </article>
-  </main>
-  <aside class="toc"><div class="toc-title">On this page</div><ul id="toc-list"></ul></aside>
-</div>
-<footer class="site-footer"><a href="https://github.com/parthmax2/ghostrun" target="_blank" rel="noopener">parthmax2/ghostrun</a> - MIT License</footer>
-<script src="../assets/search-index.js"></script>
-<script src="../assets/app.js"></script>
+        <div class="page-nav">
+          <a href="llm-regression-testing.html"><span class="dir">Previous</span>LLM regression testing</a>
+          <a class="next" href="test-openai-apps-offline.html"><span class="dir">Next</span>Test OpenAI apps offline</a>
+        </div>
+      </article>
+    </main>
+    <aside class="toc">
+      <div class="toc-title">On this page</div>
+      <ul id="toc-list"></ul>
+    </aside>
+  </div>
+  <footer class="site-footer"><a href="https://github.com/parthmax2/ghostrun" target="_blank"
+      rel="noopener">parthmax2/ghostrun</a> - MIT License</footer>
+  <script src="../assets/search-index.js"></script>
+  <script src="../assets/app.js"></script>
 </body>
+
 </html>

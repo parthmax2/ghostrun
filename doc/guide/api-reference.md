@@ -125,11 +125,27 @@ CLI-flag handling; rarely needed directly.
 | `ghostrun.UnsupportedHttpx` | The installed httpx version doesn't expose the hook the interceptor needs. |
 | `ghostrun.judge.ollama.JudgeUnavailable` | The Ollama daemon is unreachable, the model isn't pulled, or it returned an error — not exported at the top level, imported from `ghostrun.judge.ollama` if you need to catch it specifically. |
 
+## Prompt Crafting (`ghostrun.craft`)
+
+See [craft.md](craft.md) for full guide and architecture.
+
+### `ghostrun.craft.craft(...) -> CraftedPrompt`
+Synthesizes instructions and selects few-shot demonstrations for a given `Signature` against training examples and a target `criterion` or `metric`.
+
+### `ghostrun.craft.Signature(spec: str)`
+Typed input/output prompt contract (e.g. `"question, context -> answer"`).
+
+### `ghostrun.craft.Predict` / `ghostrun.craft.ChainOfThought`
+Executable module units wrapped around a `Signature`.
+
+### `ghostrun.craft.BootstrapFewShot` / `ghostrun.craft.BayesianSearch`
+Prompt optimizers: `BootstrapFewShot` creates passing demonstration examples; `BayesianSearch` searches over instruction candidates and demo temperatures using Optuna.
+
 ## CLI
 
-See [regression-tracking.md](regression-tracking.md) for `ghostrun list / show
-/ diff` and [configuration.md](configuration.md) for `ghostrun doctor` and
-`ghostrun init`.
+- `ghostrun craft`: Synthesize and optimize prompts from CLI (see [craft.md](craft.md)).
+- `ghostrun list / show / diff`: Regression tracking commands (see [regression-tracking.md](regression-tracking.md)).
+- `ghostrun doctor / init`: Diagnostics and project scaffolding (see [configuration.md](configuration.md)).
 
 ## Pytest plugin
 

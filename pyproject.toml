@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "ghostrun"
-version = "2.0.0"
+version = "2.0.1"
 description = "CI-native LLM evals for real apps: record LLM API calls once, replay them deterministically in pytest, and catch semantic regressions before they ship."
 readme = "README.md"
 requires-python = ">=3.9"
@@ -41,19 +41,25 @@ classifiers = [
 dependencies = [
     "httpx>=0.24",
     "pyyaml>=6.0",
+    "pydantic>=2.0",
+    "litellm>=1.0.0",
+    "optuna>=3.0.0",
 ]
 
 [project.optional-dependencies]
-dev = ["pytest>=7.0"]
+dev = [
+    "pytest>=7.0",
+    "pytest-asyncio>=0.20",
+]
 
 [project.scripts]
 ghostrun = "ghostrun.cli:main"
 
 [project.urls]
-Homepage = "https://ghostrun.parthmax.in"
+Homepage = "https:// ghostrun.parthmax.tech"
 Source = "https://github.com/parthmax2/ghostrun"
 Issues = "https://github.com/parthmax2/ghostrun/issues"
-Documentation = "https://ghostrun.parthmax.in"
+Documentation = "https:// ghostrun.parthmax.tech"
 Changelog = "https://github.com/parthmax2/ghostrun/blob/main/CHANGELOG.md"
 Repository = "https://github.com/parthmax2/ghostrun"
 Author = "https://github.com/parthmax2"

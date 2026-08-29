@@ -29,6 +29,7 @@ pytest test_ghostrun_example.py
 
 - [Recording and replay](guide/recording.md)
 - [Semantic assertions](guide/assertions.md)
+- [Prompt crafting & optimization](guide/craft.md)
 - [Prompt regression tracking](guide/regression-tracking.md)
 - [Configuration](guide/configuration.md)
 - [API reference](guide/api-reference.md)

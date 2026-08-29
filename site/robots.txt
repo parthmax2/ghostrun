@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://ghostrun.parthmax.in/sitemap.xml
+Sitemap: https:// ghostrun.parthmax.tech/sitemap.xml
