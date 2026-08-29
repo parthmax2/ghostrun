@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Prompt Crafting & Optimization - ghostrun</title>
+  <meta name="description"
+    content="Automatically synthesize prompt instructions and discover high-value few-shot demonstrations with Bayesian optimization and typed signatures in GhostRun.">
+  <link rel="canonical" href="https://ghostrun.parthmax.tech/guide/craft.html">
+  <link rel="icon" href="../assets/ghost-icon.png">
+  <link rel="stylesheet" href="../assets/style.css">
+</head>
+
+<body>
+
+  <header class="site-header">
+    <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="18"
+        height="18">
+        <line x1="4" y1="7" x2="20" y2="7" />
+        <line x1="4" y1="12" x2="20" y2="12" />
+        <line x1="4" y1="17" x2="20" y2="17" />
+      </svg>
+    </button>
+    <a class="brand" href="../index.html"><img src="../assets/ghost-icon.png" alt="">GhostRun</a>
+    <div class="header-spacer"></div>
+    <div class="search-wrap">
+      <span class="search-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
+          <circle cx="11" cy="11" r="7" />
+          <line x1="21" y1="21" x2="16.65" y2="16.65" />
+        </svg></span>
+      <input class="search-input" id="search-input" type="text" placeholder="Search docs..." autocomplete="off">
+      <div class="search-results" id="search-results"></div>
+    </div>
+    <div class="header-actions">
+      <a class="icon-btn" href="https://github.com/parthmax2/ghostrun" target="_blank" rel="noopener"
+        aria-label="GitHub repository">
+        <svg viewBox="0 0 16 16" width="18" height="18" fill="currentColor">
+          <path
+            d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z" />
+        </svg>
+      </a>
+    </div>
+  </header>
+
+  <div class="scrim" id="scrim"></div>
+
+  <div class="shell">
+    <nav class="sidebar" aria-label="Sidebar">
+      <div class="side-group">
+        <div class="side-group-title">Guide</div>
+        <a class="side-link" href="getting-started.html">Getting started</a>
+        <a class="side-link active" href="craft.html">Prompt crafting & optimization ⚡</a>
+        <a class="side-link" href="recording.html">Recording and replay</a>
+        <a class="side-link" href="assertions.html">Semantic assertions</a>
+        <a class="side-link" href="regression-tracking.html">Prompt regression tracking</a>
+        <a class="side-link" href="llm-regression-testing.html">LLM regression testing</a>
+        <a class="side-link" href="pytest-llm-evals.html">Pytest LLM evals</a>
+        <a class="side-link" href="test-openai-apps-offline.html">Test OpenAI apps offline</a>
+        <a class="side-link" href="configuration.html">Configuration</a>
+        <a class="side-link" href="api-reference.html">API reference</a>
+        <a class="side-link" href="why-not-diy.html">Why not just ask an LLM?</a>
+      </div>
+      <div class="side-group">
+        <div class="side-group-title">Research</div>
+        <a class="side-link" href="../research/comparison.html">Comparison with other tools</a>
+        <a class="side-link" href="../research/judge-voting-benchmark.html">Judge-voting benchmark</a>
+      </div>
+    </nav>
+
+    <main class="main">
+      <div class="article">
+        <h1>Prompt Crafting & Optimization (`ghostrun craft`)</h1>
+
+        <p class="lead">Stop hand-tuning prompts by trial and error. Declare what you want as a <strong>typed signature</strong> (<code>"inputs -> outputs"</code>), provide a few examples, and let GhostRun's Bayesian optimizer discover the highest-performing instructions and few-shot demonstrations automatically.</p>
+
+        <hr>
+
+        <h2>Why Hand-Tuning Prompts Fails</h2>
+        <p>When prompts break, developers usually tweak random words in system instructions and hope it fixes edge cases without breaking existing tests. This creates brittle, fragile prompts.</p>
+        <p><strong>GhostRun Craft</strong> treats prompt engineering as a compiler problem: it runs automated Bayesian search trials across candidate instructions and selects the combinations that maximize holdout test accuracy.</p>
+
+        <h2>1. The 10-Second Quickstart</h2>
+
+        <h3>Define a Typed Signature</h3>
+        <p>Signatures declare your input and output fields cleanly:</p>
+
+        <pre><code>from ghostrun.craft import craft
+
+# Optimize instructions and few-shot demonstrations automatically
+crafted = craft(
+    name="refund_classifier",
+    signature="customer_message -> is_refund_request: bool, urgency: int",
+    examples_path="dataset/support_queries.jsonl",
+    criterion="Accurately flags refund requests and evaluates urgency from 1 to 5",
+    model="gpt-4o-mini",
+    budget=10,  # Bayesian search iterations
+)
+
+print("🏆 Winning Instructions:\n", crafted.instructions)
+print("🎯 Holdout Accuracy Score:", crafted.holdout_score)</code></pre>
+
+        <h2>2. Using the CLI</h2>
+        <p>You can also craft and optimize prompts directly from your terminal:</p>
+
+        <pre><code>ghostrun craft triage_bot \
+    --signature "ticket_text -> priority, department" \
+    --examples dataset.jsonl \
+    --criterion "Correctly classifies urgent server outages to DevOps" \
+    --model gpt-4o-mini \
+    --budget 10</code></pre>
+
+        <p>The resulting winning prompt is saved locally into <code>.ghostrun_cache/prompts/</code> and is immediately ready to replay in your <code>pytest</code> suite for $0 with zero network latency.</p>
+
+        <h2>3. DSPy vs GhostRun Comparison</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Feature</th>
+                <th>DSPy</th>
+                <th>GhostRun (`ghostrun craft`)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Framework Native</strong></td>
+                <td>Requires full framework lock-in</td>
+                <td>Works directly with raw <code>httpx</code>, <code>openai</code>, and <code>pytest</code></td>
+              </tr>
+              <tr>
+                <td><strong>Record / Replay Cache</strong></td>
+                <td>No built-in HTTP record/replay</td>
+                <td>0.04s deterministic offline replay ($0 cost)</td>
+              </tr>
+              <tr>
+                <td><strong>Search Engine</strong></td>
+                <td>Custom Teleprompter / MIPRO</td>
+                <td>Bayesian TPE Optimization via Optuna</td>
+              </tr>
+              <tr>
+                <td><strong>Visual Feedback</strong></td>
+                <td>Console logs only</td>
+                <td>Live tactical animated companion celebration 👻</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="next-step" style="margin-top:2.5rem;">
+          <a class="btn btn-primary" href="getting-started.html">Next: Getting Started Tutorial →</a>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <footer class="site-footer">
+    <a href="https://github.com/parthmax2/ghostrun" target="_blank" rel="noopener">parthmax2/ghostrun</a> - MIT License · Version 2.0.5
+  </footer>
+
+  <script src="../assets/search-index.js"></script>
+  <script src="../assets/app.js"></script>
+</body>
+
+</html>

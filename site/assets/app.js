@@ -227,5 +227,43 @@
         });
       });
     }
+
+    /* ---------------------------------------------------------------------
+       Floating Interactive Mascot Widget on Guide Pages
+       --------------------------------------------------------------------- */
+    if (!document.getElementById("hero-pet") && document.querySelector(".article")) {
+      var petContainer = document.createElement("div");
+      petContainer.id = "floating-doc-pet";
+      petContainer.style.cssText = "position:fixed; bottom:20px; right:20px; z-index:99; display:flex; flex-direction:column; align-items:center; cursor:pointer;";
+      
+      var petSprite = document.createElement("div");
+      petSprite.style.cssText = "width:80px; height:87px; background:url('" + SITE_BASE + "assets/spritesheet.png') 0px 0px no-repeat; background-size:640px 783px; image-rendering:pixelated; filter:drop-shadow(0 0 12px rgba(139,157,255,0.45)); transition:transform 0.15s ease;";
+      petSprite.title = "I am your GhostRun tactical companion! Click me to cycle animations.";
+      
+      var frame = 0;
+      var row = 0; // 0: idle, 3: waving, 4: jumping, 7: thinking
+      var timer = setInterval(function () {
+        frame = (frame + 1) % 8;
+        petSprite.style.backgroundPosition = "-" + (frame * 80) + "px -" + (row * 87) + "px";
+      }, 120);
+
+      var states = [0, 3, 4, 7, 8, 1];
+      var stateIdx = 0;
+      petContainer.addEventListener("click", function () {
+        stateIdx = (stateIdx + 1) % states.length;
+        row = states[stateIdx];
+        frame = 0;
+      });
+
+      // Wave when user scrolls near the bottom of a guide
+      window.addEventListener("scroll", function () {
+        if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 150) {
+          if (row === 0) { row = 3; } // Wave!
+        }
+      });
+
+      petContainer.appendChild(petSprite);
+      document.body.appendChild(petContainer);
+    }
   });
 })();

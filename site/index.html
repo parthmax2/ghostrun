@@ -1,48 +1,114 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>ghostrun - pytest for LLMs</title>
+  <title>ghostrun - pytest for AI Apps</title>
   <meta name="description"
-    content="pytest for LLMs — Write fast, zero-cost tests for your AI prompts, and optimize them automatically when they fail.">
+    content="pytest for AI Apps — Fast, free, offline testing, semantic intent assertions, and self-improving prompt optimization for Python developers.">
   <link rel="canonical" href="https://ghostrun.parthmax.tech/">
   <meta name="author" content="parthmax2">
   <meta name="keywords"
-    content="LLM evals, LLM regression testing, prompt optimization, prompt engineering, DSPy alternative, few-shot selection, pytest LLM evals, deterministic LLM tests, prompt regression testing, semantic assertions, OpenAI testing, Anthropic testing, CI testing">
+    content="LLM evals, prompt optimization, prompt crafting, DSPy alternative, pytest LLM evals, deterministic LLM tests, prompt regression testing, semantic assertions, OpenAI testing, Anthropic testing, desktop pet, AI companion">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="ghostrun - pytest for LLMs">
+  <meta property="og:title" content="ghostrun - pytest for AI Apps">
   <meta property="og:description"
     content="Write fast, zero-cost tests for your AI prompts, and optimize them automatically when they fail.">
   <meta property="og:url" content="https://ghostrun.parthmax.tech/">
   <meta property="og:site_name" content="ghostrun">
   <meta property="og:image" content="https://ghostrun.parthmax.tech/assets/ghostrun-hero.gif">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="ghostrun - pytest for LLMs">
+  <meta name="twitter:title" content="ghostrun - pytest for AI Apps">
   <meta name="twitter:description"
     content="Write fast, zero-cost tests for your AI prompts, and optimize them automatically when they fail.">
   <meta name="twitter:image" content="https://ghostrun.parthmax.tech/assets/ghostrun-hero.gif">
-  <script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "SoftwareSourceCode",
-  "name": "ghostrun",
-  "description": "pytest for LLMs — Write fast, zero-cost tests for your AI prompts, and optimize them automatically when they fail.",
-  "codeRepository": "https://github.com/parthmax2/ghostrun",
-  "url": "https://ghostrun.parthmax.tech/",
-  "programmingLanguage": "Python",
-  "license": "https://github.com/parthmax2/ghostrun/blob/main/LICENSE",
-  "author": {
-    "@type": "Person",
-    "name": "parthmax2",
-    "url": "https://github.com/parthmax2"
-  },
-  "keywords": ["LLM evals", "prompt optimization", "prompt engineering", "few-shot selection", "LLM regression testing", "pytest", "prompt regression testing", "semantic assertions", "OpenAI testing", "Anthropic testing"]
-}
-</script>
   <link rel="icon" href="assets/ghost-icon.png">
   <link rel="stylesheet" href="assets/style.css">
+  <style>
+    /* Premium Modern Dark Styles */
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 4px 14px;
+      background: rgba(139, 157, 255, 0.1);
+      border: 1px solid rgba(139, 157, 255, 0.25);
+      border-radius: 999px;
+      font-size: 0.82rem;
+      color: #8b9dff;
+      margin-bottom: 1.2rem;
+      font-weight: 500;
+    }
+    .video-frame {
+      position: relative;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid #2a3155;
+      box-shadow: 0 16px 48px rgba(0, 0, 0, 0.6), 0 0 24px rgba(139, 157, 255, 0.15);
+      background: #0f1426;
+      margin: 2rem 0;
+    }
+    .video-frame img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+    .steps-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin: 2.5rem 0;
+    }
+    .step-card {
+      background: #131a2e;
+      border: 1px solid #2a3155;
+      border-radius: 10px;
+      padding: 1.5rem;
+      position: relative;
+      transition: transform 0.2s, border-color 0.2s;
+    }
+    .step-card:hover {
+      transform: translateY(-3px);
+      border-color: #8b9dff;
+    }
+    .step-num {
+      position: absolute;
+      top: -12px;
+      left: 16px;
+      background: #8b9dff;
+      color: #0b0e1a;
+      font-weight: bold;
+      font-size: 0.75rem;
+      padding: 2px 10px;
+      border-radius: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .step-card h3 {
+      margin-top: 0.5rem;
+      margin-bottom: 0.5rem;
+      color: #e7eaff;
+      font-size: 1.1rem;
+    }
+    .step-card p {
+      color: #9aa4c7;
+      font-size: 0.9rem;
+      line-height: 1.5;
+      margin: 0;
+    }
+    .code-preview {
+      background: #0b0e1a;
+      border: 1px solid #2a3155;
+      border-radius: 6px;
+      padding: 0.75rem;
+      margin-top: 0.8rem;
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      color: #e7eaff;
+      overflow-x: auto;
+    }
+  </style>
 </head>
 
 <body>
@@ -68,23 +134,6 @@
       <div class="search-results" id="search-results"></div>
     </div>
     <div class="header-actions">
-      <button class="icon-btn" id="theme-toggle" aria-label="Toggle theme">
-        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-          stroke-linecap="round">
-          <circle cx="12" cy="12" r="4" />
-          <line x1="12" y1="2" x2="12" y2="4" />
-          <line x1="12" y1="20" x2="12" y2="22" />
-          <line x1="4.9" y1="4.9" x2="6.3" y2="6.3" />
-          <line x1="17.7" y1="17.7" x2="19.1" y2="19.1" />
-          <line x1="2" y1="12" x2="4" y2="12" />
-          <line x1="20" y1="12" x2="22" y2="12" />
-          <line x1="4.9" y1="19.1" x2="6.3" y2="17.7" />
-          <line x1="17.7" y1="6.3" x2="19.1" y2="4.9" />
-        </svg>
-        <svg class="icon-moon" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
-        </svg>
-      </button>
       <a class="icon-btn" href="https://github.com/parthmax2/ghostrun" target="_blank" rel="noopener"
         aria-label="GitHub repository">
         <svg viewBox="0 0 16 16" width="18" height="18" fill="currentColor">
@@ -102,12 +151,13 @@
       <div class="side-group">
         <div class="side-group-title">Guide</div>
         <a class="side-link" href="guide/getting-started.html">Getting started</a>
-        <a class="side-link" href="guide/llm-regression-testing.html">LLM regression testing</a>
-        <a class="side-link" href="guide/pytest-llm-evals.html">Pytest LLM evals</a>
-        <a class="side-link" href="guide/test-openai-apps-offline.html">Test OpenAI apps offline</a>
+        <a class="side-link" href="guide/craft.html">Prompt crafting & optimization ⚡</a>
         <a class="side-link" href="guide/recording.html">Recording and replay</a>
         <a class="side-link" href="guide/assertions.html">Semantic assertions</a>
         <a class="side-link" href="guide/regression-tracking.html">Prompt regression tracking</a>
+        <a class="side-link" href="guide/llm-regression-testing.html">LLM regression testing</a>
+        <a class="side-link" href="guide/pytest-llm-evals.html">Pytest LLM evals</a>
+        <a class="side-link" href="guide/test-openai-apps-offline.html">Test OpenAI apps offline</a>
         <a class="side-link" href="guide/configuration.html">Configuration</a>
         <a class="side-link" href="guide/api-reference.html">API reference</a>
         <a class="side-link" href="guide/why-not-diy.html">Why not just ask an LLM?</a>
@@ -123,12 +173,14 @@
       <div class="article" style="max-width:960px">
 
         <div class="home-hero">
+          <div class="hero-badge">✨ Version 2.0.5 Live · DSPy-Style Optimization + Desktop Companion</div>
+
           <!-- Interactive Live Mascot Canvas -->
           <div style="display:flex; flex-direction:column; align-items:center; margin-bottom:1.5rem;">
-            <div id="hero-pet" style="width:115px; height:125px; background:url('assets/spritesheet.png') 0px 0px no-repeat; background-size:920px 1125px; image-rendering:pixelated; cursor:pointer; filter:drop-shadow(0 0 16px rgba(255,59,48,0.4)); transition:transform 0.15s ease;" title="Click me to change animation!"></div>
+            <div id="hero-pet" style="width:115px; height:125px; background:url('assets/spritesheet.png') 0px 0px no-repeat; background-size:920px 1125px; image-rendering:pixelated; cursor:pointer; filter:drop-shadow(0 0 16px rgba(139,157,255,0.4)); transition:transform 0.15s ease;" title="Click me to change animation!"></div>
             <div style="display:flex; gap:6px; margin-top:8px; flex-wrap:wrap; justify-content:center;">
               <button onclick="setPetState(0)" class="pet-pill active" id="pill-0">Idle</button>
-              <button onclick="setPetState(1)" class="pet-pill" id="pill-1">Run</button>
+              <button onclick="setPetState(1)" class="pet-pill" id="pill-1">Run 🏃</button>
               <button onclick="setPetState(4)" class="pet-pill" id="pill-4">Jump 🏆</button>
               <button onclick="setPetState(3)" class="pet-pill" id="pill-3">Wave 👋</button>
               <button onclick="setPetState(7)" class="pet-pill" id="pill-7">Think ⚡</button>
@@ -141,18 +193,19 @@
             .pet-pill {
               background: rgba(255,255,255,0.06);
               border: 1px solid rgba(255,255,255,0.12);
-              color: #a0a0a5;
-              padding: 3px 10px;
+              color: #9aa4c7;
+              padding: 4px 12px;
               border-radius: 999px;
-              font-size: 0.78rem;
+              font-size: 0.8rem;
               cursor: pointer;
               transition: all 0.2s;
             }
             .pet-pill:hover, .pet-pill.active {
-              background: #ff3b30;
-              color: #fff;
-              border-color: #ff3b30;
-              box-shadow: 0 0 10px rgba(255,59,48,0.5);
+              background: #8b9dff;
+              color: #0b0e1a;
+              font-weight: 600;
+              border-color: #8b9dff;
+              box-shadow: 0 0 14px rgba(139,157,255,0.6);
             }
           </style>
 
@@ -162,7 +215,6 @@
             let petTimer = null;
             const heroPet = document.getElementById('hero-pet');
             const fw = 115, fh = 125;
-
             const petSpeeds = { 0: 120, 1: 110, 3: 120, 4: 100, 5: 150, 7: 70, 8: 90 };
 
             function updateHeroPet() {
@@ -192,64 +244,98 @@
             }
           </script>
 
-          <h1>pytest for LLMs</h1>
-          <p class="tagline">Write fast, zero-cost tests for your AI prompts, and optimize them automatically when they
-            fail.</p>
+          <h1>pytest for AI Apps</h1>
+          <p class="tagline">Fast, free, offline testing, semantic intent assertions, and self-improving prompt optimization for Python developers.</p>
           <div class="home-cta">
-            <a class="btn btn-primary" href="guide/getting-started.html">Get started</a>
-            <a class="btn btn-ghost" href="https://github.com/parthmax2/ghostrun" target="_blank" rel="noopener">View on
-              GitHub</a>
+            <a class="btn btn-primary" href="guide/getting-started.html">Quickstart Guide</a>
+            <a class="btn btn-ghost" href="guide/craft.html">Prompt Crafting ⚡</a>
+            <a class="btn btn-ghost" href="https://github.com/parthmax2/ghostrun" target="_blank" rel="noopener">GitHub</a>
           </div>
+        </div>
+
+        <!-- Live Hero Demo GIF with Tactical Companion Workflow -->
+        <div class="video-frame">
+          <img src="assets/ghostrun-hero.gif" alt="GhostRun AI Prompt Testing & Optimization Demo" loading="lazy">
         </div>
 
         <div class="home-quickstart">
           <pre><code>pip install ghostrun
 ollama pull llama3.2:3b   # for the default local judge
-ghostrun init              # scaffolds a working first test
-ghostrun run               # runs tests with live animated mascot</code></pre>
+ghostrun init              # scaffolds your first test in 1 command
+ghostrun run               # runs tests in 0.04s ($0 cost) with live celebration mascot!</code></pre>
         </div>
 
+        <!-- Beginner Developer 3-Step Journey -->
+        <h2 style="text-align:center; margin-top:3rem; border:none; font-size:1.6rem;">How GhostRun Works in 3 Simple Steps</h2>
+        <p style="text-align:center; color:#9aa4c7; margin-bottom:2rem;">Everything you need to ship confident, production-grade GenAI apps with zero API flakiness.</p>
+
+        <div class="steps-container">
+          <div class="step-card">
+            <div class="step-num">Step 1</div>
+            <h3>1. Record Once, Replay in 0.04s</h3>
+            <p>Wrap your function in <code>@ghostrun.record</code>. The first run records the real OpenAI call; subsequent runs replay in 0.04s offline for $0.</p>
+            <div class="code-preview">@ghostrun.record(model="gpt-4o-mini")
+def test_support_reply():
+    reply = call_support_ai("Where is my refund?")</div>
+          </div>
+
+          <div class="step-card">
+            <div class="step-num">Step 2</div>
+            <h3>2. Assert on Meaning (Not Exact Strings)</h3>
+            <p>LLM outputs change slightly every run. Assert on semantic intent and tone graded by a free, local Ollama judge.</p>
+            <div class="code-preview">ghostrun.expect(reply).contains_intent("apology")
+ghostrun.expect(reply).contains_intent("refund policy")
+ghostrun.expect(reply).tone_is("empathetic")</div>
+          </div>
+
+          <div class="step-card">
+            <div class="step-num">Step 3</div>
+            <h3>3. Self-Healing Prompts (`ghostrun craft`)</h3>
+            <p>If your prompt fails, don't guess fixes. GhostRun uses Bayesian optimization to automatically find winning instructions for you.</p>
+            <div class="code-preview">crafted = ghostrun.craft(
+    name="support_bot",
+    signature="query -> reply, tone",
+    examples_path="dataset.jsonl",
+    budget=10
+)</div>
+          </div>
+        </div>
+
+        <!-- 4 Core Feature Cards -->
         <div class="home-grid">
           <div class="home-card">
-            <h3>Fast & free tests</h3>
-            <p>Wrap your tests in <code>@ghostrun.record</code>. The first run saves real LLM calls; later runs replay
-              instantly in 0.05 seconds offline.</p>
+            <h3>⚡ 0.04s Replay ($0 Cost)</h3>
+            <p>Transport-level HTTP cache intercepts calls. Replay entire test suites instantly in CI without spending a single cent on LLM tokens.</p>
           </div>
           <div class="home-card">
-            <h3>No more flakiness</h3>
-            <p>Assert on meaning and intent (tone, intent, output matching) instead of exact text, graded by a free,
-              private local judge.</p>
+            <h3>🎯 Semantic Intent Assertions</h3>
+            <p>Grade safety, tone, and intent privately on your laptop. Zero data leaves your machine.</p>
           </div>
           <div class="home-card">
-            <h3>Self-healing prompts</h3>
-            <p>If your prompt fails a test, `ghostrun craft` automatically searches for the best instructions and
-              few-shots to pass the test.</p>
+            <h3>🛠️ DSPy-Style Optimization</h3>
+            <p>Declare typed signatures (<code>"inputs -> outputs"</code>) and let Bayesian search discover high-scoring few-shots and instructions.</p>
           </div>
           <div class="home-card">
-            <h3>Native to pytest</h3>
-            <p>No dashboard migrations, no YAML workarounds, no playground exports. Evals live in normal Python and
-              pytest.</p>
+            <h3>👻 Desktop Mascot Companion</h3>
+            <p>A transparent tactical companion floats on your screen and celebrates passing test suites with real-time victory animations.</p>
           </div>
         </div>
 
-        <div class="home-quickstart">
-          <h2 style="border-top:none">Guide</h2>
+        <div class="home-quickstart" style="margin-top:3rem;">
+          <h2 style="border-top:none">Documentation & Guides</h2>
           <ul>
-            <li><a href="guide/getting-started.html">Getting started</a></li>
-            <li><a href="guide/llm-regression-testing.html">LLM regression testing</a></li>
-            <li><a href="guide/pytest-llm-evals.html">Pytest LLM evals</a></li>
-            <li><a href="guide/test-openai-apps-offline.html">Test OpenAI apps offline</a></li>
-            <li><a href="guide/recording.html">Recording and replay</a></li>
-            <li><a href="guide/assertions.html">Semantic assertions</a></li>
-            <li><a href="guide/regression-tracking.html">Prompt regression tracking</a></li>
-            <li><a href="guide/configuration.html">Configuration</a></li>
-            <li><a href="guide/api-reference.html">API reference</a></li>
-            <li><a href="guide/why-not-diy.html">Why not just ask an LLM to write this?</a></li>
+            <li><a href="guide/getting-started.html"><strong>Getting started</strong></a> — Scaffold and run your first test in 60 seconds.</li>
+            <li><a href="guide/craft.html"><strong>Prompt crafting & optimization</strong></a> — Bayesian prompt discovery and typed signatures.</li>
+            <li><a href="guide/recording.html"><strong>Recording and replay</strong></a> — How the deterministic 0.04s transport interceptor works.</li>
+            <li><a href="guide/assertions.html"><strong>Semantic assertions</strong></a> — Intent, tone, matching, and safety checks.</li>
+            <li><a href="guide/regression-tracking.html"><strong>Prompt regression tracking</strong></a> — Prevent silent prompt regressions across commits.</li>
+            <li><a href="guide/configuration.html"><strong>Configuration</strong></a> — Full <code>.ghostrun.yaml</code> reference.</li>
+            <li><a href="guide/api-reference.html"><strong>API reference</strong></a> — Complete Python API reference.</li>
           </ul>
-          <h2>Research</h2>
+          <h2>Research & Benchmarks</h2>
           <ul>
             <li><a href="research/judge-voting-benchmark.html">Judge-voting benchmark</a></li>
-            <li><a href="research/comparison.html">Comparison with other tools</a></li>
+            <li><a href="research/comparison.html">Comparison with LangSmith, Braintrust, and DSPy</a></li>
           </ul>
           <p>Source, issues, and the changelog live on <a href="https://github.com/parthmax2/ghostrun" target="_blank"
               rel="noopener">GitHub</a>.</p>
@@ -260,7 +346,7 @@ ghostrun run               # runs tests with live animated mascot</code></pre>
   </div>
 
   <footer class="site-footer">
-    <a href="https://github.com/parthmax2/ghostrun" target="_blank" rel="noopener">parthmax2/ghostrun</a> - MIT License
+    <a href="https://github.com/parthmax2/ghostrun" target="_blank" rel="noopener">parthmax2/ghostrun</a> - MIT License · Version 2.0.5
   </footer>
 
   <script src="assets/search-index.js"></script>

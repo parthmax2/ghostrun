@@ -11,7 +11,14 @@ window.GHOSTRUN_SEARCH_INDEX = [
     section: "Guide",
     url: "guide/getting-started.html",
     excerpt: "Install ghostrun, pull an Ollama model, and scaffold a working first test with ghostrun init.",
-    keywords: "install pip ollama init quickstart pytest"
+    keywords: "install pip ollama init quickstart pytest ghostrun run"
+  },
+  {
+    title: "Prompt crafting & optimization",
+    section: "Guide",
+    url: "guide/craft.html",
+    excerpt: "Automatically synthesize prompt instructions and discover winning few-shot demonstrations with Bayesian optimization.",
+    keywords: "craft prompt optimization dspy bayesian search signature optuna few-shot synthesis prompt engineering"
   },
   {
     title: "LLM regression testing",
