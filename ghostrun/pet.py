@@ -130,7 +130,14 @@ def run_pet(
         btn_cx, btn_cy, text="✕", fill="#ffffff", font=("Segoe UI", 9, "bold"), state="hidden", tags="close_tag"
     )
 
+    # Retain references on root to prevent Python/Tcl memory deallocation race
+    root._tk_frames = tk_frames
+    root._is_running = True
+
     def do_close(event=None):
+        if not getattr(root, "_is_running", False):
+            return
+        root._is_running = False
         if current_state.get("anim_job"):
             try:
                 root.after_cancel(current_state["anim_job"])
@@ -142,6 +149,7 @@ def run_pet(
             except Exception:
                 pass
         try:
+            root.quit()
             root.destroy()
         except Exception:
             pass
@@ -174,6 +182,8 @@ def run_pet(
         current_state["frame_idx"] = 0
 
     def show_close_btn(event=None):
+        if not getattr(root, "_is_running", False):
+            return
         if current_state["leave_job"]:
             root.after_cancel(current_state["leave_job"])
             current_state["leave_job"] = None
@@ -182,11 +192,15 @@ def run_pet(
         canvas.itemconfig(close_btn_text, state="normal")
 
     def hide_close_btn():
+        if not getattr(root, "_is_running", False):
+            return
         current_state["hover"] = False
         canvas.itemconfig(close_btn_bg, state="hidden")
         canvas.itemconfig(close_btn_text, state="hidden")
 
     def on_hover_leave(event=None):
+        if not getattr(root, "_is_running", False):
+            return
         if current_state["leave_job"]:
             root.after_cancel(current_state["leave_job"])
         current_state["leave_job"] = root.after(500, hide_close_btn)
@@ -200,7 +214,7 @@ def run_pet(
     canvas.bind("<Motion>", show_close_btn)
 
     def update_frame():
-        if not root.winfo_exists():
+        if not getattr(root, "_is_running", False):
             return
         anim = current_state["anim"]
         idx = current_state["frame_idx"]
@@ -218,7 +232,7 @@ def run_pet(
     update_frame()
 
     if auto_close_ms:
-        root.after(auto_close_ms, root.destroy)
+        root.after(auto_close_ms, do_close)
 
     root.mainloop()
 

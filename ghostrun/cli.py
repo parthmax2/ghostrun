@@ -215,22 +215,24 @@ def cmd_init(args) -> int:
 
 
 def cmd_run(args) -> int:
-    """Run pytest with live animated companion and formatted output."""
+    """Run tests with ghostrun and live companion celebration."""
     import pytest
-    from .pet import spawn_pet_async
+    from .pet import run_pet
 
-    # Spawn running mascot while tests execute
-    spawn_pet_async(anim="running", auto_close_ms=2500)
-
-    # Forward arguments to pytest
     pytest_argv = list(args.pytest_args or [])
     exit_code = pytest.main(pytest_argv)
 
-    # Spawn celebratory victory dance if tests pass
+    # Show live celebratory mascot directly on completion
     if exit_code == 0:
-        spawn_pet_async(anim="jumping", auto_close_ms=3500)
+        try:
+            run_pet(width=96, initial_anim="jumping", auto_close_ms=2500)
+        except Exception:
+            pass
     else:
-        spawn_pet_async(anim="failed", auto_close_ms=3500)
+        try:
+            run_pet(width=96, initial_anim="failed", auto_close_ms=2500)
+        except Exception:
+            pass
 
     return exit_code
 
