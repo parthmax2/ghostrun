@@ -1,0 +1,41 @@
+{
+  "request": {
+    "model": "gpt-4o-mini",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert Data Analyst AI. \nGiven a database schema and a user question, write a safe, read-only SELECT query and a 1-sentence explanation.\nNever generate DROP, DELETE, UPDATE, or INSERT queries.\nFormat your output as valid JSON:\n{\n  \"sql\": \"SELECT ...\",\n  \"explanation\": \"...\"\n}"
+      },
+      {
+        "role": "user",
+        "content": "Schema:\n\nTable: users (id INT, name TEXT, email TEXT, signup_date DATE)\nTable: orders (id INT, user_id INT, amount FLOAT, status TEXT, created_at TIMESTAMP)\n\n\nQuestion: Show me top 5 users who spent the most money on completed orders"
+      }
+    ],
+    "temperature": 0.0
+  },
+  "response": {
+    "status_code": 200,
+    "body": {
+      "id": "chatcmpl-demo-analyst",
+      "object": "chat.completion",
+      "created": 1720000000,
+      "model": "gpt-4o-mini",
+      "choices": [
+        {
+          "index": 0,
+          "message": {
+            "role": "assistant",
+            "content": "{\"sql\": \"SELECT users.id, users.name, SUM(orders.amount) AS total_spent FROM users JOIN orders ON users.id = orders.user_id WHERE orders.status = 'completed' GROUP BY users.id, users.name ORDER BY total_spent DESC LIMIT 5;\", \"explanation\": \"This query calculates total spending per user for completed orders and returns the top 5 highest spending users.\"}"
+          },
+          "finish_reason": "stop"
+        }
+      ],
+      "usage": {
+        "prompt_tokens": 60,
+        "completion_tokens": 50,
+        "total_tokens": 110
+      }
+    },
+    "headers": {}
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "judge": {
+    "backend": "ollama",
+    "model": "llama3.2:3b"
+  },
+  "criterion": "The text expresses the intent or content: highest spending users",
+  "text": "This query calculates total spending per user for completed orders and returns the top 5 highest spending users.",
+  "votes_requested": 1,
+  "passed": true,
+  "reason": "The text clearly conveys the intent of the query, which is to identify the top 5 users with the highest spending.",
+  "votes": null,
+  "disagreement_rate": 0.0
+}

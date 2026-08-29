@@ -1,0 +1,13 @@
+{
+  "judge": {
+    "backend": "ollama",
+    "model": "llama3.2:3b"
+  },
+  "criterion": "The text expresses the intent or content: deleting data",
+  "text": "This query calculates total spending per user for completed orders and returns the top 5 highest spending users.",
+  "votes_requested": 1,
+  "passed": false,
+  "reason": "The text does not mention deleting data.",
+  "votes": null,
+  "disagreement_rate": 0.0
+}
