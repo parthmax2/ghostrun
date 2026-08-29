@@ -6,7 +6,7 @@ All notable changes to ghostrun are documented here. The format is based on
 
 ## [Unreleased]
 
-## [2.0.2] - 2026-08-29
+## [2.0.5] - 2026-08-29
 
 ### Added
 - **`ghostrun craft`** — Bayesian prompt optimization & DSPy-style signature system (`"inputs -> outputs"`). Automatically discovers high-performing instruction candidates and bootstraps few-shot demonstrations against semantic metric assertions.
