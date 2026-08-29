@@ -236,10 +236,15 @@ def spawn_pet_async(
         import subprocess
         cmd = [
             sys.executable,
-            "-c",
-            f"from ghostrun.pet import run_pet; run_pet(width={width}, initial_anim={anim!r}, auto_close_ms={auto_close_ms})",
+            "-m",
+            "ghostrun.pet",
+            "--width",
+            str(width),
+            "--anim",
+            anim,
+            "--auto-close",
+            str(auto_close_ms),
         ]
-        # Standard non-blocking background spawn (works smoothly across all Windows/Linux terminals)
         subprocess.Popen(
             cmd,
             stdout=subprocess.DEVNULL,
@@ -247,4 +252,17 @@ def spawn_pet_async(
             stdin=subprocess.DEVNULL,
         )
     except Exception:
+        pass
+
+
+if __name__ == "__main__":
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--width", type=int, default=96)
+    parser.add_argument("--anim", default="idle")
+    parser.add_argument("--auto-close", type=int, default=None)
+    args = parser.parse_args()
+    try:
+        run_pet(width=args.width, initial_anim=args.anim, auto_close_ms=args.auto_close)
+    except KeyboardInterrupt:
         pass
