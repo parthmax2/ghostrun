@@ -213,15 +213,38 @@
         <span style="display:inline-block; width:8px; height:8px; background:#5fd0a0; border-radius:50%; box-shadow:0 0 8px #5fd0a0;"></span>
         GHOSTRUN v2.0.5 // MISSION BRIEFING
       </div>
-      <button class="intro-skip-btn" id="intro-skip" onclick="dismissIntro()">
-        Enter GhostRun →
-      </button>
+      <div style="display:flex; align-items:center; gap:12px; pointer-events:auto;">
+        <button class="intro-skip-btn" id="intro-mute-btn" onclick="toggleAudio()" style="padding:10px 18px;">
+          <span id="mute-icon">🔊 Sound On</span>
+        </button>
+        <button class="intro-skip-btn" id="intro-skip" onclick="dismissIntro()">
+          Enter GhostRun →
+        </button>
+      </div>
     </div>
   </div>
 
   <script>
+    function toggleAudio() {
+      var vid = document.getElementById('intro-vid');
+      var icon = document.getElementById('mute-icon');
+      if (vid) {
+        vid.muted = !vid.muted;
+        if (vid.muted) {
+          icon.textContent = "🔇 Muted";
+        } else {
+          icon.textContent = "🔊 Sound On";
+          vid.play().catch(function(){});
+        }
+      }
+    }
+
     function dismissIntro() {
       var intro = document.getElementById('cinema-intro');
+      var vid = document.getElementById('intro-vid');
+      if (vid) {
+        try { vid.pause(); } catch(e) {}
+      }
       if (intro && !intro.classList.contains('dismissed')) {
         intro.classList.add('dismissed');
         try {
