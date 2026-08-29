@@ -228,15 +228,8 @@ def spawn_pet_async(
     auto_close_ms: int = 3500,
     width: int = 96,
 ) -> None:
-    """Spawn the floating pet in a non-blocking background daemon subprocess.
-
-    Safely fails silently on headless/CI/non-interactive systems so it never breaks test suites.
-    """
-    if os.environ.get("GHOSTRUN_NO_PET") or os.environ.get("CI") or os.environ.get("NO_COLOR"):
-        return
-
-    # Check if stdout is an interactive terminal
-    if not (hasattr(sys.stdout, "isatty") and sys.stdout.isatty()):
+    """Spawn the floating pet in a non-blocking background daemon subprocess."""
+    if os.environ.get("GHOSTRUN_NO_PET") or os.environ.get("CI") or os.environ.get("GITHUB_ACTIONS"):
         return
 
     try:
@@ -246,12 +239,25 @@ def spawn_pet_async(
             "-c",
             f"from ghostrun.pet import run_pet; run_pet(width={width}, initial_anim={anim!r}, auto_close_ms={auto_close_ms})",
         ]
-        subprocess.Popen(
-            cmd,
-            stdout=subprocess.DEVNULL,
-            stderr=subprocess.DEVNULL,
-            stdin=subprocess.DEVNULL,
-            start_new_session=True,
-        )
+        if sys.platform == "win32":
+            # Windows detached process creation flags
+            DETACHED_PROCESS = 0x00000008
+            CREATE_NEW_PROCESS_GROUP = 0x00000200
+            subprocess.Popen(
+                cmd,
+                creationflags=DETACHED_PROCESS | CREATE_NEW_PROCESS_GROUP,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+                stdin=subprocess.DEVNULL,
+                close_fds=True,
+            )
+        else:
+            subprocess.Popen(
+                cmd,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+                stdin=subprocess.DEVNULL,
+                start_new_session=True,
+            )
     except Exception:
-        pass  # Never crash user tests if GUI fails to spawn
+        pass
