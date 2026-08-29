@@ -4,8 +4,8 @@ build-backend = "hatchling.build"
 
 [project]
 name = "ghostrun"
-version = "2.0.1"
-description = "CI-native LLM evals for real apps: record LLM API calls once, replay them deterministically in pytest, and catch semantic regressions before they ship."
+version = "2.0.2"
+description = "pytest for LLMs — Write fast, zero-cost tests for your AI prompts, and optimize them automatically with ghostrun craft."
 readme = "README.md"
 requires-python = ">=3.9"
 license = { text = "MIT" }
@@ -13,9 +13,10 @@ authors = [{ name = "parthmax2" }]
 keywords = [
     "llm", "llm-evals", "llm-eval", "llm-evaluation", "llm-as-judge",
     "llm-testing", "llm-regression-testing", "pytest", "pytest-plugin",
-    "testing", "unit-testing", "ci", "ci-cd",
+    "prompt-engineering", "prompt-optimization", "prompt-crafting", "few-shot-selection",
+    "dspy", "synthetic-data", "testing", "unit-testing", "ci", "ci-cd",
     "genai", "generative-ai", "ai-testing", "agent-testing", "app-testing",
-    "openai", "anthropic", "ollama", "chatbot-testing",
+    "openai", "anthropic", "gemini", "ollama", "chatbot-testing",
     "record-replay", "vcr", "http-mocking", "http-cache",
     "prompt-testing", "prompt-regression", "prompt-regression-testing",
     "regression-testing", "semantic-assertions", "deterministic-testing",
