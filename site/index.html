@@ -40,19 +40,83 @@
       margin-bottom: 1.2rem;
       font-weight: 500;
     }
+    /* Splash Loader */
+    #splash-loader {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: #0b0e1a;
+      z-index: 99999;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.6s;
+    }
+    #splash-loader.loaded {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+    .splash-mascot {
+      width: 96px;
+      height: 104px;
+      background: url('assets/spritesheet.png') 0px 0px no-repeat;
+      background-size: 768px 936px;
+      image-rendering: pixelated;
+      filter: drop-shadow(0 0 24px rgba(139, 157, 255, 0.7));
+      margin-bottom: 1.5rem;
+      animation: pulseGlow 1.5s infinite alternate;
+    }
+    @keyframes pulseGlow {
+      from { filter: drop-shadow(0 0 12px rgba(139, 157, 255, 0.4)); }
+      to { filter: drop-shadow(0 0 28px rgba(139, 157, 255, 0.9)); }
+    }
+    .splash-bar-wrap {
+      width: 220px;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 4px;
+      overflow: hidden;
+      position: relative;
+    }
+    .splash-bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #8b9dff, #5fd0a0);
+      border-radius: 4px;
+      animation: loadBar 1.2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+    }
+    @keyframes loadBar {
+      0% { width: 0%; }
+      50% { width: 70%; }
+      100% { width: 100%; }
+    }
+    .splash-title {
+      color: #e7eaff;
+      font-family: var(--font-mono);
+      font-size: 0.9rem;
+      margin-top: 1rem;
+      letter-spacing: 1px;
+    }
+
+    /* Video Frame */
     .video-frame {
       position: relative;
       border-radius: 12px;
       overflow: hidden;
       border: 1px solid #2a3155;
-      box-shadow: 0 16px 48px rgba(0, 0, 0, 0.6), 0 0 24px rgba(139, 157, 255, 0.15);
+      box-shadow: 0 16px 48px rgba(0, 0, 0, 0.6), 0 0 28px rgba(139, 157, 255, 0.2);
       background: #0f1426;
-      margin: 2rem 0;
+      margin: 2.2rem 0;
     }
-    .video-frame img {
+    .video-frame video {
       width: 100%;
       height: auto;
       display: block;
+      border-radius: 12px;
     }
     .steps-container {
       display: grid;
@@ -112,6 +176,37 @@
 </head>
 
 <body>
+
+  <!-- Cyber Splash Loader on First Launch -->
+  <div id="splash-loader">
+    <div class="splash-mascot" id="splash-sprite"></div>
+    <div class="splash-bar-wrap">
+      <div class="splash-bar"></div>
+    </div>
+    <div class="splash-title">INITIALIZING GHOSTRUN...</div>
+  </div>
+
+  <script>
+    // Animate mascot in splash screen and fade out when DOM is ready
+    (function() {
+      var sprite = document.getElementById('splash-sprite');
+      var frame = 0;
+      var splashTimer = setInterval(function() {
+        frame = (frame + 1) % 8;
+        if (sprite) sprite.style.backgroundPosition = '-' + (frame * 96) + 'px -0px';
+      }, 110);
+
+      window.addEventListener('load', function() {
+        setTimeout(function() {
+          var loader = document.getElementById('splash-loader');
+          if (loader) {
+            loader.classList.add('loaded');
+            clearInterval(splashTimer);
+          }
+        }, 1100);
+      });
+    })();
+  </script>
 
   <header class="site-header">
     <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation">
@@ -253,9 +348,13 @@
           </div>
         </div>
 
-        <!-- Live Hero Demo GIF with Tactical Companion Workflow -->
+        <!-- High-Definition Hero Video Demo with Tactical Companion Workflow -->
         <div class="video-frame">
-          <img src="assets/ghostrun-hero.gif" alt="GhostRun AI Prompt Testing & Optimization Demo" loading="lazy">
+          <video autoplay loop muted playsinline poster="assets/ghostrun-hero.gif">
+            <source src="assets/ghostrun-hero.webm" type="video/webm">
+            <source src="assets/ghostrun-hero.mp4" type="video/mp4">
+            <img src="assets/ghostrun-hero.gif" alt="GhostRun AI Prompt Testing & Optimization Demo">
+          </video>
         </div>
 
         <div class="home-quickstart">
