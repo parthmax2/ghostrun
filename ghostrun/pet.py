@@ -251,6 +251,27 @@ def run_pet(
 
         canvas.itemconfig(image_item, image=frames[idx % len(frames)])
         current_state["frame_idx"] = (idx + 1) % len(frames)
+
+        # Smooth physical desktop locomotion when running!
+        if not drag_data.get("dragging", False):
+            curr_x = root.winfo_x()
+            curr_y = root.winfo_y()
+            step_px = 6  # Smooth pixels per frame
+
+            if anim in ("running-right", "running"):
+                new_x = curr_x + step_px
+                # Bounce or wrap around if reaching right edge
+                if new_x > screen_w - total_w - 20:
+                    current_state["anim"] = "running-left"
+                else:
+                    root.geometry(f"+{new_x}+{curr_y}")
+            elif anim == "running-left":
+                new_x = curr_x - step_px
+                # Bounce if reaching left edge
+                if new_x < 20:
+                    current_state["anim"] = "running-right"
+                else:
+                    root.geometry(f"+{new_x}+{curr_y}")
         
         speed = ANIM_SPEEDS.get(anim, 100)
         current_state["anim_job"] = root.after(speed, update_frame)
