@@ -1,0 +1,40 @@
+{"message": "I was charged twice for my subscription this month, can you refund the duplicate?", "category": "billing", "urgency": "medium"}
+{"message": "The app crashes every time I try to open the settings page.", "category": "technical", "urgency": "medium"}
+{"message": "I can't log in, it says my password is wrong but I know it's correct.", "category": "account", "urgency": "high"}
+{"message": "Just wanted to say your product has been great, no issues at all.", "category": "general", "urgency": "low"}
+{"message": "URGENT: my card was charged $500 for something I never bought, please help immediately.", "category": "billing", "urgency": "high"}
+{"message": "How do I export my data to a CSV file?", "category": "technical", "urgency": "low"}
+{"message": "I want to delete my account and all my data permanently.", "category": "account", "urgency": "medium"}
+{"message": "Do you offer discounts for students?", "category": "general", "urgency": "low"}
+{"message": "My invoice from last month shows the wrong billing address, can you fix it?", "category": "billing", "urgency": "low"}
+{"message": "The dashboard has been down for 2 hours and my whole team can't work, this is critical.", "category": "technical", "urgency": "high"}
+{"message": "I forgot my two-factor authentication device and I'm locked out completely.", "category": "account", "urgency": "high"}
+{"message": "What are your office hours?", "category": "general", "urgency": "low"}
+{"message": "You auto-renewed my plan even though I cancelled last week, I want my money back.", "category": "billing", "urgency": "high"}
+{"message": "The search feature returns no results even for common terms.", "category": "technical", "urgency": "medium"}
+{"message": "Can I merge two of my accounts into one?", "category": "account", "urgency": "low"}
+{"message": "Do you have an affiliate program I could join?", "category": "general", "urgency": "low"}
+{"message": "I was billed for the annual plan but I only signed up for monthly.", "category": "billing", "urgency": "medium"}
+{"message": "Uploading files larger than 10MB always fails with a timeout error.", "category": "technical", "urgency": "medium"}
+{"message": "Someone else seems to have access to my account, I see logins I didn't make.", "category": "account", "urgency": "high"}
+{"message": "Is there a mobile app for iOS?", "category": "general", "urgency": "low"}
+{"message": "My refund from three weeks ago still hasn't shown up in my bank account.", "category": "billing", "urgency": "medium"}
+{"message": "The API keeps returning a 500 error on every request since this morning.", "category": "technical", "urgency": "high"}
+{"message": "I need to change the email address linked to my account.", "category": "account", "urgency": "low"}
+{"message": "What's the difference between the Pro and Enterprise plans?", "category": "general", "urgency": "low"}
+{"message": "I was charged in the wrong currency and it cost me way more than expected.", "category": "billing", "urgency": "medium"}
+{"message": "Notifications stopped working after the last update.", "category": "technical", "urgency": "low"}
+{"message": "Please reset my password, the reset email never arrives.", "category": "account", "urgency": "high"}
+{"message": "Can you point me to your API documentation?", "category": "general", "urgency": "low"}
+{"message": "I cancelled my subscription months ago but you're still charging my card every month.", "category": "billing", "urgency": "high"}
+{"message": "The export button is greyed out and I can't click it.", "category": "technical", "urgency": "low"}
+{"message": "I need to transfer ownership of my account to a colleague.", "category": "account", "urgency": "medium"}
+{"message": "Thanks for the quick support yesterday, really appreciated it.", "category": "general", "urgency": "low"}
+{"message": "My free trial ended but I was still charged the full price without warning.", "category": "billing", "urgency": "high"}
+{"message": "Every time I click save, the page just reloads and nothing is saved.", "category": "technical", "urgency": "medium"}
+{"message": "How do I enable two-factor authentication on my account?", "category": "account", "urgency": "low"}
+{"message": "Do you support single sign-on for enterprise customers?", "category": "general", "urgency": "low"}
+{"message": "I need an itemized receipt for my last payment for tax purposes.", "category": "billing", "urgency": "low"}
+{"message": "The whole site has been throwing a blank white screen for the last hour.", "category": "technical", "urgency": "high"}
+{"message": "My account got suspended and I have no idea why.", "category": "account", "urgency": "high"}
+{"message": "Can I get a demo of the enterprise features before upgrading?", "category": "general", "urgency": "low"}

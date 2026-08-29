@@ -6,6 +6,21 @@ All notable changes to ghostrun are documented here. The format is based on
 
 ## [Unreleased]
 
+## [2.0.2] - 2026-08-29
+
+### Added
+- **`ghostrun craft`** — Bayesian prompt optimization & DSPy-style signature system (`"inputs -> outputs"`). Automatically discovers high-performing instruction candidates and bootstraps few-shot demonstrations against semantic metric assertions.
+- **Interactive Tactical Desktop Mascot (`ghostrun pet`)** — Transparent, borderless floating companion with 9 real-time animations (`idle`, `running`, `jumping`, `waving`, `review`, `waiting`, `failed`, `thinking`), per-animation frame timings, and screen edge walking locomotion.
+- **Native Test Runner (`ghostrun run`)** — Forwarding CLI test runner that automatically executes tests and triggers celebratory victory animations upon 0.04s cache replays.
+- **Live Interactive Web Mascot** on documentation site (`ghostrun.parthmax.tech`) hero section.
+- **Comprehensive API Reference & SEO Metadata** for DSPy alternatives and prompt engineering keywords.
+
+### Fixed
+- Fixed CI matrix dependencies for `pydantic>=2.0`, `litellm>=1.0.0`, `optuna>=3.0.0`, and `pillow>=9.0.0`.
+- Fixed PyPI broken relative image references to raw GitHub asset URLs.
+- Fixed Tcl/Tkinter memory deallocation race on companion dismissal.
+- Domain migration to `ghostrun.parthmax.tech`.
+
 ## [0.1.1] - 2026-07-28
 
 ### Added

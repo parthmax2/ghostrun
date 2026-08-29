@@ -1,0 +1,23 @@
+{
+  "name": "triage",
+  "spec": "message -> category, urgency",
+  "instructions": "Analyze the customer message and classify it by topic category and urgency level.\n\nAllowed Categories:\n- billing: Issues with payments, invoices, charges, or refunds.\n- technical: Product bugs, errors, outages, or malfunctioning features.\n- account: Login, password resets, profile settings, or subscription management.\n- general: Miscellaneous questions, feedback, or general information requests.\n\nAllowed Urgency Levels:\n- high: Urgent, severe issues like service outages, security risks, or major financial errors requiring immediate resolution.\n- medium: Standard operational issues, active bugs, or time-sensitive questions impacting work.\n- low: General feedback, minor inquiries, or non-critical requests with no immediate deadline.\n\nProvide the resulting category and urgency.",
+  "criterion": "category correctly identifies the topic of the customer message (billing, technical, account, or general) and urgency correctly reflects how severe/time-sensitive it is (low, medium, or high)",
+  "model": "gemini:gemini-3.6-flash",
+  "examples": [
+    {
+      "message": "I was charged twice for my subscription this month, can you refund the duplicate?",
+      "category": "billing",
+      "urgency": "medium"
+    },
+    {
+      "message": "The app crashes every time I try to open the settings page.",
+      "category": "technical",
+      "urgency": "medium"
+    }
+  ],
+  "crafted_at": "2026-08-28T16:47:35.015590+00:00",
+  "holdout_score": 1.0,
+  "candidates_tried": 1,
+  "budget": 12
+}

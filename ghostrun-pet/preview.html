@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GhostRun - GPT Pet Simulator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-color: #0b0b0c;
+      --panel-bg: rgba(22, 22, 26, 0.7);
+      --border-color: rgba(255, 59, 48, 0.2);
+      --border-glow: rgba(255, 59, 48, 0.4);
+      --accent-color: #ff3b30;
+      --accent-glow: rgba(255, 59, 48, 0.6);
+      --text-color: #f5f5f7;
+      --text-muted: #86868b;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Share Tech Mono', monospace;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+      overflow-x: hidden;
+      background-image: 
+        radial-gradient(circle at 50% 20%, rgba(255, 59, 48, 0.08) 0%, transparent 60%),
+        linear-gradient(rgba(18, 18, 18, 0.5) 50%, rgba(0, 0, 0, 0.5) 50%),
+        linear-gradient(90deg, rgba(255, 0, 0, 0.03) 50%, rgba(0, 255, 0, 0.01) 50%, rgba(0, 0, 255, 0.03) 50%);
+      background-size: 100% 100%, 100% 4px, 6px 100%;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 30px;
+      border-bottom: 2px solid var(--border-color);
+      padding-bottom: 15px;
+      width: 100%;
+      max-width: 1100px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+      position: relative;
+    }
+
+    header::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 10%;
+      width: 80%;
+      height: 2px;
+      background: var(--accent-color);
+      box-shadow: 0 0 10px var(--accent-glow);
+    }
+
+    h1 {
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 700;
+      font-size: 2.2rem;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: #fff;
+      text-shadow: 0 0 10px var(--accent-glow);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    h1 span {
+      color: var(--accent-color);
+    }
+
+    .subtitle {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      margin-top: 5px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    .main-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+      width: 100%;
+      max-width: 1100px;
+      margin-bottom: 30px;
+    }
+
+    @media (max-width: 768px) {
+      .main-container {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .panel {
+      background: var(--panel-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 25px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      backdrop-filter: blur(10px);
+      box-shadow: inset 0 0 15px rgba(255, 59, 48, 0.05), 0 10px 30px rgba(0,0,0,0.5);
+      transition: border-color 0.3s;
+    }
+
+    .panel:hover {
+      border-color: var(--border-glow);
+    }
+
+    .panel-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.1rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 20px;
+      color: #fff;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      padding-bottom: 8px;
+      width: 100%;
+      text-align: left;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .panel-title span {
+      color: var(--accent-color);
+    }
+
+    /* Target pet viewport */
+    .viewport {
+      width: 250px;
+      height: 250px;
+      background-color: #000;
+      border: 2px solid #222;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+      box-shadow: inset 0 0 20px rgba(0,0,0,0.9), 0 0 15px rgba(255, 59, 48, 0.1);
+    }
+
+    .viewport::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+      background-size: 100% 3px, 3px 100%;
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    /* Grid overlay for retro tactical view */
+    .viewport.grid-active::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: 
+        linear-gradient(rgba(255, 59, 48, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 59, 48, 0.05) 1px, transparent 1px);
+      background-size: 20px 20px;
+      background-position: center;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    /* The sprite container representing a single frame */
+    .sprite-display {
+      width: 192px;
+      height: 208px;
+      background-image: url('spritesheet.png');
+      background-repeat: no-repeat;
+      background-position-x: 0px;
+      background-position-y: 0px;
+      image-rendering: pixelated; /* Crucial: Matches ChatGPT Desktop app */
+      z-index: 2;
+      transform: scale(1.1);
+      transition: transform 0.1s;
+    }
+
+    .controls-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      width: 100%;
+      margin-top: 10px;
+    }
+
+    .btn {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 6px;
+      color: var(--text-color);
+      padding: 12px 15px;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.95rem;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 10px;
+      text-align: left;
+    }
+
+    .btn:hover {
+      background: rgba(255, 59, 48, 0.1);
+      border-color: var(--accent-color);
+      box-shadow: 0 0 10px rgba(255, 59, 48, 0.15);
+      color: #fff;
+    }
+
+    .btn.active {
+      background: var(--accent-color);
+      border-color: var(--accent-color);
+      box-shadow: 0 0 15px var(--accent-glow);
+      color: #fff;
+      font-weight: bold;
+    }
+
+    .btn-num {
+      background: rgba(0,0,0,0.4);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+    
+    .btn.active .btn-num {
+      color: #fff;
+      background: rgba(0,0,0,0.3);
+    }
+
+    .info-box {
+      width: 100%;
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 8px;
+      padding: 15px;
+      margin-top: 20px;
+      font-size: 0.9rem;
+      line-height: 1.4;
+    }
+
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      border-bottom: 1px dashed rgba(255,255,255,0.05);
+      padding-bottom: 4px;
+    }
+
+    .info-row:last-child {
+      margin-bottom: 0;
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .info-label {
+      color: var(--text-muted);
+    }
+
+    .info-value {
+      color: #fff;
+      font-weight: bold;
+    }
+
+    .options {
+      margin-top: 15px;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      gap: 15px;
+    }
+
+    .toggle-container {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      user-select: none;
+    }
+
+    .toggle-container input {
+      display: none;
+    }
+
+    .toggle-box {
+      width: 16px;
+      height: 16px;
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 3px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+
+    .toggle-container input:checked + .toggle-box {
+      background: var(--accent-color);
+      border-color: var(--accent-color);
+      box-shadow: 0 0 5px var(--accent-glow);
+    }
+
+    .toggle-container input:checked + .toggle-box::after {
+      content: '✓';
+      color: #fff;
+      font-size: 10px;
+    }
+
+    /* Grid layout preview of all rows */
+    .grid-panel {
+      width: 100%;
+      max-width: 1100px;
+      margin-top: 10px;
+    }
+
+    .all-states-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 20px;
+      width: 100%;
+      margin-top: 20px;
+    }
+
+    .state-card {
+      background: rgba(22, 22, 26, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 8px;
+      padding: 15px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: border-color 0.2s;
+    }
+
+    .state-card:hover {
+      border-color: rgba(255, 59, 48, 0.15);
+    }
+
+    .state-card-title {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 10px;
+      color: var(--text-muted);
+      width: 100%;
+      text-align: center;
+      border-bottom: 1px solid rgba(255,255,255,0.03);
+      padding-bottom: 5px;
+    }
+
+    .state-card .sprite-display {
+      transform: scale(0.7);
+      margin: -25px 0; /* Offset scale margins */
+    }
+
+    /* Slider for Scaling */
+    .slider-container {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-top: 15px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .slider {
+      flex-grow: 1;
+      -webkit-appearance: none;
+      height: 4px;
+      border-radius: 2px;
+      background: #222;
+      outline: none;
+    }
+
+    .slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--accent-color);
+      cursor: pointer;
+      box-shadow: 0 0 5px var(--accent-glow);
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1><span>GHOSTRUN</span> PET SIMULATOR</h1>
+    <div class="subtitle">ChatGPT Desktop Custom Pet Tester</div>
+  </header>
+
+  <div class="main-container">
+    
+    <!-- LEFT PANEL: The Interactive Viewer -->
+    <div class="panel">
+      <div class="panel-title">LIVE MONITOR <span>ACTIVE</span></div>
+      
+      <div class="viewport grid-active" id="viewport">
+        <div class="sprite-display" id="main-sprite"></div>
+      </div>
+
+      <div class="slider-container">
+        <span>SCALE</span>
+        <input type="range" min="0.5" max="1.5" step="0.05" value="1.1" class="slider" id="scale-slider">
+        <span id="scale-val">1.1x</span>
+      </div>
+
+      <div class="options">
+        <label class="toggle-container">
+          <input type="checkbox" checked id="grid-toggle">
+          <div class="toggle-box"></div>
+          <span>TACTICAL GRID</span>
+        </label>
+        
+        <label class="toggle-container">
+          <input type="checkbox" checked id="scanline-toggle">
+          <div class="toggle-box"></div>
+          <span>CRT FILTER</span>
+        </label>
+      </div>
+
+      <div class="info-box">
+        <div class="info-row">
+          <span class="info-label">Active State:</span>
+          <span class="info-value" id="info-state" style="color: var(--accent-color);">IDLE</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Row Index:</span>
+          <span class="info-value" id="info-row">Row 0</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Frame Dimensions:</span>
+          <span class="info-value">192px x 208px</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">ChatGPT Context:</span>
+          <span class="info-value" id="info-context">App open, waiting for run</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT PANEL: Action Controller -->
+    <div class="panel">
+      <div class="panel-title">STATE SELECTOR <span>9 BEHAVIORS</span></div>
+      
+      <div class="controls-grid">
+        <button class="btn active" data-row="0" data-name="Idle" data-context="Awaiting chat/command execution">
+          <span class="btn-num">R0</span> Idle
+        </button>
+        
+        <button class="btn" data-row="1" data-name="Running (Right)" data-context="Agent is executing background task">
+          <span class="btn-num">R1</span> Run Right
+        </button>
+        
+        <button class="btn" data-row="2" data-name="Running (Left)" data-context="Agent is executing background task">
+          <span class="btn-num">R2</span> Run Left
+        </button>
+        
+        <button class="btn" data-row="3" data-name="Waving" data-context="Greeting user or task finished successfully">
+          <span class="btn-num">R3</span> Wave
+        </button>
+        
+        <button class="btn" data-row="4" data-name="Jumping" data-context="Triggered action or celebration">
+          <span class="btn-num">R4</span> Jump
+        </button>
+        
+        <button class="btn" data-row="5" data-name="Failed" data-context="Task aborted, connection error, or run failed">
+          <span class="btn-num">R5</span> Failed
+        </button>
+        
+        <button class="btn" data-row="6" data-name="Waiting" data-context="Paused. Awaiting user input or confirm prompt">
+          <span class="btn-num">R6</span> Waiting
+        </button>
+        
+        <button class="btn" data-row="7" data-name="Running (General)" data-context="Active LLM reasoning / tool calling">
+          <span class="btn-num">R7</span> Thinking
+        </button>
+        
+        <button class="btn" data-row="8" data-name="Review" data-context="Prompt complete, awaiting your review/approval">
+          <span class="btn-num">R8</span> Review
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- BOTTOM PANEL: Overview grid of all animations running together -->
+  <div class="panel grid-panel">
+    <div class="panel-title">MATRIX OVERVIEW <span>ALL ANIMATION LOOPS RUNNING</span></div>
+    
+    <div class="all-states-grid">
+      <div class="state-card">
+        <div class="state-card-title">Row 0: Idle</div>
+        <div class="sprite-display all-loop" data-row="0"></div>
+      </div>
+      <div class="state-card">
+        <div class="state-card-title">Row 1: Run Right</div>
+        <div class="sprite-display all-loop" data-row="1"></div>
+      </div>
+      <div class="state-card">
+        <div class="state-card-title">Row 2: Run Left</div>
+        <div class="sprite-display all-loop" data-row="2"></div>
+      </div>
+      <div class="state-card">
+        <div class="state-card-title">Row 3: Waving</div>
+        <div class="sprite-display all-loop" data-row="3"></div>
+      </div>
+      <div class="state-card">
+        <div class="state-card-title">Row 4: Jumping</div>
+        <div class="sprite-display all-loop" data-row="4"></div>
+      </div>
+      <div class="state-card">
+        <div class="state-card-title">Row 5: Failed</div>
+        <div class="sprite-display all-loop" data-row="5"></div>
+      </div>
+      <div class="state-card">
+        <div class="state-card-title">Row 6: Waiting</div>
+        <div class="sprite-display all-loop" data-row="6"></div>
+      </div>
+      <div class="state-card">
+        <div class="state-card-title">Row 7: Thinking</div>
+        <div class="sprite-display all-loop" data-row="7"></div>
+      </div>
+      <div class="state-card">
+        <div class="state-card-title">Row 8: Review</div>
+        <div class="sprite-display all-loop" data-row="8"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Simulator states
+    let activeRow = 0;
+    let frameIndex = 0;
+    let timerId = null;
+    const totalFrames = 8;
+    const frameWidth = 192;
+    const frameHeight = 208;
+    
+    const mainSprite = document.getElementById('main-sprite');
+    const infoState = document.getElementById('info-state');
+    const infoRow = document.getElementById('info-row');
+    const infoContext = document.getElementById('info-context');
+    const buttons = document.querySelectorAll('.btn');
+    const viewport = document.getElementById('viewport');
+    
+    // 1. Play active state loop
+    function updateAnimation() {
+      frameIndex = (frameIndex + 1) % totalFrames;
+      const xOffset = -frameIndex * frameWidth;
+      const yOffset = -activeRow * frameHeight;
+      mainSprite.style.backgroundPosition = `${xOffset}px ${yOffset}px`;
+    }
+
+    function setRowState(row, name, context) {
+      activeRow = parseInt(row);
+      frameIndex = 0;
+      
+      // Update UI texts
+      infoState.textContent = name.toUpperCase();
+      infoRow.textContent = `Row ${row}`;
+      infoContext.textContent = context;
+      
+      // Reset animation cycle
+      clearInterval(timerId);
+      
+      // Adjust speed based on row behavior (thinking and running nodding is faster)
+      let interval = 120; // 120ms standard (~8 FPS)
+      if (activeRow === 7) interval = 70;  // Jittery thinking is fast
+      if (activeRow === 8) interval = 90;  // Node reviewing is fast
+      if (activeRow === 5) interval = 150; // Sad drooping is slow
+      
+      timerId = setInterval(updateAnimation, interval);
+    }
+
+    // Bind state controller buttons
+    buttons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        buttons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        setRowState(btn.dataset.row, btn.dataset.name, btn.dataset.context);
+      });
+    });
+
+    // 2. Play all overview loops concurrently
+    const allLoops = document.querySelectorAll('.all-loop');
+    let subFrameIndex = 0;
+    
+    setInterval(() => {
+      subFrameIndex = (subFrameIndex + 1) % totalFrames;
+      const xOffset = -subFrameIndex * frameWidth;
+      
+      allLoops.forEach(el => {
+        const row = el.dataset.row;
+        const yOffset = -row * frameHeight;
+        el.style.backgroundPosition = `${xOffset}px ${yOffset}px`;
+      });
+    }, 120);
+
+    // 3. Grid & Filter Toggles
+    document.getElementById('grid-toggle').addEventListener('change', (e) => {
+      if (e.target.checked) {
+        viewport.classList.add('grid-active');
+      } else {
+        viewport.classList.remove('grid-active');
+      }
+    });
+
+    document.getElementById('scanline-toggle').addEventListener('change', (e) => {
+      if (e.target.checked) {
+        document.body.style.backgroundImage = `
+          radial-gradient(circle at 50% 20%, rgba(255, 59, 48, 0.08) 0%, transparent 60%),
+          linear-gradient(rgba(18, 18, 18, 0.5) 50%, rgba(0, 0, 0, 0.5) 50%),
+          linear-gradient(90deg, rgba(255, 0, 0, 0.03) 50%, rgba(0, 255, 0, 0.01) 50%, rgba(0, 0, 255, 0.03) 50%)`;
+      } else {
+        document.body.style.backgroundImage = 'none';
+        document.body.style.backgroundColor = '#0b0b0c';
+      }
+    });
+
+    // 4. Scale Slider
+    const scaleSlider = document.getElementById('scale-slider');
+    const scaleVal = document.getElementById('scale-val');
+    
+    scaleSlider.addEventListener('input', (e) => {
+      const val = e.target.value;
+      mainSprite.style.transform = `scale(${val})`;
+      scaleVal.textContent = `${val}x`;
+    });
+
+    // Initial state start (Idle)
+    setRowState(0, 'Idle', 'Awaiting chat/command execution');
+  </script>
+</body>
+</html>

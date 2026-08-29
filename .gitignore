@@ -1,7 +1,4 @@
-# ghostrun cache (recorded LLM responses live here; usually committed intentionally
-# per-project, e.g. examples/.ghostrun_cache/). The root-level one is where ad-hoc
-# local runs of the test suite / ghostrun doctor happen to write -- not intentional
-# content, so it's ignored specifically at the root rather than everywhere.
+# ghostrun cache (root-level scratch runs only)
 /.ghostrun_cache/
 
 __pycache__/
@@ -28,11 +25,7 @@ doc/task.md
 SEO_GROWTH_PLAN.md
 parthmax-journey.md
 
-# Decide later — not ready to push yet
-ghostrun-pet/
-benchmark/
-
-# Replaced by ghost-logo.webp — keep webp, drop the heavy PNGs
+# Replaced by webp
 assets/ghost-logo.png
 site/assets/ghost-logo.png
 

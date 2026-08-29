@@ -1,0 +1,379 @@
+{
+  "ghostrun": {
+    "exact_match": 0.7333333333333333,
+    "category_accuracy": 1.0,
+    "urgency_accuracy": 0.7333333333333333,
+    "examples_kept": 2,
+    "instructions": "Analyze the customer message and classify it by topic category and urgency level.\n\nAllowed Categories:\n- billing: Issues with payments, invoices, charges, or refunds.\n- technical: Product bugs, errors, outages, or malfunctioning features.\n- account: Login, password resets, profile settings, or subscription management.\n- general: Miscellaneous questions, feedback, or general information requests.\n\nAllowed Urgency Levels:\n- high: Urgent, severe issues like service outages, security risks, or major financial errors requiring immediate resolution.\n- medium: Standard operational issues, active bugs, or time-sensitive questions impacting work.\n- low: General feedback, minor inquiries, or non-critical requests with no immediate deadline.\n\nProvide the resulting category and urgency."
+  },
+  "dspy": {
+    "exact_match": 0.6,
+    "category_accuracy": 0.7333333333333333,
+    "urgency_accuracy": 0.8,
+    "demos_kept": 2
+  },
+  "ghostrun_rows": [
+    {
+      "message": "Notifications stopped working after the last update.",
+      "gold": [
+        "technical",
+        "low"
+      ],
+      "pred": [
+        "technical",
+        "medium"
+      ],
+      "exact": false
+    },
+    {
+      "message": "Please reset my password, the reset email never arrives.",
+      "gold": [
+        "account",
+        "high"
+      ],
+      "pred": [
+        "account",
+        "medium"
+      ],
+      "exact": false
+    },
+    {
+      "message": "Can you point me to your API documentation?",
+      "gold": [
+        "general",
+        "low"
+      ],
+      "pred": [
+        "general",
+        "low"
+      ],
+      "exact": true
+    },
+    {
+      "message": "I cancelled my subscription months ago but you're still charging my card every month.",
+      "gold": [
+        "billing",
+        "high"
+      ],
+      "pred": [
+        "billing",
+        "high"
+      ],
+      "exact": true
+    },
+    {
+      "message": "The export button is greyed out and I can't click it.",
+      "gold": [
+        "technical",
+        "low"
+      ],
+      "pred": [
+        "technical",
+        "medium"
+      ],
+      "exact": false
+    },
+    {
+      "message": "I need to transfer ownership of my account to a colleague.",
+      "gold": [
+        "account",
+        "medium"
+      ],
+      "pred": [
+        "account",
+        "medium"
+      ],
+      "exact": true
+    },
+    {
+      "message": "Thanks for the quick support yesterday, really appreciated it.",
+      "gold": [
+        "general",
+        "low"
+      ],
+      "pred": [
+        "general",
+        "low"
+      ],
+      "exact": true
+    },
+    {
+      "message": "My free trial ended but I was still charged the full price without warning.",
+      "gold": [
+        "billing",
+        "high"
+      ],
+      "pred": [
+        "billing",
+        "medium"
+      ],
+      "exact": false
+    },
+    {
+      "message": "Every time I click save, the page just reloads and nothing is saved.",
+      "gold": [
+        "technical",
+        "medium"
+      ],
+      "pred": [
+        "technical",
+        "medium"
+      ],
+      "exact": true
+    },
+    {
+      "message": "How do I enable two-factor authentication on my account?",
+      "gold": [
+        "account",
+        "low"
+      ],
+      "pred": [
+        "account",
+        "low"
+      ],
+      "exact": true
+    },
+    {
+      "message": "Do you support single sign-on for enterprise customers?",
+      "gold": [
+        "general",
+        "low"
+      ],
+      "pred": [
+        "general",
+        "low"
+      ],
+      "exact": true
+    },
+    {
+      "message": "I need an itemized receipt for my last payment for tax purposes.",
+      "gold": [
+        "billing",
+        "low"
+      ],
+      "pred": [
+        "billing",
+        "low"
+      ],
+      "exact": true
+    },
+    {
+      "message": "The whole site has been throwing a blank white screen for the last hour.",
+      "gold": [
+        "technical",
+        "high"
+      ],
+      "pred": [
+        "technical",
+        "high"
+      ],
+      "exact": true
+    },
+    {
+      "message": "My account got suspended and I have no idea why.",
+      "gold": [
+        "account",
+        "high"
+      ],
+      "pred": [
+        "account",
+        "high"
+      ],
+      "exact": true
+    },
+    {
+      "message": "Can I get a demo of the enterprise features before upgrading?",
+      "gold": [
+        "general",
+        "low"
+      ],
+      "pred": [
+        "general",
+        "low"
+      ],
+      "exact": true
+    }
+  ],
+  "dspy_rows": [
+    {
+      "message": "Notifications stopped working after the last update.",
+      "gold": [
+        "technical",
+        "low"
+      ],
+      "pred": [
+        "technical",
+        "medium"
+      ],
+      "exact": false
+    },
+    {
+      "message": "Please reset my password, the reset email never arrives.",
+      "gold": [
+        "account",
+        "high"
+      ],
+      "pred": [
+        "account",
+        "high"
+      ],
+      "exact": true
+    },
+    {
+      "message": "Can you point me to your API documentation?",
+      "gold": [
+        "general",
+        "low"
+      ],
+      "pred": [
+        "documentation",
+        "low"
+      ],
+      "exact": false
+    },
+    {
+      "message": "I cancelled my subscription months ago but you're still charging my card every month.",
+      "gold": [
+        "billing",
+        "high"
+      ],
+      "pred": [
+        "billing",
+        "high"
+      ],
+      "exact": true
+    },
+    {
+      "message": "The export button is greyed out and I can't click it.",
+      "gold": [
+        "technical",
+        "low"
+      ],
+      "pred": [
+        "technical",
+        "medium"
+      ],
+      "exact": false
+    },
+    {
+      "message": "I need to transfer ownership of my account to a colleague.",
+      "gold": [
+        "account",
+        "medium"
+      ],
+      "pred": [
+        "account",
+        "medium"
+      ],
+      "exact": true
+    },
+    {
+      "message": "Thanks for the quick support yesterday, really appreciated it.",
+      "gold": [
+        "general",
+        "low"
+      ],
+      "pred": [
+        "feedback",
+        "low"
+      ],
+      "exact": false
+    },
+    {
+      "message": "My free trial ended but I was still charged the full price without warning.",
+      "gold": [
+        "billing",
+        "high"
+      ],
+      "pred": [
+        "billing",
+        "high"
+      ],
+      "exact": true
+    },
+    {
+      "message": "Every time I click save, the page just reloads and nothing is saved.",
+      "gold": [
+        "technical",
+        "medium"
+      ],
+      "pred": [
+        "technical",
+        "medium"
+      ],
+      "exact": true
+    },
+    {
+      "message": "How do I enable two-factor authentication on my account?",
+      "gold": [
+        "account",
+        "low"
+      ],
+      "pred": [
+        "account",
+        "low"
+      ],
+      "exact": true
+    },
+    {
+      "message": "Do you support single sign-on for enterprise customers?",
+      "gold": [
+        "general",
+        "low"
+      ],
+      "pred": [
+        "sales",
+        "low"
+      ],
+      "exact": false
+    },
+    {
+      "message": "I need an itemized receipt for my last payment for tax purposes.",
+      "gold": [
+        "billing",
+        "low"
+      ],
+      "pred": [
+        "billing",
+        "low"
+      ],
+      "exact": true
+    },
+    {
+      "message": "The whole site has been throwing a blank white screen for the last hour.",
+      "gold": [
+        "technical",
+        "high"
+      ],
+      "pred": [
+        "technical",
+        "high"
+      ],
+      "exact": true
+    },
+    {
+      "message": "My account got suspended and I have no idea why.",
+      "gold": [
+        "account",
+        "high"
+      ],
+      "pred": [
+        "account",
+        "high"
+      ],
+      "exact": true
+    },
+    {
+      "message": "Can I get a demo of the enterprise features before upgrading?",
+      "gold": [
+        "general",
+        "low"
+      ],
+      "pred": [
+        "sales",
+        "medium"
+      ],
+      "exact": false
+    }
+  ]
+}
