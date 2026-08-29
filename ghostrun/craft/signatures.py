@@ -99,12 +99,22 @@ class SigField:
 
 
 class Signature:
-    """A prompt's input/output contract. Build with ``Signature.parse(...)``;
-    ``.with_reasoning()`` derives a copy with a ``reasoning`` field prepended
-    to the outputs (used by ``modules.ChainOfThought``)."""
+    """A prompt's input/output contract. Build with ``Signature("inputs -> outputs")``
+    or ``Signature.parse(...)``; ``.with_reasoning()`` derives a copy with a
+    ``reasoning`` field prepended to the outputs (used by ``modules.ChainOfThought``)."""
 
-    def __init__(self, raw: str, inputs: List[SigField], outputs: List[SigField],
-                instructions: str = ""):
+    def __init__(self, raw: str, inputs: Optional[List[SigField]] = None,
+                 outputs: Optional[List[SigField]] = None,
+                 instructions: str = ""):
+        if inputs is None or outputs is None:
+            parsed = self.parse(raw, instructions=instructions)
+            self.raw = parsed.raw
+            self.inputs = parsed.inputs
+            self.outputs = parsed.outputs
+            self.instructions = parsed.instructions
+            self._model = parsed._model
+            return
+
         self.raw = raw
         self.inputs = inputs
         self.outputs = outputs

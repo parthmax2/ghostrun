@@ -122,10 +122,11 @@ def _load_examples(path: Path) -> List[Dict[str, Any]]:
 
 def craft(
     name: str,
-    spec: str,
-    examples_path: str,
+    spec: Optional[str] = None,
+    examples_path: str = "",
     criterion: Optional[str] = None,
     *,
+    signature: Optional[str] = None,
     metric: Optional[Metric] = None,
     model: str,
     judge: Optional[Judge] = None,
@@ -175,7 +176,11 @@ def craft(
     if (criterion is None) == (metric is None):
         raise CraftError("pass exactly one of criterion= or metric=")
 
-    parsed_signature = Signature.parse(spec)
+    resolved_spec = signature or spec
+    if not resolved_spec:
+        raise CraftError("pass signature= or spec= (e.g. \"question -> answer\")")
+
+    parsed_signature = Signature.parse(resolved_spec)
     rows = _load_examples(Path(examples_path))
     resolved_client = client or LLMClient(model, min_interval=min_interval)
     resolved_module = module or Predict(parsed_signature)
@@ -199,7 +204,7 @@ def craft(
 
     result = CraftedPrompt(
         name=name,
-        spec=spec,
+        spec=resolved_spec,
         instructions=compiled.instructions,
         criterion=criterion,
         model=model,
