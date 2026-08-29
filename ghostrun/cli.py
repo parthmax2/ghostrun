@@ -214,6 +214,27 @@ def cmd_init(args) -> int:
     return 0
 
 
+def cmd_run(args) -> int:
+    """Run pytest with live animated companion and formatted output."""
+    import pytest
+    from .pet import spawn_pet_async
+
+    # Spawn running mascot while tests execute
+    spawn_pet_async(anim="running", auto_close_ms=2500)
+
+    # Forward arguments to pytest
+    pytest_argv = list(args.pytest_args or [])
+    exit_code = pytest.main(pytest_argv)
+
+    # Spawn celebratory victory dance if tests pass
+    if exit_code == 0:
+        spawn_pet_async(anim="jumping", auto_close_ms=3500)
+    else:
+        spawn_pet_async(anim="failed", auto_close_ms=3500)
+
+    return exit_code
+
+
 def cmd_pet(args) -> int:
     try:
         from .pet import run_pet
@@ -280,6 +301,12 @@ def build_parser() -> argparse.ArgumentParser:
     p_init.add_argument("--force", action="store_true",
                         help="Overwrite existing .ghostrun.yaml / test file.")
     p_init.set_defaults(func=cmd_init)
+
+    p_run = sub.add_parser(
+        "run", help="Run tests with ghostrun test engine and live mascot companion.")
+    p_run.add_argument("pytest_args", nargs=argparse.REMAINDER,
+                       help="Arguments forwarded directly to pytest.")
+    p_run.set_defaults(func=cmd_run)
 
     p_pet = sub.add_parser(
         "pet", help="Launch the floating transparent desktop mascot companion.")
