@@ -119,16 +119,22 @@ def run_pet(
         0, 0, anchor="nw", image=tk_frames[current_state["anim"]][0]
     )
 
-    # Hover Close Button (X) placed neatly on the top-right corner of the helmet (inside sprite frame)
-    btn_r = 9  # radius
+    # Hover Close Button (X)
+    btn_r = 10
     btn_cx, btn_cy = total_w - 14, 14
     close_btn_bg = canvas.create_oval(
         btn_cx - btn_r, btn_cy - btn_r, btn_cx + btn_r, btn_cy + btn_r,
-        fill="#e53e3e", outline="#ffffff", width=1, state="hidden"
+        fill="#e53e3e", outline="#ffffff", width=1, state="hidden", tags="close_tag"
     )
     close_btn_text = canvas.create_text(
-        btn_cx, btn_cy, text="✕", fill="#ffffff", font=("Segoe UI", 8, "bold"), state="hidden"
+        btn_cx, btn_cy, text="✕", fill="#ffffff", font=("Segoe UI", 9, "bold"), state="hidden", tags="close_tag"
     )
+
+    def do_close(event=None):
+        root.destroy()
+
+    # Direct click on the close button widget tag
+    canvas.tag_bind("close_tag", "<Button-1>", do_close)
 
     drag_data = {"x": 0, "y": 0}
 
@@ -141,9 +147,9 @@ def run_pet(
         new_y = root.winfo_y() + (event.y - drag_data["y"])
         root.geometry(f"+{new_x}+{new_y}")
 
-    def on_click(event):
-        # Generous click target for the close button
-        if (event.x - btn_cx) ** 2 + (event.y - btn_cy) ** 2 <= (btn_r + 5) ** 2:
+    def on_canvas_click(event):
+        # Generous bounding box check for top-right close area
+        if event.x >= total_w - 28 and event.y <= 28:
             root.destroy()
             return
 
@@ -154,11 +160,7 @@ def run_pet(
         current_state["anim"] = anim_cycle[next_idx]
         current_state["frame_idx"] = 0
 
-    def on_right_click(event):
-        """Instant right-click to close fallback."""
-        root.destroy()
-
-    def show_close_btn():
+    def show_close_btn(event=None):
         if current_state["leave_job"]:
             root.after_cancel(current_state["leave_job"])
             current_state["leave_job"] = None
@@ -171,22 +173,18 @@ def run_pet(
         canvas.itemconfig(close_btn_bg, state="hidden")
         canvas.itemconfig(close_btn_text, state="hidden")
 
-    def on_hover_enter(event):
-        show_close_btn()
-
-    def on_hover_leave(event):
-        # 400ms grace period so moving toward the button never flickers or disappears
+    def on_hover_leave(event=None):
         if current_state["leave_job"]:
             root.after_cancel(current_state["leave_job"])
-        current_state["leave_job"] = root.after(400, hide_close_btn)
+        current_state["leave_job"] = root.after(500, hide_close_btn)
 
-    canvas.bind("<Button-1>", on_click)
-    canvas.bind("<Button-3>", on_right_click)  # Right click also closes instantly
+    canvas.bind("<Button-1>", on_canvas_click)
+    canvas.bind("<Button-3>", do_close)  # Right click also closes instantly
     canvas.bind("<B1-Motion>", on_drag)
     canvas.bind("<ButtonPress-1>", start_drag)
-    canvas.bind("<Enter>", on_hover_enter)
+    canvas.bind("<Enter>", show_close_btn)
     canvas.bind("<Leave>", on_hover_leave)
-    canvas.bind("<Motion>", lambda e: show_close_btn())
+    canvas.bind("<Motion>", show_close_btn)
 
     def update_frame():
         anim = current_state["anim"]
