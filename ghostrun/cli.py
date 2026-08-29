@@ -207,6 +207,18 @@ def cmd_init(args) -> int:
     return 0
 
 
+def cmd_pet(args) -> int:
+    try:
+        from .pet import run_pet
+        run_pet(width=args.width, initial_anim=args.anim)
+        return 0
+    except KeyboardInterrupt:
+        return 0
+    except Exception as exc:
+        print(f"Failed to launch GhostRun pet: {exc}", file=sys.stderr)
+        return 1
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="ghostrun",
@@ -261,6 +273,12 @@ def build_parser() -> argparse.ArgumentParser:
     p_init.add_argument("--force", action="store_true",
                         help="Overwrite existing .ghostrun.yaml / test file.")
     p_init.set_defaults(func=cmd_init)
+
+    p_pet = sub.add_parser(
+        "pet", help="Launch the floating transparent desktop mascot companion.")
+    p_pet.add_argument("--width", type=int, default=96, help="Pet width in pixels (default: 96).")
+    p_pet.add_argument("--anim", default="idle", help="Initial animation state (default: idle).")
+    p_pet.set_defaults(func=cmd_pet)
 
     return parser
 
