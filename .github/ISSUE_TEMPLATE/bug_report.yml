@@ -1,0 +1,34 @@
+name: Bug Report
+description: Create a report to help us improve GhostRun
+title: "[BUG] <title>"
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for filing a bug report! Please provide as much detail as possible to help us reproduce the issue.
+  - type: textarea
+    id: description
+    attributes:
+      label: Describe the Bug
+      description: A clear and concise description of what the bug is.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to Reproduce
+      description: Provide minimal reproducible code or command line invocation.
+      placeholder: |
+        1. Run `ghostrun run test_example.py`
+        2. Encounter error: ...
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Environment Info
+      description: Python version, OS (Windows / Ubuntu / macOS), ghostrun version (`ghostrun --version`)
+      placeholder: "Python 3.12, Windows 11, ghostrun 2.0.2"
+    validations:
+      required: true

@@ -250,10 +250,12 @@ def cmd_pet(args) -> int:
 
 
 def build_parser() -> argparse.ArgumentParser:
+    from . import __version__
     parser = argparse.ArgumentParser(
         prog="ghostrun",
-        description="Inspect and compare ghostrun run snapshots.",
+        description="Deterministic testing, prompt optimization, and regression tracking for LLMs.",
     )
+    parser.add_argument("-V", "--version", action="version", version=f"ghostrun {__version__}")
     parser.add_argument("--cache-dir", default=None,
                         help="Override the cache directory (default: from config).")
     sub = parser.add_subparsers(dest="command")

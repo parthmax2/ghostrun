@@ -1,0 +1,28 @@
+name: Feature Request
+description: Suggest an idea or enhancement for GhostRun
+title: "[FEATURE] <title>"
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for contributing ideas to make GhostRun even better!
+  - type: textarea
+    id: problem
+    attributes:
+      label: Is your feature request related to a problem?
+      description: A clear description of what the problem or limitation is.
+    validations:
+      required: true
+  - type: textarea
+    id: solution
+    attributes:
+      label: Describe the Solution You'd Like
+      description: A clear and concise description of what you want to happen.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives You've Considered
+      description: Any alternative solutions or features you've considered.
