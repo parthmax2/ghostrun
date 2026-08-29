@@ -1,0 +1,53 @@
+name: GhostRun Prompt Regression Diff
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  regression-diff:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout PR branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install .[dev]
+
+      - name: Run Test Suite & Generate Snapshot
+        run: |
+          pytest --ghostrun-snapshot pr_candidate --ghostrun-replay
+
+      - name: Compare Prompt Regressions vs Main
+        id: diff
+        run: |
+          # Generate GitHub formatted markdown comment
+          ghostrun diff _last pr_candidate --format github-comment -o pr_diff.md || true
+
+      - name: Post PR Comment
+        uses: actions/github-script@v7
+        if: always()
+        with:
+          script: |
+            const fs = require('fs');
+            if (fs.existsSync('pr_diff.md')) {
+              const body = fs.readFileSync('pr_diff.md', 'utf8');
+              if (body.trim().length > 0) {
+                github.rest.issues.createComment({
+                  issue_number: context.issue.number,
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  body: body
+                });
+              }
+            }
