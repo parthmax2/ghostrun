@@ -229,41 +229,239 @@
     }
 
     /* ---------------------------------------------------------------------
-       Floating Interactive Mascot Widget on Guide Pages
+       Autonomous Roaming Mascot Companion (Patrols, Climbs, Jumps & Tips)
        --------------------------------------------------------------------- */
-    if (!document.getElementById("hero-pet") && document.querySelector(".article")) {
-      var petContainer = document.createElement("div");
-      petContainer.id = "floating-doc-pet";
-      petContainer.style.cssText = "position:fixed; bottom:20px; right:20px; z-index:99; display:flex; flex-direction:column; align-items:center; cursor:pointer;";
-      
-      var petSprite = document.createElement("div");
-      petSprite.style.cssText = "width:80px; height:87px; background:url('" + SITE_BASE + "assets/spritesheet.png') 0px 0px no-repeat; background-size:640px 783px; image-rendering:pixelated; filter:drop-shadow(0 0 12px rgba(139,157,255,0.45)); transition:transform 0.15s ease;";
-      petSprite.title = "I am your GhostRun tactical companion! Click me to cycle animations.";
-      
-      var frame = 0;
-      var row = 0; // 0: idle, 3: waving, 4: jumping, 7: thinking
-      var timer = setInterval(function () {
-        frame = (frame + 1) % 8;
-        petSprite.style.backgroundPosition = "-" + (frame * 80) + "px -" + (row * 87) + "px";
-      }, 120);
+    (function initRoamingMascot() {
+      // Don't duplicate if already exists
+      if (document.getElementById("ghostrun-roaming-pet")) return;
 
-      var states = [0, 3, 4, 7, 8, 1];
-      var stateIdx = 0;
-      petContainer.addEventListener("click", function () {
-        stateIdx = (stateIdx + 1) % states.length;
-        row = states[stateIdx];
-        frame = 0;
+      var petContainer = document.createElement("div");
+      petContainer.id = "ghostrun-roaming-pet";
+      petContainer.style.cssText = [
+        "position: fixed;",
+        "bottom: 24px;",
+        "right: 40px;",
+        "z-index: 9999;",
+        "display: flex;",
+        "flex-direction: column;",
+        "align-items: center;",
+        "cursor: grab;",
+        "user-select: none;",
+        "touch-action: none;",
+        "transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1), bottom 0.5s ease, right 0.5s ease;"
+      ].join(" ");
+
+      // Speech / Tip Bubble
+      var bubble = document.createElement("div");
+      bubble.id = "roaming-pet-bubble";
+      bubble.style.cssText = [
+        "background: rgba(16, 18, 26, 0.95);",
+        "border: 1px solid rgba(255, 51, 75, 0.4);",
+        "color: #ffffff;",
+        "font-family: var(--font-mono, monospace);",
+        "font-size: 11px;",
+        "padding: 6px 12px;",
+        "border-radius: 8px;",
+        "margin-bottom: 8px;",
+        "box-shadow: 0 8px 24px rgba(0,0,0,0.6);",
+        "white-space: nowrap;",
+        "opacity: 0;",
+        "transform: translateY(6px);",
+        "transition: opacity 0.3s, transform 0.3s;",
+        "pointer-events: none;"
+      ].join(" ");
+      bubble.textContent = "pytest for AI apps!";
+
+      // Sprite Element
+      var petSprite = document.createElement("div");
+      petSprite.style.cssText = [
+        "width: 72px;",
+        "height: 78px;",
+        "background: url('" + SITE_BASE + "assets/spritesheet.png') 0px 0px no-repeat;",
+        "background-size: 576px 702px;",
+        "image-rendering: pixelated;",
+        "filter: drop-shadow(0 0 16px rgba(255, 51, 75, 0.55));",
+        "transition: transform 0.15s ease;"
+      ].join(" ");
+      petSprite.title = "Drag me around or click to interact!";
+
+      petContainer.appendChild(bubble);
+      petContainer.appendChild(petSprite);
+      document.body.appendChild(petContainer);
+
+      // Spritesheet row mappings:
+      // 0: idle (8 frames)
+      // 1: run (8 frames)
+      // 3: wave (8 frames)
+      // 4: jump (8 frames)
+      // 5: salute / fail (8 frames)
+      // 7: thinking (8 frames)
+      // 8: celebration (8 frames)
+      var frame = 0;
+      var currentRow = 0;
+      var isFacingLeft = false;
+      var posX = window.innerWidth - 120;
+      var posY = 24;
+
+      function updateSpriteFrame() {
+        frame = (frame + 1) % 8;
+        petSprite.style.backgroundPosition = "-" + (frame * 72) + "px -" + (currentRow * 78) + "px";
+        petSprite.style.transform = isFacingLeft ? "scaleX(-1)" : "scaleX(1)";
+      }
+      var animTimer = setInterval(updateSpriteFrame, 110);
+
+      // Bubble tips library
+      var quotes = [
+        "pytest for AI apps!",
+        "Replay LLM tests in 0.04s ($0 cost)!",
+        "Run `ghostrun init` to start!",
+        "Self-improving prompts with `ghostrun craft` ⚡",
+        "100% deterministic regression testing!",
+        "Watching your code patrol...",
+        "Zero API flakiness on CI/CD!",
+        "All tests passing! 🚀"
+      ];
+
+      function speak(text, duration) {
+        bubble.textContent = text || quotes[Math.floor(Math.random() * quotes.length)];
+        bubble.style.opacity = "1";
+        bubble.style.transform = "translateY(0px)";
+        setTimeout(function() {
+          bubble.style.opacity = "0";
+          bubble.style.transform = "translateY(6px)";
+        }, duration || 3500);
+      }
+
+      // Autonomous Patrol AI Engine
+      var actions = ["idle", "walk", "jump", "think", "wave", "celebrate"];
+      function runAutonomousAI() {
+        var choice = actions[Math.floor(Math.random() * actions.length)];
+        var vw = window.innerWidth;
+
+        if (choice === "walk") {
+          // Walk to a new random X position
+          var targetX = Math.floor(Math.random() * (vw - 160)) + 40;
+          isFacingLeft = targetX < posX;
+          currentRow = 1; // Running animation
+          
+          var distance = Math.abs(targetX - posX);
+          var duration = Math.max(1200, distance * 5);
+
+          petContainer.style.transition = "left " + (duration/1000) + "s linear, bottom 0.4s ease";
+          petContainer.style.left = targetX + "px";
+          petContainer.style.right = "auto";
+          posX = targetX;
+
+          setTimeout(function() {
+            currentRow = 0; // Return to idle
+            if (Math.random() > 0.6) speak();
+          }, duration);
+
+        } else if (choice === "jump") {
+          currentRow = 4; // Jump animation
+          petContainer.style.transform = "translateY(-40px)";
+          setTimeout(function() {
+            petContainer.style.transform = "translateY(0px)";
+            setTimeout(function() { currentRow = 0; }, 300);
+          }, 350);
+
+        } else if (choice === "think") {
+          currentRow = 7;
+          speak("Analyzing prompt latency...", 2500);
+          setTimeout(function() { currentRow = 0; }, 3000);
+
+        } else if (choice === "wave") {
+          currentRow = 3;
+          speak("Hey developer! Ready to test?", 2500);
+          setTimeout(function() { currentRow = 0; }, 2600);
+
+        } else if (choice === "celebrate") {
+          currentRow = 8;
+          speak("100% Tests Passed! 🎉", 2500);
+          setTimeout(function() { currentRow = 0; }, 2800);
+
+        } else {
+          currentRow = 0; // Idle
+        }
+      }
+
+      // Run an action every 5-9 seconds
+      var aiInterval = setInterval(function() {
+        if (!isDragging) {
+          runAutonomousAI();
+        }
+      }, 6500);
+
+      // Drag and Drop Mascot Interactivity
+      var isDragging = false;
+      var startMouseX = 0, startMouseY = 0;
+      var elemStartX = 0, elemStartY = 0;
+
+      petContainer.addEventListener("pointerdown", function(e) {
+        isDragging = true;
+        petContainer.style.cursor = "grabbing";
+        petContainer.style.transition = "none";
+        currentRow = 4; // Jumping / hanging in air
+
+        startMouseX = e.clientX;
+        startMouseY = e.clientY;
+
+        var rect = petContainer.getBoundingClientRect();
+        elemStartX = rect.left;
+        elemStartY = window.innerHeight - rect.bottom;
+
+        petContainer.setPointerCapture(e.pointerId);
       });
 
-      // Wave when user scrolls near the bottom of a guide
-      window.addEventListener("scroll", function () {
-        if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 150) {
-          if (row === 0) { row = 3; } // Wave!
+      petContainer.addEventListener("pointermove", function(e) {
+        if (!isDragging) return;
+        var dx = e.clientX - startMouseX;
+        var dy = startMouseY - e.clientY;
+
+        var newX = Math.max(10, Math.min(window.innerWidth - 90, elemStartX + dx));
+        var newY = Math.max(10, Math.min(window.innerHeight - 100, elemStartY + dy));
+
+        petContainer.style.left = newX + "px";
+        petContainer.style.right = "auto";
+        petContainer.style.bottom = newY + "px";
+        posX = newX;
+        posY = newY;
+      });
+
+      petContainer.addEventListener("pointerup", function(e) {
+        if (!isDragging) return;
+        isDragging = false;
+        petContainer.style.cursor = "grab";
+        petContainer.style.transition = "left 0.4s ease, bottom 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)";
+        
+        // Gravity Drop back to bottom
+        petContainer.style.bottom = "24px";
+        posY = 24;
+        currentRow = 8; // Celebrate landing!
+        speak("Weeee! That was fun!", 2000);
+
+        setTimeout(function() {
+          currentRow = 0;
+        }, 1200);
+      });
+
+      // Quick Click Action
+      petContainer.addEventListener("click", function(e) {
+        if (Math.abs(e.clientX - startMouseX) < 5 && Math.abs(e.clientY - startMouseY) < 5) {
+          var quickStates = [3, 4, 7, 8];
+          currentRow = quickStates[Math.floor(Math.random() * quickStates.length)];
+          speak();
+          setTimeout(function() { currentRow = 0; }, 2000);
         }
       });
 
-      petContainer.appendChild(petSprite);
-      document.body.appendChild(petContainer);
-    }
+      // React to User Scrolling
+      window.addEventListener("scroll", function() {
+        if (Math.random() > 0.85 && currentRow === 0) {
+          currentRow = 3; // Wave
+          setTimeout(function() { currentRow = 0; }, 1500);
+        }
+      });
+    })();
   });
 })();
