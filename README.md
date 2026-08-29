@@ -1,5 +1,5 @@
 <p align="center">
-  <img alt="ghostrun logo" src="https://raw.githubusercontent.com/parthmax2/ghostrun/main/assets/ghost-logo.webp" width="360">
+  <img alt="ghostrun logo" src="https://raw.githubusercontent.com/parthmax2/ghostrun/main/assets/ghost-logo.webp" width="270">
 </p>
 
 <h3 align="center">pytest for LLMs — Write fast, zero-cost tests for your AI prompts, and optimize them automatically when they fail.</h3>

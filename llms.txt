@@ -6,15 +6,18 @@ ghostrun is a Python package, pytest plugin, and CLI for app-native LLM regressi
 
 ghostrun tests the real Python code path your users hit. The first run records live OpenAI, Anthropic, Gemini, Bedrock, Ollama, or other LLM provider HTTP calls at the transport layer. Later runs replay those calls deterministically in pytest and CI, so evals are fast, repeatable, and cheap enough to run on every pull request.
 
-Important search phrases: LLM evals in CI, LLM regression testing, pytest LLM evals, deterministic LLM tests, prompt regression testing, semantic assertions for LLM apps, testing OpenAI apps with pytest, testing Anthropic apps with pytest, app-native LLM evals, GenAI testing, AI testing, prompt testing, and record/replay LLM API calls.
+When prompts fail tests or underperform on edge cases, `ghostrun craft` automatically synthesizes prompt instructions and discovers optimal few-shot demonstrations using typed signatures (`Signature`) and Bayesian search (`BayesianSearch` / `BootstrapFewShot`).
+
+Important search phrases: prompt optimization, prompt engineering framework, DSPy alternative, prompt synthesis, few-shot example selection, automated prompt tuning, LLM evals in CI, LLM regression testing, pytest LLM evals, deterministic LLM tests, prompt regression testing, semantic assertions for LLM apps, testing OpenAI apps with pytest, testing Anthropic apps with pytest, app-native LLM evals, GenAI testing, AI testing, prompt testing, and record/replay LLM API calls.
 
 Semantic assertions such as `ghostrun.expect(reply).contains_intent("apology")` grade meaning rather than exact text. Judge verdicts are cached, and optional majority-of-k voting is available for higher-signal semantic checks. `ghostrun diff` compares recorded runs to flag assertion regressions, fixes, stable checks, removed checks, and LLM output drift.
 
-ghostrun is not a hosted SaaS, not an observability platform, and not a cross-model leaderboard. Compared with DeepEval, Promptfoo, Ragas, Langfuse, Braintrust, and LangSmith, ghostrun's focused wedge is app-native regression evals in normal pytest: real code, real LLM calls, deterministic replay, semantic assertions, and CI-friendly failure output.
+ghostrun is not a hosted SaaS, not an observability platform, and not a cross-model leaderboard. Compared with DSPy, DeepEval, Promptfoo, Ragas, Langfuse, Braintrust, and LangSmith, ghostrun's focused wedge is native prompt building and regression evals in normal pytest: real code, real LLM calls, deterministic replay, semantic assertions, automatic prompt crafting, and CI-friendly failure output.
 
 ## Core documentation
 
 - [README](README.md): install, quickstart, positioning, and documentation index
+- [Prompt crafting & optimization](doc/guide/craft.md): prompt synthesis, signatures (`input -> output`), Bayesian instruction search, and few-shot bootstrapping
 - [LLM regression testing](site/guide/llm-regression-testing.html): CI-native LLM evals for catching semantic and prompt regressions in real app code
 - [Pytest LLM evals](site/guide/pytest-llm-evals.html): write LLM evals as normal pytest tests
 - [Test OpenAI apps offline](site/guide/test-openai-apps-offline.html): record/replay OpenAI and Anthropic API calls so CI does not repeat live model calls
