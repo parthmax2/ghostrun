@@ -769,3 +769,108 @@ img {
 .site-footer a {
   color: var(--text-faint);
 }
+
+/* ==========================================================================
+   Living Mascot Engine — Themed Interactive Props & FX
+   ========================================================================== */
+
+/* Cyber Laptop Prop */
+.mascot-prop-laptop {
+  position: absolute;
+  bottom: 0px;
+  right: -24px;
+  width: 32px;
+  height: 22px;
+  background: #181a24;
+  border: 1px solid #ff334b;
+  border-radius: 4px;
+  box-shadow: 0 0 12px rgba(255, 51, 75, 0.5);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  z-index: 10;
+  animation: laptopGlow 1.5s infinite alternate;
+}
+.mascot-prop-laptop::after {
+  content: ">_ 0.04s";
+  color: #00e676;
+  font-family: var(--font-mono);
+  font-size: 6px;
+  line-height: 1;
+}
+@keyframes laptopGlow {
+  from { box-shadow: 0 0 6px rgba(255, 51, 75, 0.3); }
+  to { box-shadow: 0 0 16px rgba(255, 51, 75, 0.8); }
+}
+
+/* Coffee Mug Prop */
+.mascot-prop-coffee {
+  position: absolute;
+  bottom: 4px;
+  left: -18px;
+  width: 14px;
+  height: 16px;
+  background: #ffffff;
+  border-radius: 2px 2px 4px 4px;
+  border: 1px solid #ff334b;
+  box-shadow: 0 0 8px rgba(255, 51, 75, 0.4);
+}
+.mascot-prop-coffee::before {
+  content: "";
+  position: absolute;
+  right: -5px;
+  top: 3px;
+  width: 5px;
+  height: 8px;
+  border: 1.5px solid #ff334b;
+  border-left: none;
+  border-radius: 0 3px 3px 0;
+}
+.mascot-prop-coffee::after {
+  content: "~";
+  position: absolute;
+  top: -10px;
+  left: 3px;
+  color: #ff334b;
+  font-size: 10px;
+  animation: steamRise 1s infinite alternate;
+}
+@keyframes steamRise {
+  from { transform: translateY(0) scale(0.8); opacity: 0.4; }
+  to { transform: translateY(-4px) scale(1.2); opacity: 0.9; }
+}
+
+/* Radar Scanner Beam */
+.mascot-prop-radar {
+  position: absolute;
+  top: -30px;
+  left: -50px;
+  width: 170px;
+  height: 140px;
+  background: radial-gradient(circle, rgba(255, 51, 75, 0.25) 0%, rgba(255, 51, 75, 0) 70%);
+  border-radius: 50%;
+  pointer-events: none;
+  animation: radarSweep 2s infinite linear;
+}
+@keyframes radarSweep {
+  0% { transform: scale(0.6) rotate(0deg); opacity: 0.2; }
+  50% { transform: scale(1.1) rotate(180deg); opacity: 0.7; }
+  100% { transform: scale(0.6) rotate(360deg); opacity: 0.2; }
+}
+
+/* Confetti Particle FX */
+.mascot-confetti {
+  position: fixed;
+  width: 6px;
+  height: 6px;
+  pointer-events: none;
+  z-index: 99999;
+  border-radius: 50%;
+  animation: fallParticle 1.2s forwards ease-out;
+}
+@keyframes fallParticle {
+  0% { transform: translate(0, 0) scale(1); opacity: 1; }
+  100% { transform: translate(var(--dx), var(--dy)) scale(0); opacity: 0; }
+}

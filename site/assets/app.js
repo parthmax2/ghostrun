@@ -229,10 +229,9 @@
     }
 
     /* ---------------------------------------------------------------------
-       Autonomous Roaming Mascot Companion (Patrols, Climbs, Jumps & Tips)
+       Living Mascot Companion Engine (DOM-Aware, Props, Reactions & Easter Eggs)
        --------------------------------------------------------------------- */
-    (function initRoamingMascot() {
-      // Don't duplicate if already exists
+    (function initLivingMascotEngine() {
       if (document.getElementById("ghostrun-roaming-pet")) return;
 
       var petContainer = document.createElement("div");
@@ -248,7 +247,7 @@
         "cursor: grab;",
         "user-select: none;",
         "touch-action: none;",
-        "transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1), bottom 0.5s ease, right 0.5s ease;"
+        "transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1), left 0.6s ease, top 0.6s ease, bottom 0.6s ease;"
       ].join(" ");
 
       // Speech / Tip Bubble
@@ -263,14 +262,19 @@
         "padding: 6px 12px;",
         "border-radius: 8px;",
         "margin-bottom: 8px;",
-        "box-shadow: 0 8px 24px rgba(0,0,0,0.6);",
+        "box-shadow: 0 8px 24px rgba(0,0,0,0.7);",
         "white-space: nowrap;",
         "opacity: 0;",
         "transform: translateY(6px);",
         "transition: opacity 0.3s, transform 0.3s;",
-        "pointer-events: none;"
+        "pointer-events: none;",
+        "z-index: 30;"
       ].join(" ");
       bubble.textContent = "pytest for AI apps!";
+
+      // Sprite Wrapper (holds sprite + dynamic props)
+      var spriteWrap = document.createElement("div");
+      spriteWrap.style.cssText = "position: relative; width: 72px; height: 78px;";
 
       // Sprite Element
       var petSprite = document.createElement("div");
@@ -280,46 +284,56 @@
         "background: url('" + SITE_BASE + "assets/spritesheet.png') 0px 0px no-repeat;",
         "background-size: 576px 702px;",
         "image-rendering: pixelated;",
-        "filter: drop-shadow(0 0 16px rgba(255, 51, 75, 0.55));",
+        "filter: drop-shadow(0 0 16px rgba(255, 51, 75, 0.6));",
         "transition: transform 0.15s ease;"
       ].join(" ");
-      petSprite.title = "Drag me around or click to interact!";
+      petSprite.title = "I am your GhostRun tactical pet! Click, drag, or watch me patrol!";
 
+      // Dynamic Prop Slot
+      var propSlot = document.createElement("div");
+      propSlot.id = "mascot-prop-slot";
+
+      spriteWrap.appendChild(petSprite);
+      spriteWrap.appendChild(propSlot);
       petContainer.appendChild(bubble);
-      petContainer.appendChild(petSprite);
+      petContainer.appendChild(spriteWrap);
       document.body.appendChild(petContainer);
 
-      // Spritesheet row mappings:
-      // 0: idle (8 frames)
-      // 1: run (8 frames)
-      // 3: wave (8 frames)
-      // 4: jump (8 frames)
-      // 5: salute / fail (8 frames)
-      // 7: thinking (8 frames)
-      // 8: celebration (8 frames)
       var frame = 0;
       var currentRow = 0;
       var isFacingLeft = false;
       var posX = window.innerWidth - 120;
       var posY = 24;
+      var isPerched = false;
+      var isDragging = false;
+      var clickCount = 0;
+      var clickTimer = null;
 
       function updateSpriteFrame() {
         frame = (frame + 1) % 8;
         petSprite.style.backgroundPosition = "-" + (frame * 72) + "px -" + (currentRow * 78) + "px";
         petSprite.style.transform = isFacingLeft ? "scaleX(-1)" : "scaleX(1)";
       }
-      var animTimer = setInterval(updateSpriteFrame, 110);
+      setInterval(updateSpriteFrame, 110);
 
-      // Bubble tips library
+      // Prop Manager
+      function setProp(propName) {
+        propSlot.innerHTML = "";
+        if (!propName) return;
+        var p = document.createElement("div");
+        p.className = "mascot-prop-" + propName;
+        propSlot.appendChild(p);
+      }
+
+      // Speech library
       var quotes = [
-        "pytest for AI apps!",
         "Replay LLM tests in 0.04s ($0 cost)!",
-        "Run `ghostrun init` to start!",
+        "pytest for AI Apps 🚀",
+        "Run `ghostrun init` to scaffold in 1 command!",
         "Self-improving prompts with `ghostrun craft` ⚡",
         "100% deterministic regression testing!",
-        "Watching your code patrol...",
         "Zero API flakiness on CI/CD!",
-        "All tests passing! 🚀"
+        "Patrolling codeblocks for flaky outputs..."
       ];
 
       function speak(text, duration) {
@@ -329,17 +343,103 @@
         setTimeout(function() {
           bubble.style.opacity = "0";
           bubble.style.transform = "translateY(6px)";
-        }, duration || 3500);
+        }, duration || 3200);
       }
 
-      // Autonomous Patrol AI Engine
-      var actions = ["idle", "walk", "jump", "think", "wave", "celebrate"];
-      function runAutonomousAI() {
-        var choice = actions[Math.floor(Math.random() * actions.length)];
-        var vw = window.innerWidth;
+      // Particle Confetti Generator
+      function spawnConfetti(originX, originY) {
+        var colors = ["#ff334b", "#ffffff", "#00e676", "#ff9933"];
+        for (var i = 0; i < 24; i++) {
+          var dot = document.createElement("div");
+          dot.className = "mascot-confetti";
+          dot.style.left = (originX || posX + 36) + "px";
+          dot.style.top = (originY || (window.innerHeight - posY - 36)) + "px";
+          dot.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+          var dx = (Math.random() - 0.5) * 160 + "px";
+          var dy = (Math.random() - 0.8) * 160 + "px";
+          dot.style.setProperty("--dx", dx);
+          dot.style.setProperty("--dy", dy);
+          document.body.appendChild(dot);
+          setTimeout((function(el) { return function() { el.remove(); }; })(dot), 1200);
+        }
+      }
 
-        if (choice === "walk") {
-          // Walk to a new random X position
+      // 1. Autonomous Behavior Engine (Patrols, Perches & Props)
+      var behaviorTree = ["walk_floor", "perch_codeblock", "laptop_hack", "coffee_break", "radar_scan", "wave", "celebrate"];
+
+      function runAutonomousAI() {
+        if (isDragging) return;
+        var action = behaviorTree[Math.floor(Math.random() * behaviorTree.length)];
+
+        if (action === "perch_codeblock") {
+          // Find visible code blocks or cards to perch on
+          var elements = Array.prototype.slice.call(document.querySelectorAll(".step-card, pre, .home-card, .video-frame"));
+          var visibleElements = elements.filter(function(el) {
+            var rect = el.getBoundingClientRect();
+            return rect.top >= 80 && rect.bottom <= window.innerHeight - 80;
+          });
+
+          if (visibleElements.length > 0) {
+            var targetEl = visibleElements[Math.floor(Math.random() * visibleElements.length)];
+            var rect = targetEl.getBoundingClientRect();
+            
+            isPerched = true;
+            currentRow = 4; // Jump up
+            petContainer.style.transition = "all 0.8s cubic-bezier(0.16, 1, 0.3, 1)";
+            petContainer.style.left = (rect.right - 90) + "px";
+            petContainer.style.bottom = "auto";
+            petContainer.style.top = Math.max(70, rect.top - 68) + "px";
+
+            setTimeout(function() {
+              currentRow = 7; // Thinking / inspecting
+              setProp("laptop");
+              speak("Inspecting code assertions...", 3000);
+
+              setTimeout(function() {
+                setProp(null);
+                // Hop down
+                currentRow = 4;
+                petContainer.style.top = "auto";
+                petContainer.style.bottom = "24px";
+                isPerched = false;
+                setTimeout(function() { currentRow = 0; }, 600);
+              }, 5000);
+            }, 800);
+            return;
+          }
+        }
+
+        if (action === "laptop_hack") {
+          currentRow = 7; // Thinking
+          setProp("laptop");
+          speak("Running prompt craft optimizer...", 3500);
+          setTimeout(function() {
+            setProp(null);
+            currentRow = 0;
+          }, 4000);
+
+        } else if (action === "coffee_break") {
+          currentRow = 0; // Idle
+          setProp("coffee");
+          speak("Replay cache hit: 0.04s. Coffee time ☕", 3000);
+          setTimeout(function() {
+            setProp(null);
+          }, 4500);
+
+        } else if (action === "radar_scan") {
+          currentRow = 7;
+          setProp("radar");
+          speak("Scanning for LLM regressions...", 3000);
+          setTimeout(function() {
+            setProp(null);
+            currentRow = 8; // Celebrate clean scan
+            speak("Zero regressions found! 🎯", 2000);
+            setTimeout(function() { currentRow = 0; }, 2000);
+          }, 3500);
+
+        } else if (action === "walk_floor") {
+          if (isPerched) return;
+          var vw = window.innerWidth;
           var targetX = Math.floor(Math.random() * (vw - 160)) + 40;
           isFacingLeft = targetX < posX;
           currentRow = 1; // Running animation
@@ -350,58 +450,63 @@
           petContainer.style.transition = "left " + (duration/1000) + "s linear, bottom 0.4s ease";
           petContainer.style.left = targetX + "px";
           petContainer.style.right = "auto";
+          petContainer.style.bottom = "24px";
           posX = targetX;
 
           setTimeout(function() {
-            currentRow = 0; // Return to idle
-            if (Math.random() > 0.6) speak();
+            currentRow = 0;
+            if (Math.random() > 0.5) speak();
           }, duration);
 
-        } else if (choice === "jump") {
-          currentRow = 4; // Jump animation
-          petContainer.style.transform = "translateY(-40px)";
-          setTimeout(function() {
-            petContainer.style.transform = "translateY(0px)";
-            setTimeout(function() { currentRow = 0; }, 300);
-          }, 350);
-
-        } else if (choice === "think") {
-          currentRow = 7;
-          speak("Analyzing prompt latency...", 2500);
-          setTimeout(function() { currentRow = 0; }, 3000);
-
-        } else if (choice === "wave") {
+        } else if (action === "wave") {
           currentRow = 3;
-          speak("Hey developer! Ready to test?", 2500);
-          setTimeout(function() { currentRow = 0; }, 2600);
+          speak("Tactical AI testing ready!", 2500);
+          setTimeout(function() { currentRow = 0; }, 2500);
 
-        } else if (choice === "celebrate") {
+        } else if (action === "celebrate") {
           currentRow = 8;
-          speak("100% Tests Passed! 🎉", 2500);
-          setTimeout(function() { currentRow = 0; }, 2800);
-
-        } else {
-          currentRow = 0; // Idle
+          spawnConfetti();
+          speak("100% Deterministic Pass! 🎉", 2500);
+          setTimeout(function() { currentRow = 0; }, 2500);
         }
       }
 
-      // Run an action every 5-9 seconds
-      var aiInterval = setInterval(function() {
-        if (!isDragging) {
-          runAutonomousAI();
-        }
-      }, 6500);
+      setInterval(runAutonomousAI, 7000);
 
-      // Drag and Drop Mascot Interactivity
-      var isDragging = false;
+      // 2. Developer Action Reaction Hooks
+      // React when developer copies code
+      document.addEventListener("copy", function() {
+        currentRow = 8; // Celebrate
+        setProp("laptop");
+        spawnConfetti();
+        speak("Code copied! Cached in 0.04s ($0 cost) ⚡", 3500);
+        setTimeout(function() {
+          setProp(null);
+          currentRow = 0;
+        }, 3500);
+      });
+
+      // React when developer searches
+      var searchInput = document.getElementById("search-input");
+      if (searchInput) {
+        searchInput.addEventListener("focus", function() {
+          currentRow = 3; // Wave
+          speak("Looking for docs? Let's find it!", 2500);
+          setTimeout(function() { currentRow = 0; }, 2500);
+        });
+      }
+
+      // 3. Drag and Drop Physics
       var startMouseX = 0, startMouseY = 0;
       var elemStartX = 0, elemStartY = 0;
 
       petContainer.addEventListener("pointerdown", function(e) {
         isDragging = true;
+        setProp(null);
         petContainer.style.cursor = "grabbing";
         petContainer.style.transition = "none";
-        currentRow = 4; // Jumping / hanging in air
+        currentRow = 4; // Airborne jump
+        isPerched = false;
 
         startMouseX = e.clientX;
         startMouseY = e.clientY;
@@ -409,7 +514,6 @@
         var rect = petContainer.getBoundingClientRect();
         elemStartX = rect.left;
         elemStartY = window.innerHeight - rect.bottom;
-
         petContainer.setPointerCapture(e.pointerId);
       });
 
@@ -424,6 +528,7 @@
         petContainer.style.left = newX + "px";
         petContainer.style.right = "auto";
         petContainer.style.bottom = newY + "px";
+        petContainer.style.top = "auto";
         posX = newX;
         posY = newY;
       });
@@ -434,32 +539,63 @@
         petContainer.style.cursor = "grab";
         petContainer.style.transition = "left 0.4s ease, bottom 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)";
         
-        // Gravity Drop back to bottom
         petContainer.style.bottom = "24px";
         posY = 24;
-        currentRow = 8; // Celebrate landing!
-        speak("Weeee! That was fun!", 2000);
+        currentRow = 8; // Celebrate landing
+        spawnConfetti();
+        speak("Tactical landing executed!", 2000);
 
-        setTimeout(function() {
-          currentRow = 0;
-        }, 1200);
+        setTimeout(function() { currentRow = 0; }, 1500);
       });
 
-      // Quick Click Action
+      // 4. Easter Eggs (Triple Click Party Mode + Konami Code)
       petContainer.addEventListener("click", function(e) {
-        if (Math.abs(e.clientX - startMouseX) < 5 && Math.abs(e.clientY - startMouseY) < 5) {
-          var quickStates = [3, 4, 7, 8];
-          currentRow = quickStates[Math.floor(Math.random() * quickStates.length)];
-          speak();
-          setTimeout(function() { currentRow = 0; }, 2000);
-        }
+        clickCount++;
+        clearTimeout(clickTimer);
+        clickTimer = setTimeout(function() {
+          if (clickCount >= 3) {
+            // Secret Rave Mode
+            currentRow = 8;
+            spawnConfetti();
+            speak("SECRET UNLOCKED: GHOSTRUN RAVE MODE! 🪩⚡", 4000);
+            document.body.style.filter = "invert(0.1) hue-rotate(45deg)";
+            setTimeout(function() {
+              document.body.style.filter = "none";
+              currentRow = 0;
+            }, 3000);
+          } else if (clickCount === 1) {
+            var quick = [3, 4, 7, 8];
+            currentRow = quick[Math.floor(Math.random() * quick.length)];
+            speak();
+            setTimeout(function() { currentRow = 0; }, 2000);
+          }
+          clickCount = 0;
+        }, 350);
       });
 
-      // React to User Scrolling
-      window.addEventListener("scroll", function() {
-        if (Math.random() > 0.85 && currentRow === 0) {
-          currentRow = 3; // Wave
-          setTimeout(function() { currentRow = 0; }, 1500);
+      // Konami Code Listener: ↑ ↑ ↓ ↓ ← → ← → B A
+      var konami = [38, 38, 40, 40, 37, 39, 37, 39, 66, 65];
+      var konamiIndex = 0;
+      document.addEventListener("keydown", function(e) {
+        if (e.keyCode === konami[konamiIndex]) {
+          konamiIndex++;
+          if (konamiIndex === konami.length) {
+            konamiIndex = 0;
+            spawnConfetti(window.innerWidth / 2, window.innerHeight / 2);
+            speak("SQUAD CLONES DEPLOYED! 👻👻👻", 5000);
+            currentRow = 8;
+            // Spawn 2 clone buddies
+            for (var c = 0; c < 2; c++) {
+              var clone = petContainer.cloneNode(true);
+              clone.style.left = (posX + (c === 0 ? -90 : 90)) + "px";
+              document.body.appendChild(clone);
+              (function(cl) {
+                setTimeout(function() { cl.remove(); }, 6000);
+              })(clone);
+            }
+          }
+        } else {
+          konamiIndex = 0;
         }
       });
     })();
