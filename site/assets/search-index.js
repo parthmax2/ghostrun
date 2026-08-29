@@ -18,7 +18,7 @@ window.GHOSTRUN_SEARCH_INDEX = [
     section: "Guide",
     url: "guide/craft.html",
     excerpt: "Automatically synthesize prompt instructions and discover winning few-shot demonstrations with Bayesian optimization.",
-    keywords: "craft prompt optimization dspy bayesian search signature optuna few-shot synthesis prompt engineering"
+    keywords: "craft prompt optimization bayesian search signature optuna few-shot synthesis prompt engineering"
   },
   {
     title: "LLM regression testing",

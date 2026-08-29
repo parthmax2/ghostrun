@@ -14,7 +14,7 @@ keywords = [
     "llm", "llm-evals", "llm-eval", "llm-evaluation", "llm-as-judge",
     "llm-testing", "llm-regression-testing", "pytest", "pytest-plugin",
     "prompt-engineering", "prompt-optimization", "prompt-crafting", "few-shot-selection",
-    "dspy", "synthetic-data", "testing", "unit-testing", "ci", "ci-cd",
+    "synthetic-data", "testing", "unit-testing", "ci", "ci-cd",
     "genai", "generative-ai", "ai-testing", "agent-testing", "app-testing",
     "openai", "anthropic", "gemini", "ollama", "chatbot-testing",
     "record-replay", "vcr", "http-mocking", "http-cache",

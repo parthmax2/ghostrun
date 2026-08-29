@@ -1,0 +1,203 @@
+/* ==========================================================================
+   GhostRun — Interactive Tactical Tour & Mascot Stage Styles
+   ========================================================================== */
+
+/* Phase 3: Center-Screen Mascot Stage Overlay */
+#mascot-briefing-stage {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(8, 9, 13, 0.94);
+  backdrop-filter: blur(24px);
+  z-index: 99999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.6s;
+}
+
+#mascot-briefing-stage.active {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+/* Stage Inner Content Card */
+.stage-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  max-width: 800px;
+  width: 92%;
+  position: relative;
+}
+
+/* Half-Screen Giant Pixel Mascot (320px x 347px, ~45-50vh) */
+.stage-mascot-avatar {
+  width: 320px;
+  height: 347px;
+  background-image: url('spritesheet.png');
+  background-repeat: no-repeat;
+  background-position: 0px 0px;
+  background-size: 2560px 3123px;
+  image-rendering: pixelated;
+  margin-bottom: 1.2rem;
+  transition: transform 0.2s ease;
+}
+
+/* Subtitle & Dialogue Box */
+.stage-dialogue-box {
+  background: #10121a;
+  border: 1px solid rgba(255, 51, 75, 0.4);
+  border-radius: 14px;
+  padding: 1.2rem 2rem;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.85), 0 0 24px rgba(255, 51, 75, 0.15);
+  margin-bottom: 1.2rem;
+  width: 100%;
+}
+
+.stage-caller-id {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: #ff334b;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  margin-bottom: 0.8rem;
+}
+
+.stage-caller-dot {
+  width: 7px;
+  height: 7px;
+  background: #00e676;
+  border-radius: 50%;
+  box-shadow: 0 0 8px #00e676;
+}
+
+.stage-speech-text {
+  color: #ffffff;
+  font-family: var(--font-mono, monospace);
+  font-size: 1.15rem;
+  line-height: 1.6;
+  margin: 0;
+  min-height: 3.2em;
+}
+
+/* Stage Action Buttons */
+.stage-actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.btn-stage-start {
+  background: #ff334b;
+  color: #ffffff;
+  border: none;
+  font-family: var(--font-mono, monospace);
+  font-weight: 700;
+  font-size: 0.95rem;
+  padding: 12px 28px;
+  border-radius: 999px;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(255, 51, 75, 0.4);
+  transition: all 0.25s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-stage-start:hover {
+  background: #d9263a;
+  transform: translateY(-2px);
+  box-shadow: 0 0 28px rgba(255, 51, 75, 0.7);
+}
+
+.btn-stage-skip {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #b0b4c3;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.9rem;
+  padding: 12px 24px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-stage-skip:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+/* ==========================================================================
+   Screen Control: Tactical Spotlight & Laser Pointer
+   ========================================================================== */
+
+/* Active Section Spotlight Overlay */
+.tactical-camera-spotlight {
+  position: relative;
+  transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  outline: 3px solid #ff334b !important;
+  box-shadow: 0 0 35px rgba(255, 51, 75, 0.7), inset 0 0 20px rgba(255, 51, 75, 0.2) !important;
+  border-radius: 8px !important;
+  animation: spotlightPulse 2s infinite alternate;
+}
+
+@keyframes spotlightPulse {
+  from { box-shadow: 0 0 25px rgba(255, 51, 75, 0.5); }
+  to { box-shadow: 0 0 45px rgba(255, 51, 75, 0.9); }
+}
+
+/* Tactical Laser Pointer Targeting Line */
+.tactical-laser-pointer {
+  position: absolute;
+  height: 2px;
+  background: linear-gradient(90deg, #ff334b, #ffffff);
+  box-shadow: 0 0 8px #ff334b;
+  transform-origin: 0% 50%;
+  pointer-events: none;
+  z-index: 9998;
+  opacity: 0.85;
+}
+
+/* Header Re-Tour Action Button (Hidden by default during tour, appears only when tour ends) */
+.btn-retour {
+  display: none;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 51, 75, 0.12);
+  border: 1px solid rgba(255, 51, 75, 0.4);
+  color: #ffffff;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 5px 12px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  letter-spacing: 0.5px;
+}
+.btn-retour.active {
+  display: inline-flex;
+}
+.btn-retour:hover {
+  background: #ff334b;
+  color: #ffffff;
+  transform: translateY(-1px);
+  box-shadow: 0 0 16px rgba(255, 51, 75, 0.6);
+}
+.btn-retour:hover span {
+  color: #ffffff !important;
+}

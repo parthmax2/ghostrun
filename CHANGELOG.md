@@ -9,7 +9,10 @@ All notable changes to ghostrun are documented here. The format is based on
 ## [2.0.5] - 2026-08-29
 
 ### Added
-- **`ghostrun craft`** — Bayesian prompt optimization & DSPy-style signature system (`"inputs -> outputs"`). Automatically discovers high-performing instruction candidates and bootstraps few-shot demonstrations against semantic metric assertions.
+- **`ghostrun craft`** — Bayesian prompt optimization & typed signature system (`"inputs -> outputs"`). Automatically discovers high-performing instruction candidates and bootstraps few-shot demonstrations against semantic metric assertions.
+- **`@ghostrun.craft.optimize` Decorator** — Auto-tunes application prompts during standard `pytest` runs using Bayesian Search with Optuna.
+- **`ghostrun.craft.Signature` & `Predict` Modules** — Declare typed LLM interfaces natively without complex framework dependencies.
+- **Comprehensive API Reference & SEO Metadata** for prompt optimization and prompt engineering workflows.
 - **Interactive Tactical Desktop Mascot (`ghostrun pet`)** — Transparent, borderless floating companion with 9 real-time animations (`idle`, `running`, `jumping`, `waving`, `review`, `waiting`, `failed`, `thinking`), per-animation frame timings, and screen edge walking locomotion.
 - **Native Test Runner (`ghostrun run`)** — Forwarding CLI test runner that automatically executes tests and triggers celebratory victory animations upon 0.04s cache replays.
 - **Live Interactive Web Mascot** on documentation site (`ghostrun.parthmax.tech`) hero section.

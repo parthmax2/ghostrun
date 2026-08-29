@@ -1,6 +1,6 @@
 ---
 name: ghostrun-craft
-description: Automatically search, synthesize, and optimize AI prompts using DSPy-style signatures and Bayesian instruction optimization.
+description: Automatically search, synthesize, and optimize AI prompts using typed signatures and Bayesian instruction optimization.
 ---
 
 # GhostRun Prompt Crafting Skill

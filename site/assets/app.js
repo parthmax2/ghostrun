@@ -229,11 +229,42 @@
     }
 
     /* ---------------------------------------------------------------------
-       Living Mascot Companion Engine (DOM-Aware, Props, Reactions & Easter Eggs)
+       Punisher-Style Living Tactical Mentor Engine ("Ghost")
        --------------------------------------------------------------------- */
-    (function initLivingMascotEngine() {
+    (function initLivingTacticalMentor() {
       if (document.getElementById("ghostrun-roaming-pet")) return;
 
+      // 1. Voice Synthesis & Audio Engine (100% Free Browser-Native)
+      function speakTacticalAudio(text) {
+        var isVoiceOn = (window.GhostRunVoiceEnabled !== false);
+        if (!isVoiceOn || !window.speechSynthesis) {
+          if (window.speechSynthesis) window.speechSynthesis.cancel();
+          return;
+        }
+        window.speechSynthesis.cancel();
+
+        var utter = new SpeechSynthesisUtterance(text);
+        utter.rate = 0.95; // Calm, steady cadence
+        utter.pitch = 0.75; // Deep commanding tone
+        
+        var voices = window.speechSynthesis.getVoices();
+        // Look for deep English voice
+        var chosenVoice = voices.find(function(v) { 
+          return v.lang.startsWith("en") && (v.name.includes("Male") || v.name.includes("David") || v.name.includes("Google US English") || v.name.includes("Natural")); 
+        }) || voices[0];
+
+        if (chosenVoice) utter.voice = chosenVoice;
+        window.speechSynthesis.speak(utter);
+      }
+
+      // Pre-warm voices
+      if (window.speechSynthesis) {
+        window.speechSynthesis.onvoiceschanged = function() {
+          window.speechSynthesis.getVoices();
+        };
+      }
+
+      // 2. Mascot Container
       var petContainer = document.createElement("div");
       petContainer.id = "ghostrun-roaming-pet";
       petContainer.style.cssText = [
@@ -247,30 +278,34 @@
         "cursor: grab;",
         "user-select: none;",
         "touch-action: none;",
-        "transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1), left 0.6s ease, top 0.6s ease, bottom 0.6s ease;"
+        "transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), left 0.8s cubic-bezier(0.16, 1, 0.3, 1), top 0.8s cubic-bezier(0.16, 1, 0.3, 1), bottom 0.8s ease;"
       ].join(" ");
+      petContainer.style.left = (window.innerWidth - 130) + "px";
+      petContainer.style.bottom = "24px";
 
-      // Speech / Tip Bubble
+      // Speech / Subtitle Bubble
       var bubble = document.createElement("div");
       bubble.id = "roaming-pet-bubble";
       bubble.style.cssText = [
         "background: rgba(16, 18, 26, 0.95);",
-        "border: 1px solid rgba(255, 51, 75, 0.4);",
+        "border: 1px solid rgba(255, 51, 75, 0.5);",
         "color: #ffffff;",
         "font-family: var(--font-mono, monospace);",
-        "font-size: 11px;",
-        "padding: 6px 12px;",
+        "font-size: 11.5px;",
+        "line-height: 1.4;",
+        "padding: 8px 14px;",
         "border-radius: 8px;",
-        "margin-bottom: 8px;",
-        "box-shadow: 0 8px 24px rgba(0,0,0,0.7);",
-        "white-space: nowrap;",
+        "margin-bottom: 10px;",
+        "box-shadow: 0 8px 24px rgba(0,0,0,0.8);",
+        "max-width: 280px;",
+        "text-align: center;",
         "opacity: 0;",
         "transform: translateY(6px);",
         "transition: opacity 0.3s, transform 0.3s;",
         "pointer-events: none;",
         "z-index: 30;"
       ].join(" ");
-      bubble.textContent = "pytest for AI apps!";
+      bubble.textContent = "GhostRun Tactical Mentor Ready.";
 
       // Sprite Wrapper (holds sprite + dynamic props)
       var spriteWrap = document.createElement("div");
@@ -286,7 +321,7 @@
         "image-rendering: pixelated;",
         "transition: transform 0.15s ease;"
       ].join(" ");
-      petSprite.title = "I am your GhostRun tactical pet! Click, drag, or watch me patrol!";
+      petSprite.title = "Ghost: Tactical AI Testing Mentor. Click to brief!";
 
       // Dynamic Prop Slot
       var propSlot = document.createElement("div");
@@ -305,8 +340,8 @@
       var posY = 24;
       var isPerched = false;
       var isDragging = false;
-      var clickCount = 0;
-      var clickTimer = null;
+      var isBriefingActive = false;
+      var currentStepIndex = 0;
 
       function updateSpriteFrame() {
         frame = (frame + 1) % 8;
@@ -324,28 +359,30 @@
         propSlot.appendChild(p);
       }
 
-      // Speech library
-      var quotes = [
-        "Replay LLM tests in 0.04s ($0 cost)!",
-        "pytest for AI Apps 🚀",
-        "Run `ghostrun init` to scaffold in 1 command!",
-        "Self-improving prompts with `ghostrun craft` ⚡",
-        "100% deterministic regression testing!",
-        "Zero API flakiness on CI/CD!",
-        "Patrolling codeblocks for flaky outputs..."
-      ];
-
-      function speak(text, duration) {
-        bubble.textContent = text || quotes[Math.floor(Math.random() * quotes.length)];
+      function speak(text, duration, withVoice) {
+        bubble.textContent = text;
         bubble.style.opacity = "1";
         bubble.style.transform = "translateY(0px)";
+        if (withVoice !== false) {
+          speakTacticalAudio(text);
+        }
         setTimeout(function() {
-          bubble.style.opacity = "0";
-          bubble.style.transform = "translateY(6px)";
-        }, duration || 3200);
+          if (!isBriefingActive) {
+            bubble.style.opacity = "0";
+            bubble.style.transform = "translateY(6px)";
+          }
+        }, duration || 4500);
       }
 
-      // Particle Confetti Generator
+      function spawnShockwave(x, y) {
+        var ring = document.createElement("div");
+        ring.className = "tactical-shockwave";
+        ring.style.left = x + "px";
+        ring.style.top = y + "px";
+        document.body.appendChild(ring);
+        setTimeout(function() { ring.remove(); }, 700);
+      }
+
       function spawnConfetti(originX, originY) {
         var colors = ["#ff334b", "#ffffff", "#00e676", "#ff9933"];
         for (var i = 0; i < 24; i++) {
@@ -363,153 +400,175 @@
         }
       }
 
-      // 1. Autonomous Behavior Engine (Navigates to Stations Across Page)
-      var stationsList = ["station-pc", "station-coffee", "station-server", "station-dummy"];
+      // 3. Guided Tour Mission Steps (Punisher Dialogue)
+      var tourSteps = [
+        {
+          stationId: "station-pc",
+          prop: "laptop",
+          row: 7,
+          message: "Step 1: Stop burning cash on LLMs in CI. Wrap with @ghostrun.record. One run records; future runs replay in 0.04 seconds for zero dollars."
+        },
+        {
+          stationId: "station-coffee",
+          prop: "coffee",
+          row: 0,
+          message: "Step 2: Never test AI for exact strings. LLMs change wording every run. We assert on intent, empathy, and meaning."
+        },
+        {
+          stationId: "station-server",
+          prop: "radar",
+          row: 7,
+          message: "Step 3: When a prompt breaks, don't guess fixes like an amateur. Run ghostrun craft to let Bayesian optimization fix the wording."
+        },
+        {
+          stationId: "station-dummy",
+          prop: null,
+          row: 4,
+          message: "Target secured! Zero hallucinations, zero flakiness. You are ready to ship production AI apps."
+        }
+      ];
 
-      function travelToStation(stationId, customCallback) {
-        var el = document.getElementById(stationId);
-        if (!el) return false;
+      function executeTourStep(index) {
+        if (index >= tourSteps.length) {
+          isBriefingActive = false;
+          currentRow = 8;
+          spawnConfetti();
+          speak("Mission briefing complete. Explore the documentation or start testing!", 4000);
+          setTimeout(function() {
+            setProp(null);
+            currentRow = 0;
+            petContainer.style.top = "auto";
+            petContainer.style.bottom = "24px";
+            isPerched = false;
+          }, 3500);
+          return;
+        }
+
+        currentStepIndex = index;
+        var step = tourSteps[index];
+        var el = document.getElementById(step.stationId);
+        if (!el) return;
+
+        // Clear active highlights
+        document.querySelectorAll(".station-active-highlight").forEach(function(h) {
+          h.classList.remove("station-active-highlight");
+        });
+        el.classList.add("station-active-highlight");
+
         var rect = el.getBoundingClientRect();
-        
-        // Only target if in reasonable scroll view or near
-        var targetLeft = Math.max(30, Math.min(window.innerWidth - 100, rect.left - 40));
-        var targetTop = Math.max(70, rect.top - 10);
+        var targetLeft = Math.max(20, Math.min(window.innerWidth - 100, rect.left - 60));
+        var targetTop = Math.max(60, rect.top - 10);
 
         isPerched = true;
         isFacingLeft = targetLeft < posX;
-        currentRow = 1; // Run towards station
-        
-        var dist = Math.hypot(targetLeft - posX, targetTop - (window.innerHeight - posY));
-        var dur = Math.min(2.5, Math.max(0.8, dist * 0.002));
+        currentRow = 1; // Run to station
 
-        petContainer.style.transition = "left " + dur + "s cubic-bezier(0.2, 0.8, 0.2, 1), top " + dur + "s cubic-bezier(0.2, 0.8, 0.2, 1)";
+        var dist = Math.hypot(targetLeft - posX, targetTop - (window.innerHeight - posY));
+        var dur = Math.min(2.0, Math.max(0.6, dist * 0.0018));
+
+        petContainer.style.transition = "left " + dur + "s cubic-bezier(0.16, 1, 0.3, 1), top " + dur + "s cubic-bezier(0.16, 1, 0.3, 1)";
         petContainer.style.left = targetLeft + "px";
         petContainer.style.bottom = "auto";
         petContainer.style.top = targetTop + "px";
         posX = targetLeft;
 
         setTimeout(function() {
-          if (stationId === "station-pc") {
-            currentRow = 7; // Thinking / typing
-            setProp("laptop");
-            speak("Executing 0.04s offline AI test suite... 💻", 3500);
-          } else if (stationId === "station-coffee") {
-            currentRow = 0; // Idle
-            setProp("coffee");
-            speak("Fresh espresso brewed! Ready to optimize prompts ☕", 3500);
-          } else if (stationId === "station-server") {
-            currentRow = 7; // Scanning
-            setProp("radar");
-            speak("All AI servers healthy: 0 regressions found! 🗄️", 3500);
-          } else if (stationId === "station-dummy") {
-            currentRow = 4; // Jump
-            speak("Tactical strike on hallucination bug! 🎯", 3000);
-            spawnConfetti(targetLeft + 36, targetTop + 36);
+          spawnShockwave(targetLeft + 36, targetTop + 65);
+          currentRow = step.row;
+          setProp(step.prop);
+          speak(step.message, 5500);
+
+          if (step.stationId === "station-dummy") {
+            spawnConfetti(targetLeft + 45, targetTop + 40);
           }
-
-          if (customCallback) customCallback();
-
-          // After interacting, hop down after 5.5s
-          setTimeout(function() {
-            setProp(null);
-            currentRow = 4; // Hop down
-            petContainer.style.transition = "bottom 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275), left 0.6s ease";
-            petContainer.style.top = "auto";
-            petContainer.style.bottom = "24px";
-            isPerched = false;
-            posY = 24;
-            setTimeout(function() { currentRow = 0; }, 600);
-          }, 5500);
         }, dur * 1000);
-
-        return true;
       }
 
-      function runAutonomousAI() {
-        if (isDragging || isPerched) return;
-        var roll = Math.random();
+      // 4. Cinematic Full-Screen Briefing Takeover -> Dive Down Animation
+      function triggerCinematicBriefing() {
+        isBriefingActive = true;
+        setProp(null);
+        currentRow = 3; // Saluting / standing tall
 
-        if (roll < 0.45) {
-          // Travel to a random station on page
-          var randStation = stationsList[Math.floor(Math.random() * stationsList.length)];
-          travelToStation(randStation);
-        } else if (roll < 0.75) {
-          // Walk across the floor
-          var vw = window.innerWidth;
-          var targetX = Math.floor(Math.random() * (vw - 160)) + 40;
-          isFacingLeft = targetX < posX;
-          currentRow = 1; // Running animation
-          
-          var distance = Math.abs(targetX - posX);
-          var duration = Math.max(1200, distance * 5);
+        // 1. Zoom into huge center screen
+        petContainer.style.transition = "all 0.6s cubic-bezier(0.16, 1, 0.3, 1)";
+        petContainer.style.left = (window.innerWidth / 2 - 36) + "px";
+        petContainer.style.top = (window.innerHeight / 2 - 80) + "px";
+        petContainer.style.bottom = "auto";
+        petContainer.style.transform = "scale(2.2)";
 
-          petContainer.style.transition = "left " + (duration/1000) + "s linear, bottom 0.4s ease";
-          petContainer.style.left = targetX + "px";
-          petContainer.style.right = "auto";
-          petContainer.style.bottom = "24px";
-          posX = targetX;
+        speak("Listen up. I'm Ghost. Most developers test AI with blind hope and burning cash. Let me show you how we run operations here.", 5000);
 
-          setTimeout(function() {
-            currentRow = 0;
-            if (Math.random() > 0.5) speak();
-          }, duration);
-        } else if (roll < 0.9) {
-          currentRow = 3; // Wave
-          speak("Tactical AI testing standing by!", 2500);
-          setTimeout(function() { currentRow = 0; }, 2500);
-        } else {
-          currentRow = 8; // Celebrate
-          spawnConfetti();
-          speak("100% Deterministic Pass! 🎉", 2500);
-          setTimeout(function() { currentRow = 0; }, 2500);
-        }
+        // 2. After intro speech, dive down directly to Step 1 station!
+        setTimeout(function() {
+          petContainer.style.transform = "scale(1)";
+          executeTourStep(0);
+        }, 4200);
       }
 
-      setInterval(runAutonomousAI, 7500);
+      // 5. Tactical Radio Comms HUD (Hidden by default until tour starts)
+      var hud = document.createElement("div");
+      hud.id = "tactical-radio-hud";
+      hud.style.display = "none";
+      hud.innerHTML = [
+        '<div class="radio-led"></div>',
+        '<span style="color:#ff334b; font-weight:bold;">RADIO: GHOST</span>',
+        '<button class="radio-btn primary" id="btn-next-target">Next Target →</button>',
+        '<button class="radio-btn" id="btn-end-tour">End Tour ✕</button>',
+        '<button class="radio-btn" id="btn-toggle-voice">🔊 Audio: ON</button>'
+      ].join("");
+      document.body.appendChild(hud);
 
-      // Bind Click events on Stations so clicking a station calls the mascot over!
-      stationsList.forEach(function(sId) {
-        var el = document.getElementById(sId);
-        if (el) {
-          el.addEventListener("click", function() {
-            travelToStation(sId);
-          });
+      // On direct page load (if intro already seen), show Re-Tour button in header
+      var reTourBtn = document.getElementById("btn-re-tour");
+      if (reTourBtn) reTourBtn.classList.add("active");
+
+      document.getElementById("btn-next-target").addEventListener("click", function() {
+        if (window.GhostRunTour) window.GhostRunTour.nextStep();
+      });
+      document.getElementById("btn-end-tour").addEventListener("click", function() {
+        hud.style.display = "none";
+        if (window.GhostRunTour) window.GhostRunTour.skipTour();
+      });
+      document.getElementById("btn-toggle-voice").addEventListener("click", function() {
+        if (window.GhostRunTour) {
+          var state = window.GhostRunTour.toggleVoice();
+          this.textContent = state ? "🔊 Audio: ON" : "🔇 Audio: OFF";
         }
       });
 
-      // 2. Developer Action Reaction Hooks
-      // React when developer copies code
+      // 6. Developer Action Reaction Hooks
       document.addEventListener("copy", function() {
-        currentRow = 8; // Celebrate
+        currentRow = 8;
         setProp("laptop");
         spawnConfetti();
-        speak("Code copied! Cached in 0.04s ($0 cost) ⚡", 3500);
+        speak("Code secured. Put it in your codebase and run pytest. 0.04s replay locked.", 4000);
         setTimeout(function() {
           setProp(null);
           currentRow = 0;
-        }, 3500);
+        }, 4000);
       });
 
-      // React when developer searches
       var searchInput = document.getElementById("search-input");
       if (searchInput) {
         searchInput.addEventListener("focus", function() {
-          currentRow = 3; // Wave
-          speak("Looking for docs? Let's find it!", 2500);
-          setTimeout(function() { currentRow = 0; }, 2500);
+          currentRow = 3;
+          speak("Looking for Intel? Type your query. I've indexed everything.", 3000);
+          setTimeout(function() { currentRow = 0; }, 3000);
         });
       }
 
-      // 3. Drag and Drop Physics
+      // 7. Drag & Drop Physics
       var startMouseX = 0, startMouseY = 0;
       var elemStartX = 0, elemStartY = 0;
 
       petContainer.addEventListener("pointerdown", function(e) {
         isDragging = true;
+        isBriefingActive = false;
         setProp(null);
         petContainer.style.cursor = "grabbing";
         petContainer.style.transition = "none";
-        currentRow = 4; // Airborne jump
+        currentRow = 4; // Jump / airborne
         isPerched = false;
 
         startMouseX = e.clientX;
@@ -545,61 +604,17 @@
         
         petContainer.style.bottom = "24px";
         posY = 24;
-        currentRow = 8; // Celebrate landing
-        spawnConfetti();
-        speak("Tactical landing executed!", 2000);
+        currentRow = 8;
+        spawnShockwave(posX + 36, window.innerHeight - 20);
+        speak("Tactical landing executed. Standing by.", 2500);
 
         setTimeout(function() { currentRow = 0; }, 1500);
       });
 
-      // 4. Easter Eggs (Triple Click Party Mode + Konami Code)
+      // Quick Click Trigger
       petContainer.addEventListener("click", function(e) {
-        clickCount++;
-        clearTimeout(clickTimer);
-        clickTimer = setTimeout(function() {
-          if (clickCount >= 3) {
-            // Secret Rave Mode
-            currentRow = 8;
-            spawnConfetti();
-            speak("SECRET UNLOCKED: GHOSTRUN RAVE MODE! 🪩⚡", 4000);
-            document.body.style.filter = "invert(0.1) hue-rotate(45deg)";
-            setTimeout(function() {
-              document.body.style.filter = "none";
-              currentRow = 0;
-            }, 3000);
-          } else if (clickCount === 1) {
-            var quick = [3, 4, 7, 8];
-            currentRow = quick[Math.floor(Math.random() * quick.length)];
-            speak();
-            setTimeout(function() { currentRow = 0; }, 2000);
-          }
-          clickCount = 0;
-        }, 350);
-      });
-
-      // Konami Code Listener: ↑ ↑ ↓ ↓ ← → ← → B A
-      var konami = [38, 38, 40, 40, 37, 39, 37, 39, 66, 65];
-      var konamiIndex = 0;
-      document.addEventListener("keydown", function(e) {
-        if (e.keyCode === konami[konamiIndex]) {
-          konamiIndex++;
-          if (konamiIndex === konami.length) {
-            konamiIndex = 0;
-            spawnConfetti(window.innerWidth / 2, window.innerHeight / 2);
-            speak("SQUAD CLONES DEPLOYED! 👻👻👻", 5000);
-            currentRow = 8;
-            // Spawn 2 clone buddies
-            for (var c = 0; c < 2; c++) {
-              var clone = petContainer.cloneNode(true);
-              clone.style.left = (posX + (c === 0 ? -90 : 90)) + "px";
-              document.body.appendChild(clone);
-              (function(cl) {
-                setTimeout(function() { cl.remove(); }, 6000);
-              })(clone);
-            }
-          }
-        } else {
-          konamiIndex = 0;
+        if (Math.abs(e.clientX - startMouseX) < 5 && Math.abs(e.clientY - startMouseY) < 5) {
+          if (window.GhostRunTour) window.GhostRunTour.launchStageBriefing();
         }
       });
     })();

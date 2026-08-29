@@ -10,7 +10,7 @@
   <link rel="canonical" href="https://ghostrun.parthmax.tech/">
   <meta name="author" content="parthmax2">
   <meta name="keywords"
-    content="LLM evals, prompt optimization, prompt crafting, DSPy alternative, pytest LLM evals, deterministic LLM tests, prompt regression testing, semantic assertions, OpenAI testing, Anthropic testing, desktop pet, AI companion">
+    content="LLM evals, prompt optimization, prompt crafting, prompt tuning, pytest LLM evals, deterministic LLM tests, prompt regression testing, semantic assertions, OpenAI testing, Anthropic testing, desktop pet, AI companion">
   <meta property="og:type" content="website">
   <meta property="og:title" content="ghostrun - pytest for AI Apps">
   <meta property="og:description"
@@ -25,6 +25,7 @@
   <meta name="twitter:image" content="https://ghostrun.parthmax.tech/assets/ghostrun-hero.gif">
   <link rel="icon" href="assets/ghost-icon.png">
   <link rel="stylesheet" href="assets/style.css">
+  <link rel="stylesheet" href="assets/tour.css">
   <style>
     /* Premium Modern Dark Styles */
     .hero-badge {
@@ -342,6 +343,30 @@
     </div>
   </div>
 
+  <!-- Phase 3: Center-Screen Mascot Stage Takeover Modal -->
+  <div id="mascot-briefing-stage">
+    <div class="stage-content">
+      <div class="stage-mascot-avatar" id="stage-avatar" style="width:320px; height:347px; background:url('assets/spritesheet.png') 0px 0px no-repeat; background-size:2560px 3123px; image-rendering:pixelated;"></div>
+      <div class="stage-dialogue-box">
+        <div class="stage-caller-id">
+          <div class="stage-caller-dot"></div>
+          <span>OPERATIONAL INTEL // COMMS: GHOST</span>
+        </div>
+        <p class="stage-speech-text" id="stage-speech-text">
+          Listen up. I'm Ghost. Most developers test AI with blind hope and burning cash. Let me walk you through our operational framework.
+        </p>
+      </div>
+      <div class="stage-actions">
+        <button class="btn-stage-start" id="btn-stage-start">
+          Start Guided Tour →
+        </button>
+        <button class="btn-stage-skip" id="btn-stage-skip">
+          Skip Tour &amp; Read Docs
+        </button>
+      </div>
+    </div>
+  </div>
+
   <script>
     function startMissionExperience() {
       var card = document.getElementById('launch-card');
@@ -366,7 +391,6 @@
           vid.volume = 1.0;
           vid.currentTime = 0;
           vid.play().catch(function() {
-            // Fallback if blocked
             vid.muted = true;
             vid.play();
           });
@@ -387,6 +411,13 @@
           sessionStorage.setItem('ghostrun_intro_seen', 'true');
         } catch(e) {}
       }
+
+      // Seamlessly transition into Phase 3 Center-Screen Stage Takeover!
+      setTimeout(function() {
+        if (window.GhostRunTour && typeof window.GhostRunTour.launchStageBriefing === 'function') {
+          window.GhostRunTour.launchStageBriefing();
+        }
+      }, 500);
     }
 
     (function() {
@@ -398,7 +429,7 @@
         if (sprite) sprite.style.backgroundPosition = '-' + (frame * 96) + 'px -0px';
       }, 120);
 
-      // If user already watched intro in this session, skip it automatically
+      // If user already watched intro in this session, skip intro
       try {
         if (sessionStorage.getItem('ghostrun_intro_seen') === 'true') {
           var el = document.getElementById('cinema-intro');
@@ -428,7 +459,10 @@
       <input class="search-input" id="search-input" type="text" placeholder="Search docs..." autocomplete="off">
       <div class="search-results" id="search-results"></div>
     </div>
-    <div class="header-actions">
+    <div class="header-actions" style="display:flex; align-items:center; gap:8px;">
+      <button class="btn-retour" id="btn-re-tour" onclick="if(window.GhostRunTour) window.GhostRunTour.startStationTour();" title="Re-launch Guided Tactical Tour">
+        <span style="color:#ff334b;">⚡</span> Re-Tour
+      </button>
       <a class="icon-btn" href="https://github.com/parthmax2/ghostrun" target="_blank" rel="noopener"
         aria-label="GitHub repository">
         <svg viewBox="0 0 16 16" width="18" height="18" fill="currentColor">
@@ -468,7 +502,7 @@
       <div class="article" style="max-width:960px">
 
         <div class="home-hero">
-          <div class="hero-badge">✨ Version 2.0.5 Live · DSPy-Style Optimization + Desktop Companion</div>
+          <div class="hero-badge">✨ Version 2.0.5 Live · Self-Improving Prompt Crafting + Desktop Companion</div>
 
           <!-- Interactive Live Mascot Canvas -->
           <div style="display:flex; flex-direction:column; align-items:center; margin-bottom:1.5rem;">
@@ -557,9 +591,9 @@
           </video>
         </div>
 
-        <div class="home-quickstart" style="position:relative;">
-          <!-- Interactive Station 1: Cyber PC Desk -->
-          <div class="mascot-station station-pc-desk" id="station-pc" style="top:-30px; right:15px;" title="Click to summon GhostRun to test code!">
+        <div class="home-quickstart" style="position:relative; margin-top:2.5rem;">
+          <!-- Interactive Station 1: Cyber PC Desk (Cleanly positioned on top-right ledge) -->
+          <div class="mascot-station station-pc-desk" id="station-pc" style="top:-42px; right:20px;" title="Click to summon GhostRun to test code!">
             <div class="pc-monitor"></div>
             <div class="pc-stand"></div>
             <div class="pc-desk-top"></div>
@@ -573,11 +607,11 @@ ghostrun run               # runs tests in 0.04s ($0 cost) with live celebration
         </div>
 
         <!-- Beginner Developer 3-Step Journey -->
-        <h2 style="text-align:center; margin-top:3rem; border:none; font-size:1.6rem;">How GhostRun Works in 3 Simple Steps</h2>
+        <h2 style="text-align:center; margin-top:3.5rem; border:none; font-size:1.6rem;">How GhostRun Works in 3 Simple Steps</h2>
         <p style="text-align:center; color:#9aa4c7; margin-bottom:2rem;">Everything you need to ship confident, production-grade GenAI apps with zero API flakiness.</p>
 
         <div class="steps-container" style="position:relative;">
-          <div class="step-card" style="position:relative;">
+          <div class="step-card" style="position:relative; padding-right:75px;">
             <div class="step-num">Step 1</div>
             <h3>1. Record Once, Replay in 0.04s</h3>
             <p>Wrap your function in <code>@ghostrun.record</code>. The first run records the real OpenAI call; subsequent runs replay in 0.04s offline for $0.</p>
@@ -586,9 +620,9 @@ def test_support_reply():
     reply = call_support_ai("Where is my refund?")</div>
           </div>
 
-          <div class="step-card" style="position:relative;">
+          <div class="step-card" style="position:relative; padding-right:75px;">
             <!-- Interactive Station 2: Cyber Coffee Station -->
-            <div class="mascot-station station-coffee-bar" id="station-coffee" style="top:12px; right:14px;" title="Click to call GhostRun for a coffee break!">
+            <div class="mascot-station station-coffee-bar" id="station-coffee" style="top:18px; right:16px;" title="Click to call GhostRun for a coffee break!">
               <div class="coffee-machine"></div>
             </div>
 
@@ -600,9 +634,9 @@ ghostrun.expect(reply).contains_intent("refund policy")
 ghostrun.expect(reply).tone_is("empathetic")</div>
           </div>
 
-          <div class="step-card" style="position:relative;">
+          <div class="step-card" style="position:relative; padding-right:75px;">
             <!-- Interactive Station 3: Tactical Server Rack -->
-            <div class="mascot-station station-server-rack" id="station-server" style="top:10px; right:14px;" title="Click to have GhostRun inspect the AI servers!">
+            <div class="mascot-station station-server-rack" id="station-server" style="top:18px; right:16px;" title="Click to have GhostRun inspect the AI servers!">
               <div class="server-unit"><div class="server-led"></div></div>
               <div class="server-unit"><div class="server-led red"></div></div>
               <div class="server-unit"><div class="server-led"></div></div>
@@ -623,9 +657,9 @@ ghostrun.expect(reply).tone_is("empathetic")</div>
 
         <!-- 4 Core Feature Cards with Target Dummy -->
         <div class="home-grid" style="position:relative;">
-          <div class="home-card" style="position:relative;">
-            <!-- Interactive Station 4: Bug Dummy -->
-            <div class="mascot-station station-bug-dummy" id="station-dummy" style="top:14px; right:14px;" title="Click for tactical training!">
+          <div class="home-card" style="position:relative; padding-top:24px;">
+            <!-- Interactive Station 4: Bug Dummy (Safely anchored in top-right corner with ample padding) -->
+            <div class="mascot-station station-bug-dummy" id="station-dummy" style="top:-38px; right:16px;" title="Click for tactical training!">
               <div class="dummy-head">🎯</div>
               <div class="dummy-pole"></div>
               <div class="dummy-base"></div>
@@ -639,7 +673,7 @@ ghostrun.expect(reply).tone_is("empathetic")</div>
             <p>Grade safety, tone, and intent privately on your laptop. Zero data leaves your machine.</p>
           </div>
           <div class="home-card">
-            <h3>🛠️ DSPy-Style Optimization</h3>
+            <h3>🛠️ Bayesian Prompt Optimization</h3>
             <p>Declare typed signatures (<code>"inputs -> outputs"</code>) and let Bayesian search discover high-scoring few-shots and instructions.</p>
           </div>
           <div class="home-card">
@@ -677,6 +711,7 @@ ghostrun.expect(reply).tone_is("empathetic")</div>
   </footer>
 
   <script src="assets/search-index.js"></script>
+  <script src="assets/tour.js"></script>
   <script src="assets/app.js"></script>
 </body>
 

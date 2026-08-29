@@ -889,125 +889,126 @@ img {
   transform: translateY(-3px) scale(1.05);
 }
 
-/* 1. Mini Cyber PC Battlestation */
+/* 1. Mini Cyber PC Battlestation (Enlarged) */
 .station-pc-desk {
-  width: 64px;
-  height: 52px;
+  width: 96px;
+  height: 74px;
   position: relative;
 }
 .station-pc-desk .pc-monitor {
   position: absolute;
   top: 0;
-  left: 12px;
-  width: 40px;
-  height: 28px;
+  left: 18px;
+  width: 60px;
+  height: 40px;
   background: #08090d;
-  border: 2px solid #262938;
-  border-radius: 3px;
+  border: 2px solid #ff334b;
+  border-radius: 4px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.8);
 }
 .station-pc-desk .pc-monitor::after {
   content: ">_ 0.04s";
   color: #00e676;
   font-family: var(--font-mono);
-  font-size: 7px;
+  font-size: 9px;
   font-weight: bold;
+  letter-spacing: 0.5px;
 }
 .station-pc-desk .pc-stand {
   position: absolute;
-  top: 28px;
-  left: 28px;
-  width: 8px;
-  height: 8px;
+  top: 40px;
+  left: 42px;
+  width: 12px;
+  height: 12px;
   background: #262938;
 }
 .station-pc-desk .pc-desk-top {
   position: absolute;
-  top: 36px;
+  top: 52px;
   left: 0;
-  width: 64px;
-  height: 6px;
+  width: 96px;
+  height: 8px;
   background: #181a24;
   border: 1px solid #262938;
-  border-radius: 2px;
+  border-radius: 3px;
 }
 .station-pc-desk .pc-keyboard {
   position: absolute;
-  top: 34px;
-  left: 16px;
-  width: 24px;
-  height: 4px;
+  top: 48px;
+  left: 24px;
+  width: 36px;
+  height: 6px;
   background: #ffffff;
-  border-radius: 1px;
+  border-radius: 2px;
 }
 
-/* 2. Cyber Coffee Station */
+/* 2. Cyber Coffee Station (Enlarged) */
 .station-coffee-bar {
-  width: 46px;
-  height: 50px;
+  width: 68px;
+  height: 72px;
   position: relative;
 }
 .station-coffee-bar .coffee-machine {
   position: absolute;
   top: 6px;
   left: 6px;
-  width: 32px;
-  height: 38px;
+  width: 48px;
+  height: 58px;
   background: #181a24;
   border: 2px solid #ff334b;
-  border-radius: 4px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+  border-radius: 6px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.8);
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 .station-coffee-bar .coffee-machine::before {
-  content: "ESP";
+  content: "ESPRESSO";
   font-family: var(--font-mono);
-  font-size: 6px;
+  font-size: 7px;
   color: #ff334b;
   font-weight: bold;
-  margin-top: 4px;
+  margin-top: 6px;
 }
 .station-coffee-bar .coffee-machine::after {
   content: "☕";
-  font-size: 11px;
-  margin-top: 2px;
+  font-size: 18px;
+  margin-top: 4px;
 }
 
-/* 3. Tactical Server Rack */
+/* 3. Tactical Server Rack (Enlarged) */
 .station-server-rack {
-  width: 44px;
-  height: 64px;
+  width: 64px;
+  height: 88px;
   position: relative;
   background: #08090d;
   border: 2px solid #262938;
-  border-radius: 4px;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.7);
+  border-radius: 6px;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.8);
   display: flex;
   flex-direction: column;
-  padding: 4px 6px;
-  gap: 5px;
+  padding: 6px 8px;
+  gap: 7px;
 }
 .station-server-rack .server-unit {
   width: 100%;
-  height: 10px;
+  height: 14px;
   background: #181a24;
   border: 1px solid #262938;
-  border-radius: 2px;
+  border-radius: 3px;
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  gap: 3px;
-  padding-right: 3px;
+  gap: 4px;
+  padding-right: 5px;
 }
 .station-server-rack .server-led {
-  width: 3px;
-  height: 3px;
+  width: 4px;
+  height: 4px;
   border-radius: 50%;
   background: #00e676;
   animation: blinkLed 1.2s infinite alternate;
@@ -1021,34 +1022,116 @@ img {
   to { opacity: 1; }
 }
 
-/* 4. Bug Practice Dummy */
+/* 4. Bug Practice Dummy (Enlarged) */
 .station-bug-dummy {
-  width: 40px;
-  height: 52px;
+  width: 60px;
+  height: 78px;
   position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 .station-bug-dummy .dummy-head {
-  width: 22px;
-  height: 22px;
+  width: 32px;
+  height: 32px;
   background: #181a24;
   border: 2px solid #ff334b;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 11px;
+  font-size: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.7);
 }
 .station-bug-dummy .dummy-pole {
-  width: 4px;
-  height: 28px;
+  width: 6px;
+  height: 40px;
   background: #262938;
 }
 .station-bug-dummy .dummy-base {
-  width: 26px;
-  height: 4px;
+  width: 40px;
+  height: 6px;
   background: #181a24;
-  border-radius: 2px;
+  border-radius: 3px;
+}
+
+/* ==========================================================================
+   Tactical Radio Comms HUD & Full-Screen Briefing Styles
+   ========================================================================== */
+
+/* Tactical Radio HUD Controller */
+#tactical-radio-hud {
+  position: fixed;
+  bottom: 24px;
+  left: 24px;
+  z-index: 9999;
+  background: rgba(16, 18, 26, 0.95);
+  border: 1px solid rgba(255, 51, 75, 0.4);
+  backdrop-filter: blur(16px);
+  border-radius: 12px;
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.8);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: #ffffff;
+  transition: all 0.3s ease;
+}
+.radio-led {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #00e676;
+  box-shadow: 0 0 8px #00e676;
+  animation: radioPulse 1.5s infinite alternate;
+}
+@keyframes radioPulse {
+  from { opacity: 0.4; }
+  to { opacity: 1; }
+}
+.radio-btn {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  padding: 5px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.radio-btn:hover {
+  background: #ff334b;
+  border-color: #ff334b;
+  color: #ffffff;
+}
+.radio-btn.primary {
+  background: #ff334b;
+  border-color: #ff334b;
+  font-weight: bold;
+}
+
+/* Dive-in Shockwave Impact Ring */
+.tactical-shockwave {
+  position: absolute;
+  width: 120px;
+  height: 40px;
+  border: 2px solid #ff334b;
+  border-radius: 50%;
+  transform: translate(-50%, -50%) scale(0.2);
+  pointer-events: none;
+  z-index: 999;
+  animation: shockwaveExpand 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+@keyframes shockwaveExpand {
+  0% { transform: translate(-50%, -50%) scale(0.2); opacity: 1; }
+  100% { transform: translate(-50%, -50%) scale(1.8); opacity: 0; }
+}
+
+/* Active Station Target Glow */
+.station-active-highlight {
+  outline: 2px solid #ff334b !important;
+  box-shadow: 0 0 28px rgba(255, 51, 75, 0.6) !important;
 }
