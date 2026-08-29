@@ -88,11 +88,12 @@ def run_pet(
     except tk.TclError:
         pass  # Non-Windows fallback
 
-    # Position at bottom-right of primary display
+    # Position at bottom right-center (nestled beside chat input & terminal)
     screen_w = root.winfo_screenwidth()
     screen_h = root.winfo_screenheight()
-    pos_x = screen_w - total_w - 40
-    pos_y = screen_h - total_h - 70
+    # Offset further left into the workspace area (e.g. ~420px from right edge)
+    pos_x = max(50, screen_w - total_w - 420)
+    pos_y = max(50, screen_h - total_h - 75)
     root.geometry(f"{total_w}x{total_h}+{pos_x}+{pos_y}")
 
     canvas = tk.Canvas(
