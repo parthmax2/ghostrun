@@ -69,49 +69,65 @@
       align-items: center;
       justify-content: center;
       text-align: center;
-      background: rgba(16, 18, 26, 0.9);
-      backdrop-filter: blur(20px);
-      border: 1px solid rgba(255, 51, 75, 0.3);
-      padding: 3rem 2.5rem;
-      border-radius: 20px;
-      box-shadow: 0 24px 64px rgba(0, 0, 0, 0.9), 0 0 32px rgba(255, 51, 75, 0.25);
-      max-width: 480px;
-      width: 90%;
-      transition: opacity 0.4s, transform 0.4s;
+      background: transparent;
+      padding: 2rem 1.5rem;
+      max-width: 680px;
+      width: 92%;
+      transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
     }
     .intro-launch-card.hide {
       opacity: 0;
-      transform: scale(0.92);
+      transform: scale(0.95);
       pointer-events: none;
     }
-    .launch-mascot {
-      width: 96px;
-      height: 104px;
-      background: url('assets/spritesheet.png') 0px 0px no-repeat;
-      background-size: 768px 936px;
-      image-rendering: pixelated;
-      filter: drop-shadow(0 0 20px rgba(255, 51, 75, 0.7));
-      margin-bottom: 1.2rem;
+    .intro-badge-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 16px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 999px;
+      font-size: 0.8rem;
+      color: var(--text-dim);
+      margin-bottom: 1.5rem;
+      letter-spacing: 0.5px;
     }
-    .btn-launch-exp {
-      background: linear-gradient(135deg, #ff334b, #d9263a);
+    .intro-title {
+      font-size: 2.8rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
       color: #ffffff;
+      margin: 0 0 1rem 0;
+      line-height: 1.15;
+    }
+    .intro-desc {
+      font-size: 1.15rem;
+      color: var(--text-dim);
+      max-width: 540px;
+      line-height: 1.6;
+      margin: 0 0 2rem 0;
+    }
+    .btn-enter-site {
+      background: #ffffff;
+      color: #08090d;
       border: none;
       font-weight: 700;
-      font-size: 1.05rem;
-      padding: 14px 32px;
+      font-size: 1rem;
+      padding: 14px 36px;
       border-radius: 999px;
       cursor: pointer;
-      box-shadow: 0 8px 24px rgba(255, 51, 75, 0.4);
-      transition: all 0.2s;
-      margin-top: 1.5rem;
-      display: flex;
+      box-shadow: 0 8px 24px rgba(255, 255, 255, 0.15);
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      display: inline-flex;
       align-items: center;
       gap: 10px;
     }
-    .btn-launch-exp:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 32px rgba(255, 51, 75, 0.8);
+    .btn-enter-site:hover {
+      background: #ff334b;
+      color: #ffffff;
+      box-shadow: 0 0 32px rgba(255, 51, 75, 0.7);
+      transform: translateY(-2px);
     }
     .intro-loader-wrap {
       display: none;
@@ -283,19 +299,19 @@
 
   <!-- Full-Screen Cinematic Video Intro Experience -->
   <div id="cinema-intro">
-    <!-- Step 1: Launch Card (Unlocks Full Browser Audio on Click) -->
+    <!-- Step 1: Professional Intro Hero (Unlocks Full Browser Audio on Click) -->
     <div class="intro-launch-card" id="launch-card">
-      <div class="launch-mascot" id="launch-sprite"></div>
-      <h2 style="color:#e7eaff; margin:0 0 0.5rem 0; font-size:1.6rem;">GhostRun 2.0.5</h2>
-      <p style="color:#9aa4c7; margin:0; font-size:0.95rem; line-height:1.5;">
-        pytest for AI Apps — Fast, free, offline testing and self-improving prompt optimization.
+      <div class="intro-badge-pill">
+        <span style="display:inline-block; width:6px; height:6px; background:#ff334b; border-radius:50%;"></span>
+        pytest for AI Applications
+      </div>
+      <h1 class="intro-title">GhostRun</h1>
+      <p class="intro-desc">
+        Fast, free, and deterministic offline testing with self-improving prompt optimization for production GenAI developers.
       </p>
-      <button class="btn-launch-exp" onclick="startMissionExperience()">
-        ▶ Play Briefing (With Sound)
+      <button class="btn-enter-site" onclick="startMissionExperience()">
+        Enter Site →
       </button>
-      <a href="javascript:void(0)" onclick="dismissIntro()" style="color:#6b7396; font-size:0.8rem; margin-top:1rem; text-decoration:none;">
-        Skip Intro &amp; Enter Docs →
-      </a>
     </div>
 
     <!-- Step 2: Cyber Loading Spinner Animation -->
