@@ -88,6 +88,19 @@ def pytest_runtest_logreport(report):
 
 
 def pytest_sessionfinish(session, exitstatus):
+    # Automatic interactive mascot animation on local runs:
+    if not session.config.getoption("--ghostrun-no-pet", False):
+        try:
+            from .pet import spawn_pet_async
+            stats = _interceptor.get_stats()
+            if exitstatus == 0:
+                anim = "jumping" if stats.get("replayed", 0) > 0 else "waving"
+            else:
+                anim = "failed"
+            spawn_pet_async(anim=anim, auto_close_ms=3500)
+        except Exception:
+            pass
+
     log = runlog.stop_run()
     if log is None or not log.tests:
         return
@@ -106,21 +119,6 @@ def pytest_sessionfinish(session, exitstatus):
         block = _mascot.render(stats)
         if block:
             reporter.write_line(block)
-
-        # Automatic interactive mascot animation on local runs:
-        # If tests passed with cache/replays -> victory dance ("jumping")
-        # If test suite failed -> "failed"
-        # If new fixtures recorded -> "waving"
-        if not session.config.getoption("--ghostrun-no-pet", False):
-            try:
-                from .pet import spawn_pet_async
-                if exitstatus == 0:
-                    anim = "jumping" if stats.get("replayed", 0) > 0 else "waving"
-                else:
-                    anim = "failed"
-                spawn_pet_async(anim=anim, auto_close_ms=3500)
-            except Exception:
-                pass
 
 
 @pytest.fixture
