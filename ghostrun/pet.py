@@ -239,25 +239,12 @@ def spawn_pet_async(
             "-c",
             f"from ghostrun.pet import run_pet; run_pet(width={width}, initial_anim={anim!r}, auto_close_ms={auto_close_ms})",
         ]
-        if sys.platform == "win32":
-            # Windows detached process creation flags
-            DETACHED_PROCESS = 0x00000008
-            CREATE_NEW_PROCESS_GROUP = 0x00000200
-            subprocess.Popen(
-                cmd,
-                creationflags=DETACHED_PROCESS | CREATE_NEW_PROCESS_GROUP,
-                stdout=subprocess.DEVNULL,
-                stderr=subprocess.DEVNULL,
-                stdin=subprocess.DEVNULL,
-                close_fds=True,
-            )
-        else:
-            subprocess.Popen(
-                cmd,
-                stdout=subprocess.DEVNULL,
-                stderr=subprocess.DEVNULL,
-                stdin=subprocess.DEVNULL,
-                start_new_session=True,
-            )
+        # Standard non-blocking background spawn (works smoothly across all Windows/Linux terminals)
+        subprocess.Popen(
+            cmd,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+            stdin=subprocess.DEVNULL,
+        )
     except Exception:
         pass
