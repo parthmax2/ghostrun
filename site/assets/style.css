@@ -5,20 +5,20 @@
    ========================================================================== */
 
 :root {
-  --ink: #0b0e1a;
-  --ink-panel: #131a2e;
-  --ink-panel-2: #0f1426;
-  --ink-raised: #171f38;
-  --hairline: #2a3155;
-  --glow: #8b9dff;
-  --glow-dim: #6b7bd6;
-  --signal: #ffb066;
-  --danger: #ff6b6b;
-  --ok: #5fd0a0;
-  --text: #e7eaff;
-  --text-dim: #9aa4c7;
-  --text-faint: #6b7396;
-  --shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  --ink: #08090d;
+  --ink-panel: #10121a;
+  --ink-panel-2: #0c0e14;
+  --ink-raised: #181a24;
+  --hairline: #262938;
+  --glow: #ff334b;
+  --glow-dim: #d9263a;
+  --signal: #ff9933;
+  --danger: #ff334b;
+  --ok: #00e676;
+  --text: #ffffff;
+  --text-dim: #b0b4c3;
+  --text-faint: #65697d;
+  --shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
 
   --font-sans: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   --font-mono: ui-monospace, "SF Mono", "Cascadia Mono", "JetBrains Mono", Consolas, "Liberation Mono", monospace;
