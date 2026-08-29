@@ -1,4 +1,4 @@
-﻿(function () {
+(function () {
   "use strict";
 
   /* ---------------------------------------------------------------------
@@ -13,47 +13,10 @@
   })();
 
   /* ---------------------------------------------------------------------
-     Theme toggle: localStorage -> system preference -> dark default.
+     Theme: Permanent pure sleek dark mode.
      --------------------------------------------------------------------- */
   var root = document.documentElement;
-  var THEME_KEY = "ghostrun-theme";
-
-  function getStoredTheme() {
-    try {
-      return localStorage.getItem(THEME_KEY);
-    } catch (e) {
-      return null;
-    }
-  }
-
-  function setStoredTheme(theme) {
-    try {
-      localStorage.setItem(THEME_KEY, theme);
-    } catch (e) {
-      /* Theme still applies for this page view when storage is unavailable. */
-    }
-  }
-
-  function applyTheme(theme) {
-    root.setAttribute("data-theme", theme);
-    var btn = document.getElementById("theme-toggle");
-    if (btn) btn.setAttribute("aria-label", "Switch to " + (theme === "dark" ? "light" : "dark") + " mode");
-  }
-
-  function initTheme() {
-    var stored = getStoredTheme();
-    var theme = stored || (window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark");
-    applyTheme(theme);
-  }
-
-  function toggleTheme() {
-    var current = root.getAttribute("data-theme") === "light" ? "light" : "dark";
-    var next = current === "light" ? "dark" : "light";
-    setStoredTheme(next);
-    applyTheme(next);
-  }
-
-  initTheme();
+  root.setAttribute("data-theme", "dark");
 
   document.addEventListener("DOMContentLoaded", function () {
     var themeBtn = document.getElementById("theme-toggle");

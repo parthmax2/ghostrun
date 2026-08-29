@@ -150,8 +150,8 @@ def run_pet(
             except Exception:
                 pass
         try:
+            root.withdraw()
             root.quit()
-            root.destroy()
         except Exception:
             pass
 
