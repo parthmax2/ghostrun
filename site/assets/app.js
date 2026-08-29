@@ -363,81 +363,78 @@
         }
       }
 
-      // 1. Autonomous Behavior Engine (Patrols, Perches & Props)
-      var behaviorTree = ["walk_floor", "perch_codeblock", "laptop_hack", "coffee_break", "radar_scan", "wave", "celebrate"];
+      // 1. Autonomous Behavior Engine (Navigates to Stations Across Page)
+      var stationsList = ["station-pc", "station-coffee", "station-server", "station-dummy"];
+
+      function travelToStation(stationId, customCallback) {
+        var el = document.getElementById(stationId);
+        if (!el) return false;
+        var rect = el.getBoundingClientRect();
+        
+        // Only target if in reasonable scroll view or near
+        var targetLeft = Math.max(30, Math.min(window.innerWidth - 100, rect.left - 40));
+        var targetTop = Math.max(70, rect.top - 10);
+
+        isPerched = true;
+        isFacingLeft = targetLeft < posX;
+        currentRow = 1; // Run towards station
+        
+        var dist = Math.hypot(targetLeft - posX, targetTop - (window.innerHeight - posY));
+        var dur = Math.min(2.5, Math.max(0.8, dist * 0.002));
+
+        petContainer.style.transition = "left " + dur + "s cubic-bezier(0.2, 0.8, 0.2, 1), top " + dur + "s cubic-bezier(0.2, 0.8, 0.2, 1)";
+        petContainer.style.left = targetLeft + "px";
+        petContainer.style.bottom = "auto";
+        petContainer.style.top = targetTop + "px";
+        posX = targetLeft;
+
+        setTimeout(function() {
+          if (stationId === "station-pc") {
+            currentRow = 7; // Thinking / typing
+            setProp("laptop");
+            speak("Executing 0.04s offline AI test suite... 💻", 3500);
+          } else if (stationId === "station-coffee") {
+            currentRow = 0; // Idle
+            setProp("coffee");
+            speak("Fresh espresso brewed! Ready to optimize prompts ☕", 3500);
+          } else if (stationId === "station-server") {
+            currentRow = 7; // Scanning
+            setProp("radar");
+            speak("All AI servers healthy: 0 regressions found! 🗄️", 3500);
+          } else if (stationId === "station-dummy") {
+            currentRow = 4; // Jump
+            speak("Tactical strike on hallucination bug! 🎯", 3000);
+            spawnConfetti(targetLeft + 36, targetTop + 36);
+          }
+
+          if (customCallback) customCallback();
+
+          // After interacting, hop down after 5.5s
+          setTimeout(function() {
+            setProp(null);
+            currentRow = 4; // Hop down
+            petContainer.style.transition = "bottom 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275), left 0.6s ease";
+            petContainer.style.top = "auto";
+            petContainer.style.bottom = "24px";
+            isPerched = false;
+            posY = 24;
+            setTimeout(function() { currentRow = 0; }, 600);
+          }, 5500);
+        }, dur * 1000);
+
+        return true;
+      }
 
       function runAutonomousAI() {
-        if (isDragging) return;
-        var action = behaviorTree[Math.floor(Math.random() * behaviorTree.length)];
+        if (isDragging || isPerched) return;
+        var roll = Math.random();
 
-        if (action === "perch_codeblock") {
-          // Find visible code blocks or cards to perch on
-          var elements = Array.prototype.slice.call(document.querySelectorAll(".step-card, pre, .home-card, .video-frame"));
-          var visibleElements = elements.filter(function(el) {
-            var rect = el.getBoundingClientRect();
-            return rect.top >= 80 && rect.bottom <= window.innerHeight - 80;
-          });
-
-          if (visibleElements.length > 0) {
-            var targetEl = visibleElements[Math.floor(Math.random() * visibleElements.length)];
-            var rect = targetEl.getBoundingClientRect();
-            
-            isPerched = true;
-            currentRow = 4; // Jump up
-            petContainer.style.transition = "all 0.8s cubic-bezier(0.16, 1, 0.3, 1)";
-            petContainer.style.left = (rect.right - 90) + "px";
-            petContainer.style.bottom = "auto";
-            petContainer.style.top = Math.max(70, rect.top - 68) + "px";
-
-            setTimeout(function() {
-              currentRow = 7; // Thinking / inspecting
-              setProp("laptop");
-              speak("Inspecting code assertions...", 3000);
-
-              setTimeout(function() {
-                setProp(null);
-                // Hop down
-                currentRow = 4;
-                petContainer.style.top = "auto";
-                petContainer.style.bottom = "24px";
-                isPerched = false;
-                setTimeout(function() { currentRow = 0; }, 600);
-              }, 5000);
-            }, 800);
-            return;
-          }
-        }
-
-        if (action === "laptop_hack") {
-          currentRow = 7; // Thinking
-          setProp("laptop");
-          speak("Running prompt craft optimizer...", 3500);
-          setTimeout(function() {
-            setProp(null);
-            currentRow = 0;
-          }, 4000);
-
-        } else if (action === "coffee_break") {
-          currentRow = 0; // Idle
-          setProp("coffee");
-          speak("Replay cache hit: 0.04s. Coffee time ☕", 3000);
-          setTimeout(function() {
-            setProp(null);
-          }, 4500);
-
-        } else if (action === "radar_scan") {
-          currentRow = 7;
-          setProp("radar");
-          speak("Scanning for LLM regressions...", 3000);
-          setTimeout(function() {
-            setProp(null);
-            currentRow = 8; // Celebrate clean scan
-            speak("Zero regressions found! 🎯", 2000);
-            setTimeout(function() { currentRow = 0; }, 2000);
-          }, 3500);
-
-        } else if (action === "walk_floor") {
-          if (isPerched) return;
+        if (roll < 0.45) {
+          // Travel to a random station on page
+          var randStation = stationsList[Math.floor(Math.random() * stationsList.length)];
+          travelToStation(randStation);
+        } else if (roll < 0.75) {
+          // Walk across the floor
           var vw = window.innerWidth;
           var targetX = Math.floor(Math.random() * (vw - 160)) + 40;
           isFacingLeft = targetX < posX;
@@ -456,21 +453,29 @@
             currentRow = 0;
             if (Math.random() > 0.5) speak();
           }, duration);
-
-        } else if (action === "wave") {
-          currentRow = 3;
-          speak("Tactical AI testing ready!", 2500);
+        } else if (roll < 0.9) {
+          currentRow = 3; // Wave
+          speak("Tactical AI testing standing by!", 2500);
           setTimeout(function() { currentRow = 0; }, 2500);
-
-        } else if (action === "celebrate") {
-          currentRow = 8;
+        } else {
+          currentRow = 8; // Celebrate
           spawnConfetti();
           speak("100% Deterministic Pass! 🎉", 2500);
           setTimeout(function() { currentRow = 0; }, 2500);
         }
       }
 
-      setInterval(runAutonomousAI, 7000);
+      setInterval(runAutonomousAI, 7500);
+
+      // Bind Click events on Stations so clicking a station calls the mascot over!
+      stationsList.forEach(function(sId) {
+        var el = document.getElementById(sId);
+        if (el) {
+          el.addEventListener("click", function() {
+            travelToStation(sId);
+          });
+        }
+      });
 
       // 2. Developer Action Reaction Hooks
       // React when developer copies code

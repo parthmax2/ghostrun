@@ -874,3 +874,181 @@ img {
   0% { transform: translate(0, 0) scale(1); opacity: 1; }
   100% { transform: translate(var(--dx), var(--dy)) scale(0); opacity: 0; }
 }
+
+/* ==========================================================================
+   Pixel Art Interactive Stations / Objects Around the Site
+   ========================================================================== */
+
+.mascot-station {
+  position: absolute;
+  z-index: 10;
+  cursor: pointer;
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.mascot-station:hover {
+  transform: translateY(-3px) scale(1.05);
+}
+
+/* 1. Mini Cyber PC Battlestation */
+.station-pc-desk {
+  width: 64px;
+  height: 52px;
+  position: relative;
+}
+.station-pc-desk .pc-monitor {
+  position: absolute;
+  top: 0;
+  left: 12px;
+  width: 40px;
+  height: 28px;
+  background: #08090d;
+  border: 2px solid #262938;
+  border-radius: 3px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+}
+.station-pc-desk .pc-monitor::after {
+  content: ">_ 0.04s";
+  color: #00e676;
+  font-family: var(--font-mono);
+  font-size: 7px;
+  font-weight: bold;
+}
+.station-pc-desk .pc-stand {
+  position: absolute;
+  top: 28px;
+  left: 28px;
+  width: 8px;
+  height: 8px;
+  background: #262938;
+}
+.station-pc-desk .pc-desk-top {
+  position: absolute;
+  top: 36px;
+  left: 0;
+  width: 64px;
+  height: 6px;
+  background: #181a24;
+  border: 1px solid #262938;
+  border-radius: 2px;
+}
+.station-pc-desk .pc-keyboard {
+  position: absolute;
+  top: 34px;
+  left: 16px;
+  width: 24px;
+  height: 4px;
+  background: #ffffff;
+  border-radius: 1px;
+}
+
+/* 2. Cyber Coffee Station */
+.station-coffee-bar {
+  width: 46px;
+  height: 50px;
+  position: relative;
+}
+.station-coffee-bar .coffee-machine {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  width: 32px;
+  height: 38px;
+  background: #181a24;
+  border: 2px solid #ff334b;
+  border-radius: 4px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.station-coffee-bar .coffee-machine::before {
+  content: "ESP";
+  font-family: var(--font-mono);
+  font-size: 6px;
+  color: #ff334b;
+  font-weight: bold;
+  margin-top: 4px;
+}
+.station-coffee-bar .coffee-machine::after {
+  content: "☕";
+  font-size: 11px;
+  margin-top: 2px;
+}
+
+/* 3. Tactical Server Rack */
+.station-server-rack {
+  width: 44px;
+  height: 64px;
+  position: relative;
+  background: #08090d;
+  border: 2px solid #262938;
+  border-radius: 4px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.7);
+  display: flex;
+  flex-direction: column;
+  padding: 4px 6px;
+  gap: 5px;
+}
+.station-server-rack .server-unit {
+  width: 100%;
+  height: 10px;
+  background: #181a24;
+  border: 1px solid #262938;
+  border-radius: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 3px;
+  padding-right: 3px;
+}
+.station-server-rack .server-led {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: #00e676;
+  animation: blinkLed 1.2s infinite alternate;
+}
+.station-server-rack .server-led.red {
+  background: #ff334b;
+  animation-delay: 0.6s;
+}
+@keyframes blinkLed {
+  from { opacity: 0.2; }
+  to { opacity: 1; }
+}
+
+/* 4. Bug Practice Dummy */
+.station-bug-dummy {
+  width: 40px;
+  height: 52px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.station-bug-dummy .dummy-head {
+  width: 22px;
+  height: 22px;
+  background: #181a24;
+  border: 2px solid #ff334b;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+}
+.station-bug-dummy .dummy-pole {
+  width: 4px;
+  height: 28px;
+  background: #262938;
+}
+.station-bug-dummy .dummy-base {
+  width: 26px;
+  height: 4px;
+  background: #181a24;
+  border-radius: 2px;
+}

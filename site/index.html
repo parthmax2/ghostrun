@@ -557,7 +557,15 @@
           </video>
         </div>
 
-        <div class="home-quickstart">
+        <div class="home-quickstart" style="position:relative;">
+          <!-- Interactive Station 1: Cyber PC Desk -->
+          <div class="mascot-station station-pc-desk" id="station-pc" style="top:-30px; right:15px;" title="Click to summon GhostRun to test code!">
+            <div class="pc-monitor"></div>
+            <div class="pc-stand"></div>
+            <div class="pc-desk-top"></div>
+            <div class="pc-keyboard"></div>
+          </div>
+
           <pre><code>pip install ghostrun
 ollama pull llama3.2:3b   # for the default local judge
 ghostrun init              # scaffolds your first test in 1 command
@@ -568,8 +576,8 @@ ghostrun run               # runs tests in 0.04s ($0 cost) with live celebration
         <h2 style="text-align:center; margin-top:3rem; border:none; font-size:1.6rem;">How GhostRun Works in 3 Simple Steps</h2>
         <p style="text-align:center; color:#9aa4c7; margin-bottom:2rem;">Everything you need to ship confident, production-grade GenAI apps with zero API flakiness.</p>
 
-        <div class="steps-container">
-          <div class="step-card">
+        <div class="steps-container" style="position:relative;">
+          <div class="step-card" style="position:relative;">
             <div class="step-num">Step 1</div>
             <h3>1. Record Once, Replay in 0.04s</h3>
             <p>Wrap your function in <code>@ghostrun.record</code>. The first run records the real OpenAI call; subsequent runs replay in 0.04s offline for $0.</p>
@@ -578,7 +586,12 @@ def test_support_reply():
     reply = call_support_ai("Where is my refund?")</div>
           </div>
 
-          <div class="step-card">
+          <div class="step-card" style="position:relative;">
+            <!-- Interactive Station 2: Cyber Coffee Station -->
+            <div class="mascot-station station-coffee-bar" id="station-coffee" style="top:12px; right:14px;" title="Click to call GhostRun for a coffee break!">
+              <div class="coffee-machine"></div>
+            </div>
+
             <div class="step-num">Step 2</div>
             <h3>2. Assert on Meaning (Not Exact Strings)</h3>
             <p>LLM outputs change slightly every run. Assert on semantic intent and tone graded by a free, local Ollama judge.</p>
@@ -587,7 +600,15 @@ ghostrun.expect(reply).contains_intent("refund policy")
 ghostrun.expect(reply).tone_is("empathetic")</div>
           </div>
 
-          <div class="step-card">
+          <div class="step-card" style="position:relative;">
+            <!-- Interactive Station 3: Tactical Server Rack -->
+            <div class="mascot-station station-server-rack" id="station-server" style="top:10px; right:14px;" title="Click to have GhostRun inspect the AI servers!">
+              <div class="server-unit"><div class="server-led"></div></div>
+              <div class="server-unit"><div class="server-led red"></div></div>
+              <div class="server-unit"><div class="server-led"></div></div>
+              <div class="server-unit"><div class="server-led red"></div></div>
+            </div>
+
             <div class="step-num">Step 3</div>
             <h3>3. Self-Healing Prompts (`ghostrun craft`)</h3>
             <p>If your prompt fails, don't guess fixes. GhostRun uses Bayesian optimization to automatically find winning instructions for you.</p>
@@ -600,9 +621,16 @@ ghostrun.expect(reply).tone_is("empathetic")</div>
           </div>
         </div>
 
-        <!-- 4 Core Feature Cards -->
-        <div class="home-grid">
-          <div class="home-card">
+        <!-- 4 Core Feature Cards with Target Dummy -->
+        <div class="home-grid" style="position:relative;">
+          <div class="home-card" style="position:relative;">
+            <!-- Interactive Station 4: Bug Dummy -->
+            <div class="mascot-station station-bug-dummy" id="station-dummy" style="top:14px; right:14px;" title="Click for tactical training!">
+              <div class="dummy-head">🎯</div>
+              <div class="dummy-pole"></div>
+              <div class="dummy-base"></div>
+            </div>
+
             <h3>⚡ 0.04s Replay ($0 Cost)</h3>
             <p>Transport-level HTTP cache intercepts calls. Replay entire test suites instantly in CI without spending a single cent on LLM tokens.</p>
           </div>
