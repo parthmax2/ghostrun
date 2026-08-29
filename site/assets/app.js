@@ -284,7 +284,6 @@
         "background: url('" + SITE_BASE + "assets/spritesheet.png') 0px 0px no-repeat;",
         "background-size: 576px 702px;",
         "image-rendering: pixelated;",
-        "filter: drop-shadow(0 0 16px rgba(255, 51, 75, 0.6));",
         "transition: transform 0.15s ease;"
       ].join(" ");
       petSprite.title = "I am your GhostRun tactical pet! Click, drag, or watch me patrol!";
