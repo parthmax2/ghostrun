@@ -147,6 +147,22 @@ ghostrun craft refund_classifier \
     --model gpt-4o-mini
 ```
 
+## Interactive Tactical Companion (`ghostrun pet`)
+
+GhostRun includes a borderless, transparent desktop tactical companion with 9 real-time animated states that react to your development workflow:
+
+```bash
+ghostrun run test_app.py        # Runs tests & triggers victory celebration dance on 0.04s replay
+ghostrun pet                    # Launches transparent floating companion on screen
+ghostrun pet --anim thinking    # Hyper-speed thinking animation
+```
+
+- **Interactive Controls**: Left-click to cycle through all 9 animations (`idle`, `running`, `jumping`, `waving`, `review`, `waiting`, `failed`), drag anywhere across multiple monitors, or click the hover red `✕` button to dismiss.
+- **Workflow Triggers**:
+  - `ghostrun init` → 👋 **`waving`** welcome greeting.
+  - `ghostrun run` → 🏆 **`jumping`** celebration on passing tests / 💀 **`failed`** on regression.
+  - `ghostrun craft` → 🎖️ **`review`** tactical salute on discovering winning prompts.
+
 Learn more in the [Prompt Crafting Guide](doc/guide/craft.md).
 
 ## Is this for you?
